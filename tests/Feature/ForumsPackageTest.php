@@ -9,7 +9,7 @@ use ForumKit\Forums\ForumKitForumsPlugin;
 it('registers itself as a module that needs core and entitlements', function () {
     $module = app(ModuleRegistry::class)->get('forums');
 
-    expect($module->package)->toBe('zencart/forumkit-forums')
+    expect($module->package)->toBe('zcwilt/forumkit-forums')
         ->and($module->requires)->toBe(['core', 'entitlements'])
         ->and(app(ModuleRegistry::class)->missingRequirements())->toBe([]);
 });

@@ -1,0 +1,20 @@
+name: ci
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  tests:
+    uses: zcwilt/forumkit-shared/.github/workflows/tests.yml@master
+
+  lint:
+    uses: zcwilt/forumkit-shared/.github/workflows/lint.yml@master
+
+  leak-scan:
+    uses: zcwilt/forumkit-shared/.github/workflows/leak-scan.yml@master
+    secrets: inherit

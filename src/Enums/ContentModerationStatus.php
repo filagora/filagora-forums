@@ -1,0 +1,32 @@
+<?php
+
+declare(strict_types=1);
+
+namespace ForumKit\Forums\Enums;
+
+enum ContentModerationStatus: string
+{
+    case APPROVED = 'approved';
+    case PENDING = 'pending';
+    case REJECTED = 'rejected';
+    case REJECTED_FINAL = 'rejected_final';
+
+    public function label(): string
+    {
+        return match ($this) {
+            self::APPROVED => 'Approved',
+            self::PENDING => 'Pending review',
+            self::REJECTED => 'Rejected',
+            self::REJECTED_FINAL => 'Rejected Permanently',
+        };
+    }
+
+    public function color(): string
+    {
+        return match ($this) {
+            self::APPROVED => 'success',
+            self::PENDING => 'warning',
+            self::REJECTED, self::REJECTED_FINAL => 'danger',
+        };
+    }
+}

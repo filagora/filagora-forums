@@ -20,7 +20,7 @@ class ForumsServiceProvider extends ServiceProvider
     public function boot(): void
     {
         $this->app->make(ModuleRegistry::class)->register(
-            new Module('forums', 'ForumKit Forums', 'zencart/forumkit-forums', requires: ['core', 'entitlements']),
+            new Module('forums', 'ForumKit Forums', 'zcwilt/forumkit-forums', requires: ['core', 'entitlements']),
         );
 
         $this->app->make(SchemaRegistry::class)->register(

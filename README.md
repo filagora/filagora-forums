@@ -57,9 +57,8 @@ moderation, reports and a staff queue, as a Laravel 13 / Filament 5 plugin. Requ
 
 ## Still to come
 
-Moderation actions
-and report resolution, with events other packages can hook into; the Filament resources and the
-moderation queue.
+Moderation actions and report resolution, with events other packages can hook into, and the
+Filament resources and the moderation queue.
 
 ## Install
 

@@ -32,4 +32,21 @@ return [
         'thread_moderation_log' => ThreadModerationLog::class,
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | Gate abilities
+    |--------------------------------------------------------------------------
+    |
+    | Maps each ability that marks a user as forum staff to the entitlement that grants it.
+    | Holding any of them makes a user staff. Point an ability at your own entitlement key to
+    | use your own keys; keys listed here are created as definitions by
+    | `forumkit:entitlements:sync`.
+    |
+    */
+    'gates' => [
+        'forumkit.forums.moderate' => 'forumkit.forums.moderate',
+        'forumkit.forums.view_unapproved' => 'forumkit.forums.view_unapproved',
+        'forumkit.forums.bypass_approval' => 'forumkit.forums.bypass_approval',
+    ],
+
 ];

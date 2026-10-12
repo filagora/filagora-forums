@@ -6,6 +6,8 @@ namespace ForumKit\Forums;
 
 use ForumKit\Core\Modules\Module;
 use ForumKit\Core\Modules\ModuleRegistry;
+use ForumKit\Core\Navigation\NavigationGroupDefinition;
+use ForumKit\Core\Navigation\NavigationGroupRegistry;
 use ForumKit\Core\Schema\PackageSchema;
 use ForumKit\Core\Schema\SchemaRegistry;
 use ForumKit\Core\Settings\SettingDefinition;
@@ -65,6 +67,16 @@ class ForumsServiceProvider extends ServiceProvider
         $this->app->singleton(PostReports::class);
     }
 
+    private function registerNavigationGroups(): void
+    {
+        $this->app->make(NavigationGroupRegistry::class)->register(new NavigationGroupDefinition(
+            key: 'forum',
+            label: fn (): string => __('forumkit-forums::messages.navigation_groups.forum'),
+            icon: 'heroicon-o-chat-bubble-left-right',
+            sort: 10,
+        ));
+    }
+
     public function boot(): void
     {
         $this->app->make(ModuleRegistry::class)->register(
@@ -75,6 +87,7 @@ class ForumsServiceProvider extends ServiceProvider
             PackageSchema::fromFile('forums', __DIR__.'/../database/schema.php', __DIR__.'/../database/migrations'),
         );
 
+        $this->registerNavigationGroups();
         $this->declareEntitlements();
         $this->defineGates();
         $this->observeModels();

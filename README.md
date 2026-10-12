@@ -68,9 +68,23 @@ moderation, reports and a staff queue, as a Laravel 13 / Filament 5 plugin. Requ
   or `remove_thread` (the whole thread, if the post is all it holds) and dispatches
   `PostReportsResolved` with the reporters' ids.
 
-## Still to come
+- **Filament screens.** `ForumKitForumsPlugin` adds forum groups and forums (create and edit),
+  threads, posts and post reports (browse, filter, and act through the moderation services, so
+  every action is logged and counted), a **Moderation queue** page (threads and replies waiting
+  for approval, reported replies one row each) and a `ModerationQueueStats` dashboard widget.
+  Every screen needs the `forumkit.forums.moderate` ability. Register it on the panel next to the
+  core and entitlements plugins:
 
-The Filament resources and the moderation queue.
+  ```php
+  ->plugins([
+      ForumKitCorePlugin::make(),
+      ForumKitEntitlementsPlugin::make(),
+      ForumKitForumsPlugin::make(),
+  ])
+  ```
+
+  The moderation queue's navigation badge and the widget count what is waiting; add
+  `ModerationQueueStats::class` to your dashboard if your panel lists widgets explicitly.
 
 ## Install
 

@@ -8,6 +8,7 @@ use ForumKit\Core\Support\Tables;
 use ForumKit\Forums\Support\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Carbon;
 
 /**
  * @property int $id
@@ -16,6 +17,8 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property string|null $description
  * @property int $sort_order
  * @property bool $is_active
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
  */
 class ForumGroup extends Model
 {

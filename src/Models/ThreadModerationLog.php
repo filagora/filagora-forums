@@ -9,6 +9,7 @@ use ForumKit\Core\Support\UserModel;
 use ForumKit\Forums\Support\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Carbon;
 
 /**
  * @property int $id
@@ -16,6 +17,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property int|null $moderator_id
  * @property string $action Free-form: add-ons (polls, for one) write their own actions.
  * @property string|null $reason
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
  */
 class ThreadModerationLog extends Model
 {

@@ -36,9 +36,15 @@ moderation, reports and a staff queue, as a Laravel 13 / Filament 5 plugin. Requ
   no entitlement (the default grants nobody), and `StaffPreview` if your frontend can switch staff
   privileges off to see the forum as a member does (the default is always on).
 
+- **Counters kept right.** A forum holds `thread_count`, `post_count` and last-post fields, and a
+  thread holds `reply_count` and last-post fields, so listings never count rows. They are updated
+  incrementally as threads and posts change (a post counts when it and its thread are approved),
+  and `forumkit:forums:sync-stats` and `forumkit:forums:sync-thread-stats` rebuild them from the
+  data if they ever drift. A `ForumStatsChanged` event tells a frontend when to drop its caches.
+
 ## Still to come
 
-Thread and reply creation with the forum and thread counters kept correct; moderation actions
+Thread and reply creation (the approval rule, unique slugs, double-submit protection); moderation actions
 and report resolution, with events other packages can hook into; the Filament resources and the
 moderation queue.
 

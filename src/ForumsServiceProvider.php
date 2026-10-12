@@ -11,11 +11,17 @@ use ForumKit\Core\Schema\SchemaRegistry;
 use ForumKit\Entitlements\Registry\Definition;
 use ForumKit\Entitlements\Registry\EntitlementRegistry;
 use ForumKit\Entitlements\Services\AuthorizationService;
+use ForumKit\Forums\Commands\SyncForumStatsCommand;
+use ForumKit\Forums\Commands\SyncThreadStatsCommand;
 use ForumKit\Forums\Contracts\PaidAccessCheck;
 use ForumKit\Forums\Contracts\StaffPreview;
+use ForumKit\Forums\Observers\ForumStatsObserver;
 use ForumKit\Forums\Services\ForumAccess;
+use ForumKit\Forums\Services\ForumStats;
+use ForumKit\Forums\Services\ThreadStats;
 use ForumKit\Forums\Support\AlwaysStaffPreview;
 use ForumKit\Forums\Support\ForumEntitlementKeys;
+use ForumKit\Forums\Support\Models;
 use ForumKit\Forums\Support\NoPaidAccess;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Support\Facades\Gate;
@@ -30,6 +36,8 @@ class ForumsServiceProvider extends ServiceProvider
         $this->app->bindIf(PaidAccessCheck::class, NoPaidAccess::class);
         $this->app->bindIf(StaffPreview::class, AlwaysStaffPreview::class);
         $this->app->scoped(ForumAccess::class);
+        $this->app->singleton(ForumStats::class);
+        $this->app->singleton(ThreadStats::class);
     }
 
     public function boot(): void
@@ -44,15 +52,28 @@ class ForumsServiceProvider extends ServiceProvider
 
         $this->declareEntitlements();
         $this->defineGates();
+        $this->observeModels();
 
         $this->loadTranslationsFrom(__DIR__.'/../resources/lang', 'forumkit-forums');
         $this->loadViewsFrom(__DIR__.'/../resources/views', 'forumkit-forums');
         $this->loadMigrationsFrom(__DIR__.'/../database/migrations');
 
         if ($this->app->runningInConsole()) {
+            $this->commands([SyncForumStatsCommand::class, SyncThreadStatsCommand::class]);
+
             $this->publishes([
                 __DIR__.'/../config/forumkit-forums.php' => config_path('forumkit-forums.php'),
             ], 'forumkit-forums-config');
+        }
+    }
+
+    /**
+     * Keep forum counters right as threads and posts change.
+     */
+    private function observeModels(): void
+    {
+        foreach (['thread', 'post'] as $key) {
+            Models::class($key)::observe(ForumStatsObserver::class);
         }
     }
 

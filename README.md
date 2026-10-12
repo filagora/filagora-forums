@@ -42,9 +42,22 @@ moderation, reports and a staff queue, as a Laravel 13 / Filament 5 plugin. Requ
   and `forumkit:forums:sync-stats` and `forumkit:forums:sync-thread-stats` rebuild them from the
   data if they ever drift. A `ForumStatsChanged` event tells a frontend when to drop its caches.
 
+- **Posting.** `Posting` starts threads, replies and edits posts, checking `ForumAccess` first
+  and refusing with `PostingNotPermitted` and a reason (`PostingDenial`). A new thread creates its
+  first post with it. Whether content waits for a moderator follows the forum's approval flags,
+  the author's `forumkit.forums.bypass_approval` entitlement and your `ContentModerationPolicy`;
+  slugs are made unique; an identical post within 15 seconds is returned rather than duplicated;
+  counters are kept right. Authors may edit their own posts within a window set by the
+  `forum_post_edit_window_minutes` setting (default 30), and an edit shows as "edited" after
+  `forum_post_edit_grace_period_minutes` (default 5). Events `ThreadCreated`, `PostCreated` and
+  `PostEdited` let add-ons (subscriptions, mentions, notifications, attachments) hook in.
+- **Two more extension points:** `ContentModerationPolicy` (users whose content is always
+  moderated, and a first post awaiting review) and `PostSignatureResolver` (the signature copied
+  onto new posts). Both do nothing by default.
+
 ## Still to come
 
-Thread and reply creation (the approval rule, unique slugs, double-submit protection); moderation actions
+Moderation actions
 and report resolution, with events other packages can hook into; the Filament resources and the
 moderation queue.
 

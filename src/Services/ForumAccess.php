@@ -11,6 +11,7 @@ use ForumKit\Forums\Enums\ContentModerationStatus;
 use ForumKit\Forums\Enums\ForumPostingPolicy;
 use ForumKit\Forums\Enums\ForumVisibility;
 use ForumKit\Forums\Models\Forum;
+use ForumKit\Forums\Models\Post;
 use ForumKit\Forums\Models\Thread;
 use ForumKit\Forums\Support\Abilities;
 use ForumKit\Forums\Support\ForumViewerScope;
@@ -53,6 +54,35 @@ class ForumAccess
     public function actsAsStaff(?Authenticatable $user): bool
     {
         return $this->isStaff($user) && $this->preview->enabledFor($user);
+    }
+
+    /**
+     * Holds the moderate entitlement itself (the other staff entitlements are not enough).
+     */
+    public function canModerate(?Authenticatable $user): bool
+    {
+        return $user !== null && Gate::forUser($user)->allows(Abilities::MODERATE);
+    }
+
+    /**
+     * May this user change the post's body? Moderators may at any time; the author only within the
+     * edit window; and in either case the user must be able to see the thread.
+     */
+    public function canEditPost(Post $post, ?Authenticatable $user): bool
+    {
+        if ($user === null) {
+            return false;
+        }
+
+        $thread = $post->thread;
+        assert($thread instanceof Thread);
+        $forum = $this->forumOf($thread);
+
+        if (! $this->canViewForum($forum, $user) || ! $this->canAccessThread($thread, $user)) {
+            return false;
+        }
+
+        return $this->canModerate($user) || $post->canBeEditedByAuthor($user);
     }
 
     /**

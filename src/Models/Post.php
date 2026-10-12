@@ -4,10 +4,12 @@ declare(strict_types=1);
 
 namespace ForumKit\Forums\Models;
 
+use ForumKit\Core\Settings\SettingsRegistry;
 use ForumKit\Core\Support\Tables;
 use ForumKit\Core\Support\UserModel;
 use ForumKit\Forums\Enums\ContentModerationStatus;
 use ForumKit\Forums\Support\Models;
+use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -163,5 +165,56 @@ class Post extends Model
     public function isRejected(): bool
     {
         return in_array($this->moderation_status, [ContentModerationStatus::REJECTED, ContentModerationStatus::REJECTED_FINAL], true);
+    }
+
+    /**
+     * Minutes after posting during which an author may edit their own post (setting
+     * `forum_post_edit_window_minutes`, default 30; zero or less turns author editing off).
+     */
+    public static function authorEditWindowInMinutes(): int
+    {
+        return max(0, app(SettingsRegistry::class)->integer('forum_post_edit_window_minutes', 30));
+    }
+
+    /**
+     * Minutes after posting within which an edit is not worth marking "edited" (setting
+     * `forum_post_edit_grace_period_minutes`, default 5).
+     */
+    public static function editedMarkerGracePeriodInMinutes(): int
+    {
+        return max(0, app(SettingsRegistry::class)->integer('forum_post_edit_grace_period_minutes', 5));
+    }
+
+    public function canBeEditedByAuthor(Authenticatable $user): bool
+    {
+        if ((string) $this->author_id !== (string) $user->getAuthIdentifier() || $this->is_deleted) {
+            return false;
+        }
+
+        $createdAt = Carbon::make($this->created_at);
+        $window = self::authorEditWindowInMinutes();
+
+        if (! $createdAt instanceof Carbon || $window <= 0) {
+            return false;
+        }
+
+        return now()->lt($createdAt->copy()->addMinutes($window));
+    }
+
+    public function shouldShowEditedMarker(): bool
+    {
+        $editedAt = Carbon::make($this->edited_at);
+
+        if (! $editedAt instanceof Carbon) {
+            return false;
+        }
+
+        $createdAt = Carbon::make($this->created_at);
+
+        if (! $createdAt instanceof Carbon) {
+            return true;
+        }
+
+        return $editedAt->gt($createdAt->copy()->addMinutes(self::editedMarkerGracePeriodInMinutes()));
     }
 }

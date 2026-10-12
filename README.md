@@ -55,10 +55,22 @@ moderation, reports and a staff queue, as a Laravel 13 / Filament 5 plugin. Requ
   moderated, and a first post awaiting review) and `PostSignatureResolver` (the signature copied
   onto new posts). Both do nothing by default.
 
+- **Moderation.** For moderators (`forumkit.forums.moderate`; anyone else gets
+  `ModerationNotPermitted`): `ThreadModeration` locks, unlocks, pins, unpins, moves, renames,
+  approves and permanently deletes threads; `PostModeration` soft-deletes (singly or up to 200
+  at once), restores, approves, unapproves and rejects posts; `PostRelocation` moves posts to
+  another thread and promotes posts into a new one, singly or in batches, and removes a thread
+  the move emptied. Each action writes a row to the thread or post moderation log, re-derives
+  the counters, and dispatches `ThreadModerated`, `PostModerated` or `ThreadDeleted`, which is
+  where you notify authors or ban them. Undo is left to the frontend.
+- **Reports.** `PostReports::report()` lets a member who can see an approved post report it
+  once; `resolve()` closes every open report on the post at once as `dismiss`, `keep`, `remove`
+  or `remove_thread` (the whole thread, if the post is all it holds) and dispatches
+  `PostReportsResolved` with the reporters' ids.
+
 ## Still to come
 
-Moderation actions and report resolution, with events other packages can hook into, and the
-Filament resources and the moderation queue.
+The Filament resources and the moderation queue.
 
 ## Install
 

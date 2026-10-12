@@ -25,8 +25,12 @@ use ForumKit\Forums\Services\ApprovalRules;
 use ForumKit\Forums\Services\ForumAccess;
 use ForumKit\Forums\Services\ForumStats;
 use ForumKit\Forums\Services\Posting;
+use ForumKit\Forums\Services\PostModeration;
+use ForumKit\Forums\Services\PostRelocation;
+use ForumKit\Forums\Services\PostReports;
 use ForumKit\Forums\Services\ReplyCreation;
 use ForumKit\Forums\Services\ThreadCreation;
+use ForumKit\Forums\Services\ThreadModeration;
 use ForumKit\Forums\Services\ThreadStats;
 use ForumKit\Forums\Support\AlwaysStaffPreview;
 use ForumKit\Forums\Support\ForumEntitlementKeys;
@@ -55,6 +59,10 @@ class ForumsServiceProvider extends ServiceProvider
         $this->app->singleton(ThreadCreation::class);
         $this->app->singleton(ReplyCreation::class);
         $this->app->singleton(Posting::class);
+        $this->app->singleton(ThreadModeration::class);
+        $this->app->singleton(PostModeration::class);
+        $this->app->singleton(PostRelocation::class);
+        $this->app->singleton(PostReports::class);
     }
 
     public function boot(): void

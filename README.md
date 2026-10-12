@@ -24,12 +24,23 @@ moderation, reports and a staff queue, as a Laravel 13 / Filament 5 plugin. Requ
   that already holds these tables. A site's own extra columns are declared with a core
   `SchemaExtension`.
 
+- **The access rules** (`ForumAccess`): who can view a forum, open a thread, post and reply,
+  from the forum's visibility (public, registered, staff only, entitlement only, paid only, paid
+  or author, staff or author) and posting policy, the viewer's entitlements, and whether they
+  have authored in the forum. It also says which forums a viewer sees in full, which only their
+  own threads in, and gives query scopes for visible threads and posts.
+- **Three staff abilities** (`forumkit.forums.moderate`, `.view_unapproved`, `.bypass_approval`),
+  each mapped to an entitlement key in `forumkit-forums.gates`; holding any one makes a user
+  staff. Remap them to your own keys in config.
+- **Two extension points:** bind `PaidAccessCheck` to say what "paid" means for forums that name
+  no entitlement (the default grants nobody), and `StaffPreview` if your frontend can switch staff
+  privileges off to see the forum as a member does (the default is always on).
+
 ## Still to come
 
-The rules and screens, built in this order: who can view, open, post and reply (visibility and
-posting policy, including entitlement-gated and author-only forums); thread and reply creation
-with the forum and thread counters kept correct; moderation actions and report resolution, with
-events other packages can hook into; the Filament resources and moderation queue.
+Thread and reply creation with the forum and thread counters kept correct; moderation actions
+and report resolution, with events other packages can hook into; the Filament resources and the
+moderation queue.
 
 ## Install
 

@@ -5,11 +5,10 @@ moderation, reports and a staff queue, as a Laravel 13 / Filament 5 plugin. Requ
 [`zcwilt/forumkit-core`](https://github.com/zcwilt/forumkit-core) and
 [`zcwilt/forumkit-entitlements`](https://github.com/zcwilt/forumkit-entitlements).
 
-> **In development: not released and not on Packagist yet**, so it cannot be installed with
-> Composer. There is no frontend: the finished package will be models, services, events and
-> staff screens.
+> The package is at `0.1`: the API may change between `0.x` minor versions. There is no
+> frontend: it is models, services, events and staff screens, and you build the public pages.
 
-## What exists so far
+## What it does
 
 - **The seven tables** (`forum_groups`, `forums`, `threads`, `posts`, `post_reports`,
   `post_moderation_logs`, `thread_moderation_logs`), matching the shape of the forum they were
@@ -88,16 +87,20 @@ moderation, reports and a staff queue, as a Laravel 13 / Filament 5 plugin. Requ
 
 ## Install
 
-Once released:
-
 ```bash
 composer require zcwilt/forumkit-forums
 php artisan migrate
+php artisan forumkit:entitlements:sync   # creates the forum entitlement definitions
 ```
+
+Register the plugin on your Filament panel, after the core and entitlements plugins:
 
 ```php
 ->plugin(\ForumKit\Forums\ForumKitForumsPlugin::make())
 ```
+
+To start from a database that already holds these tables, run `php artisan forumkit:adopt`
+instead of `migrate` (see `zcwilt/forumkit-core`).
 
 ## Testing
 

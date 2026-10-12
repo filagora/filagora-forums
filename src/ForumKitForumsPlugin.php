@@ -6,6 +6,13 @@ namespace ForumKit\Forums;
 
 use Filament\Contracts\Plugin;
 use Filament\Panel;
+use ForumKit\Forums\Filament\Pages\ModerationQueue;
+use ForumKit\Forums\Filament\Resources\ForumGroups\ForumGroupResource;
+use ForumKit\Forums\Filament\Resources\Forums\ForumResource;
+use ForumKit\Forums\Filament\Resources\PostReports\PostReportResource;
+use ForumKit\Forums\Filament\Resources\Posts\PostResource;
+use ForumKit\Forums\Filament\Resources\Threads\ThreadResource;
+use ForumKit\Forums\Filament\Widgets\ModerationQueueStats;
 
 class ForumKitForumsPlugin implements Plugin
 {
@@ -21,7 +28,16 @@ class ForumKitForumsPlugin implements Plugin
 
     public function register(Panel $panel): void
     {
-        // Register resources, pages and widgets here.
+        $panel
+            ->resources([
+                ForumGroupResource::class,
+                ForumResource::class,
+                ThreadResource::class,
+                PostResource::class,
+                PostReportResource::class,
+            ])
+            ->pages([ModerationQueue::class])
+            ->widgets([ModerationQueueStats::class]);
     }
 
     public function boot(Panel $panel): void

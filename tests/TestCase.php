@@ -18,6 +18,7 @@ use Filament\Widgets\WidgetsServiceProvider;
 use ForumKit\Core\CoreServiceProvider;
 use ForumKit\Entitlements\EntitlementsServiceProvider;
 use ForumKit\Forums\ForumsServiceProvider;
+use ForumKit\Forums\Tests\Support\TestPanelProvider;
 use ForumKit\Forums\Tests\Support\TestSupportServiceProvider;
 use ForumKit\Forums\Tests\Support\TestUser;
 use Livewire\LivewireServiceProvider;
@@ -44,6 +45,7 @@ abstract class TestCase extends Orchestra
             EntitlementsServiceProvider::class,
             ForumsServiceProvider::class,
             TestSupportServiceProvider::class,
+            TestPanelProvider::class,
         ];
     }
 

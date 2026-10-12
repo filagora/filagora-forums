@@ -18,4 +18,18 @@ enum PostReportStatus: string
             self::DISMISSED => 'Dismissed',
         };
     }
+
+    /**
+     * @return array<string, string> value => label, for selects and filters.
+     */
+    public static function options(): array
+    {
+        $options = [];
+
+        foreach (self::cases() as $case) {
+            $options[$case->value] = $case->label();
+        }
+
+        return $options;
+    }
 }

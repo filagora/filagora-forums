@@ -34,6 +34,8 @@ use Illuminate\Support\Carbon;
  * @property string|null $moderation_reason
  * @property Carbon|null $edited_at
  * @property int|null $edited_by_id
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
  */
 class Post extends Model
 {

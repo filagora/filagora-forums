@@ -35,6 +35,8 @@ use Illuminate\Support\Carbon;
  * @property int|null $last_post_thread_id
  * @property int|null $last_post_author_id
  * @property Carbon|null $last_post_at
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
  */
 class Forum extends Model
 {

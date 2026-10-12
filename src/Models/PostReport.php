@@ -22,6 +22,8 @@ use Illuminate\Support\Carbon;
  * @property int|null $reviewed_by_id
  * @property Carbon|null $reviewed_at
  * @property string|null $resolution_note
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
  */
 class PostReport extends Model
 {

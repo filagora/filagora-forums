@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace ForumKit\Forums\Exceptions;
+namespace Filagora\Forums\Exceptions;
 
-use ForumKit\Forums\Enums\PostingDenial;
+use Filagora\Forums\Enums\PostingDenial;
 use RuntimeException;
 
 class PostingNotPermitted extends RuntimeException

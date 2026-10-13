@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace ForumKit\Forums\Services;
+namespace Filagora\Forums\Services;
 
-use ForumKit\Forums\Enums\ContentModerationStatus;
-use ForumKit\Forums\Support\Models;
+use Filagora\Forums\Enums\ContentModerationStatus;
+use Filagora\Forums\Support\Models;
 use Illuminate\Support\Facades\DB;
 
 /**

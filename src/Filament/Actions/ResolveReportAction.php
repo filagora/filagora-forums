@@ -2,16 +2,16 @@
 
 declare(strict_types=1);
 
-namespace ForumKit\Forums\Filament\Actions;
+namespace Filagora\Forums\Filament\Actions;
 
+use Filagora\Forums\Enums\PostReportStatus;
+use Filagora\Forums\Models\Post;
+use Filagora\Forums\Models\PostReport;
+use Filagora\Forums\Services\PostReports;
 use Filament\Actions\Action;
 use Filament\Forms\Components\Radio;
 use Filament\Forms\Components\Textarea;
 use Filament\Notifications\Notification;
-use ForumKit\Forums\Enums\PostReportStatus;
-use ForumKit\Forums\Models\Post;
-use ForumKit\Forums\Models\PostReport;
-use ForumKit\Forums\Services\PostReports;
 use Illuminate\Database\Eloquent\Model;
 
 /**

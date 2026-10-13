@@ -2,8 +2,11 @@
 
 declare(strict_types=1);
 
-namespace ForumKit\Forums\Filament\Resources\Forums\Schemas;
+namespace Filagora\Forums\Filament\Resources\Forums\Schemas;
 
+use Filagora\Entitlements\Models\EntitlementDefinition;
+use Filagora\Forums\Enums\ForumPostingPolicy;
+use Filagora\Forums\Enums\ForumVisibility;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
@@ -11,16 +14,13 @@ use Filament\Forms\Components\Toggle;
 use Filament\Schemas\Components\Utilities\Get;
 use Filament\Schemas\Components\Utilities\Set;
 use Filament\Schemas\Schema;
-use ForumKit\Entitlements\Models\EntitlementDefinition;
-use ForumKit\Forums\Enums\ForumPostingPolicy;
-use ForumKit\Forums\Enums\ForumVisibility;
 use Illuminate\Support\Str;
 
 class ForumForm
 {
     public static function configure(Schema $schema): Schema
     {
-        $t = static fn (string $key): string => __("forumkit-forums::messages.forums.form.{$key}");
+        $t = static fn (string $key): string => __("filagora-forums::messages.forums.form.{$key}");
 
         return $schema->components([
             Select::make('forum_group_id')->relationship('group', 'name')->required()->searchable()->preload(),

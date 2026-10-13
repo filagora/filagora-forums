@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace ForumKit\Forums\Events;
+namespace Filagora\Forums\Events;
 
-use ForumKit\Forums\Models\Post;
+use Filagora\Forums\Models\Post;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Foundation\Events\Dispatchable;
 

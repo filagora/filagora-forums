@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace ForumKit\Forums\Exceptions;
+namespace Filagora\Forums\Exceptions;
 
 use RuntimeException;
 

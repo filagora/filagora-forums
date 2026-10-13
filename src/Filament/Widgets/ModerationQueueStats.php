@@ -2,17 +2,17 @@
 
 declare(strict_types=1);
 
-namespace ForumKit\Forums\Filament\Widgets;
+namespace Filagora\Forums\Filament\Widgets;
 
+use Filagora\Forums\Enums\ContentModerationStatus;
+use Filagora\Forums\Enums\PostReportStatus;
+use Filagora\Forums\Filament\Pages\ModerationQueue;
+use Filagora\Forums\Models\Post;
+use Filagora\Forums\Models\PostReport;
+use Filagora\Forums\Models\Thread;
+use Filagora\Forums\Support\Abilities;
 use Filament\Widgets\StatsOverviewWidget;
 use Filament\Widgets\StatsOverviewWidget\Stat;
-use ForumKit\Forums\Enums\ContentModerationStatus;
-use ForumKit\Forums\Enums\PostReportStatus;
-use ForumKit\Forums\Filament\Pages\ModerationQueue;
-use ForumKit\Forums\Models\Post;
-use ForumKit\Forums\Models\PostReport;
-use ForumKit\Forums\Models\Thread;
-use ForumKit\Forums\Support\Abilities;
 use Illuminate\Support\Facades\Gate;
 
 /**
@@ -39,12 +39,12 @@ class ModerationQueueStats extends StatsOverviewWidget
         $waiting = $threads + $posts;
 
         return [
-            Stat::make(__('forumkit-forums::messages.widget.waiting'), (string) $waiting)
-                ->description(__('forumkit-forums::messages.widget.waiting_description', ['threads' => $threads, 'posts' => $posts]))
+            Stat::make(__('filagora-forums::messages.widget.waiting'), (string) $waiting)
+                ->description(__('filagora-forums::messages.widget.waiting_description', ['threads' => $threads, 'posts' => $posts]))
                 ->url(ModerationQueue::getUrl())
                 ->color($waiting > 0 ? 'danger' : 'success'),
-            Stat::make(__('forumkit-forums::messages.widget.reported'), (string) $reports)
-                ->description(trans_choice('forumkit-forums::messages.widget.reported_description', $reports, ['count' => $reports]))
+            Stat::make(__('filagora-forums::messages.widget.reported'), (string) $reports)
+                ->description(trans_choice('filagora-forums::messages.widget.reported_description', $reports, ['count' => $reports]))
                 ->url(ModerationQueue::getUrl())
                 ->color($reports > 0 ? 'danger' : 'success'),
         ];

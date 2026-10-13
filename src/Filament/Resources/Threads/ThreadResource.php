@@ -2,18 +2,18 @@
 
 declare(strict_types=1);
 
-namespace ForumKit\Forums\Filament\Resources\Threads;
+namespace Filagora\Forums\Filament\Resources\Threads;
 
 use BackedEnum;
+use Filagora\Core\Navigation\NavigationGroupRegistry;
+use Filagora\Forums\Filament\Concerns\GatedByModerate;
+use Filagora\Forums\Filament\Resources\Threads\Pages\ListThreads;
+use Filagora\Forums\Filament\Resources\Threads\Tables\ThreadsTable;
+use Filagora\Forums\Support\Models;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
-use ForumKit\Core\Navigation\NavigationGroupRegistry;
-use ForumKit\Forums\Filament\Concerns\GatedByModerate;
-use ForumKit\Forums\Filament\Resources\Threads\Pages\ListThreads;
-use ForumKit\Forums\Filament\Resources\Threads\Tables\ThreadsTable;
-use ForumKit\Forums\Support\Models;
 use Illuminate\Database\Eloquent\Builder;
 use UnitEnum;
 
@@ -37,17 +37,17 @@ class ThreadResource extends Resource
 
     public static function getNavigationLabel(): string
     {
-        return __('forumkit-forums::messages.threads.navigation_label');
+        return __('filagora-forums::messages.threads.navigation_label');
     }
 
     public static function getModelLabel(): string
     {
-        return __('forumkit-forums::messages.threads.model_label');
+        return __('filagora-forums::messages.threads.model_label');
     }
 
     public static function getPluralModelLabel(): string
     {
-        return __('forumkit-forums::messages.threads.plural_model_label');
+        return __('filagora-forums::messages.threads.plural_model_label');
     }
 
     public static function form(Schema $schema): Schema

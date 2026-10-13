@@ -1,9 +1,9 @@
-# ForumKit Forums
+# Filagora Forums
 
-Forum groups, forums, threads and posts for ForumKit, with visibility and posting rules,
+Forum groups, forums, threads and posts for Filagora, with visibility and posting rules,
 moderation, reports and a staff queue, as a Laravel 13 / Filament 5 plugin. Requires
-[`zcwilt/forumkit-core`](https://github.com/zcwilt/forumkit-core) and
-[`zcwilt/forumkit-entitlements`](https://github.com/zcwilt/forumkit-entitlements).
+[`filagora/filagora-core`](https://github.com/filagora/filagora-core) and
+[`filagora/filagora-entitlements`](https://github.com/filagora/filagora-entitlements).
 
 > The package is at `0.1`: the API may change between `0.x` minor versions. There is no
 > frontend: it is models, services, events and staff screens, and you build the public pages.
@@ -18,8 +18,8 @@ moderation, reports and a staff queue, as a Laravel 13 / Filament 5 plugin. Requ
 - **Models and enums** (`Forum`, `ForumGroup`, `Thread`, `Post`, `PostReport`,
   `PostModerationLog`, `ThreadModerationLog`; forum visibility, posting policy, moderation
   status, report status). Every stored value is kept, so existing data loads. Model classes
-  can be swapped under `forumkit.models.<key>`.
-- **A schema snapshot** so `forumkit:adopt` (from core) can start the package on a database
+  can be swapped under `filagora.models.<key>`.
+- **A schema snapshot** so `filagora:adopt` (from core) can start the package on a database
   that already holds these tables. A site's own extra columns are declared with a core
   `SchemaExtension`.
 
@@ -28,8 +28,8 @@ moderation, reports and a staff queue, as a Laravel 13 / Filament 5 plugin. Requ
   or author, staff or author) and posting policy, the viewer's entitlements, and whether they
   have authored in the forum. It also says which forums a viewer sees in full, which only their
   own threads in, and gives query scopes for visible threads and posts.
-- **Three staff abilities** (`forumkit.forums.moderate`, `.view_unapproved`, `.bypass_approval`),
-  each mapped to an entitlement key in `forumkit-forums.gates`; holding any one makes a user
+- **Three staff abilities** (`filagora.forums.moderate`, `.view_unapproved`, `.bypass_approval`),
+  each mapped to an entitlement key in `filagora-forums.gates`; holding any one makes a user
   staff. Remap them to your own keys in config.
 - **Two extension points:** bind `PaidAccessCheck` to say what "paid" means for forums that name
   no entitlement (the default grants nobody), and `StaffPreview` if your frontend can switch staff
@@ -38,13 +38,13 @@ moderation, reports and a staff queue, as a Laravel 13 / Filament 5 plugin. Requ
 - **Counters kept right.** A forum holds `thread_count`, `post_count` and last-post fields, and a
   thread holds `reply_count` and last-post fields, so listings never count rows. They are updated
   incrementally as threads and posts change (a post counts when it and its thread are approved),
-  and `forumkit:forums:sync-stats` and `forumkit:forums:sync-thread-stats` rebuild them from the
+  and `filagora:forums:sync-stats` and `filagora:forums:sync-thread-stats` rebuild them from the
   data if they ever drift. A `ForumStatsChanged` event tells a frontend when to drop its caches.
 
 - **Posting.** `Posting` starts threads, replies and edits posts, checking `ForumAccess` first
   and refusing with `PostingNotPermitted` and a reason (`PostingDenial`). A new thread creates its
   first post with it. Whether content waits for a moderator follows the forum's approval flags,
-  the author's `forumkit.forums.bypass_approval` entitlement and your `ContentModerationPolicy`;
+  the author's `filagora.forums.bypass_approval` entitlement and your `ContentModerationPolicy`;
   slugs are made unique; an identical post within 15 seconds is returned rather than duplicated;
   counters are kept right. Authors may edit their own posts within a window set by the
   `forum_post_edit_window_minutes` setting (default 30), and an edit shows as "edited" after
@@ -54,7 +54,7 @@ moderation, reports and a staff queue, as a Laravel 13 / Filament 5 plugin. Requ
   moderated, and a first post awaiting review) and `PostSignatureResolver` (the signature copied
   onto new posts). Both do nothing by default.
 
-- **Moderation.** For moderators (`forumkit.forums.moderate`; anyone else gets
+- **Moderation.** For moderators (`filagora.forums.moderate`; anyone else gets
   `ModerationNotPermitted`): `ThreadModeration` locks, unlocks, pins, unpins, moves, renames,
   approves and permanently deletes threads; `PostModeration` soft-deletes (singly or up to 200
   at once), restores, approves, unapproves and rejects posts; `PostRelocation` moves posts to
@@ -67,18 +67,18 @@ moderation, reports and a staff queue, as a Laravel 13 / Filament 5 plugin. Requ
   or `remove_thread` (the whole thread, if the post is all it holds) and dispatches
   `PostReportsResolved` with the reporters' ids.
 
-- **Filament screens.** `ForumKitForumsPlugin` adds forum groups and forums (create and edit),
+- **Filament screens.** `FilagoraForumsPlugin` adds forum groups and forums (create and edit),
   threads, posts and post reports (browse, filter, and act through the moderation services, so
   every action is logged and counted), a **Moderation queue** page (threads and replies waiting
   for approval, reported replies one row each) and a `ModerationQueueStats` dashboard widget.
-  Every screen needs the `forumkit.forums.moderate` ability. Register it on the panel next to the
+  Every screen needs the `filagora.forums.moderate` ability. Register it on the panel next to the
   core and entitlements plugins:
 
   ```php
   ->plugins([
-      ForumKitCorePlugin::make(),
-      ForumKitEntitlementsPlugin::make(),
-      ForumKitForumsPlugin::make(),
+      FilagoraCorePlugin::make(),
+      FilagoraEntitlementsPlugin::make(),
+      FilagoraForumsPlugin::make(),
   ])
   ```
 
@@ -88,19 +88,19 @@ moderation, reports and a staff queue, as a Laravel 13 / Filament 5 plugin. Requ
 ## Install
 
 ```bash
-composer require zcwilt/forumkit-forums
+composer require filagora/filagora-forums
 php artisan migrate
-php artisan forumkit:entitlements:sync   # creates the forum entitlement definitions
+php artisan filagora:entitlements:sync   # creates the forum entitlement definitions
 ```
 
 Register the plugin on your Filament panel, after the core and entitlements plugins:
 
 ```php
-->plugin(\ForumKit\Forums\ForumKitForumsPlugin::make())
+->plugin(\Filagora\Forums\FilagoraForumsPlugin::make())
 ```
 
-To start from a database that already holds these tables, run `php artisan forumkit:adopt`
-instead of `migrate` (see `zcwilt/forumkit-core`).
+To start from a database that already holds these tables, run `php artisan filagora:adopt`
+instead of `migrate` (see `filagora/filagora-core`).
 
 ## Testing
 

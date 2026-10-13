@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace ForumKit\Forums\Support;
+namespace Filagora\Forums\Support;
 
-use ForumKit\Forums\Contracts\PostSignatureResolver;
+use Filagora\Forums\Contracts\PostSignatureResolver;
 use Illuminate\Contracts\Auth\Authenticatable;
 
 final class NoPostSignature implements PostSignatureResolver

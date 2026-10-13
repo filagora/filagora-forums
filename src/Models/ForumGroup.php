@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace ForumKit\Forums\Models;
+namespace Filagora\Forums\Models;
 
-use ForumKit\Core\Support\Tables;
-use ForumKit\Forums\Support\Models;
+use Filagora\Core\Support\Tables;
+use Filagora\Forums\Support\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Carbon;

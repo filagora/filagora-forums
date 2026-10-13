@@ -2,18 +2,18 @@
 
 declare(strict_types=1);
 
-namespace ForumKit\Forums\Services;
+namespace Filagora\Forums\Services;
 
-use ForumKit\Forums\Events\PostModerated;
-use ForumKit\Forums\Events\ThreadDeleted;
-use ForumKit\Forums\Exceptions\InvalidModeration;
-use ForumKit\Forums\Models\Forum;
-use ForumKit\Forums\Models\Post;
-use ForumKit\Forums\Models\PostModerationLog;
-use ForumKit\Forums\Models\PostReport;
-use ForumKit\Forums\Models\Thread;
-use ForumKit\Forums\Services\Concerns\ChecksModerator;
-use ForumKit\Forums\Support\Models;
+use Filagora\Forums\Events\PostModerated;
+use Filagora\Forums\Events\ThreadDeleted;
+use Filagora\Forums\Exceptions\InvalidModeration;
+use Filagora\Forums\Models\Forum;
+use Filagora\Forums\Models\Post;
+use Filagora\Forums\Models\PostModerationLog;
+use Filagora\Forums\Models\PostReport;
+use Filagora\Forums\Models\Thread;
+use Filagora\Forums\Services\Concerns\ChecksModerator;
+use Filagora\Forums\Support\Models;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Support\Facades\DB;
 

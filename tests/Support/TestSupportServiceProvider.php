@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace ForumKit\Forums\Tests\Support;
+namespace Filagora\Forums\Tests\Support;
 
 use Illuminate\Support\ServiceProvider;
 

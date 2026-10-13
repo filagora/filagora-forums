@@ -2,16 +2,16 @@
 
 declare(strict_types=1);
 
-namespace ForumKit\Forums\Filament\Concerns;
+namespace Filagora\Forums\Filament\Concerns;
 
-use ForumKit\Entitlements\Filament\Concerns\GatedByAbility;
-use ForumKit\Forums\Support\Abilities;
+use Filagora\Entitlements\Filament\Concerns\GatedByAbility;
+use Filagora\Forums\Support\Abilities;
 use Illuminate\Database\Eloquent\Model;
 use UnitEnum;
 
 /**
  * Every forum screen is for moderators: nothing is allowed unless the user passes the
- * `forumkit.forums.moderate` ability (mapped to an entitlement key in `forumkit-forums.gates`).
+ * `filagora.forums.moderate` ability (mapped to an entitlement key in `filagora-forums.gates`).
  */
 trait GatedByModerate
 {

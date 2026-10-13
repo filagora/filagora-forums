@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace ForumKit\Forums\Filament\Resources\ForumGroups\Schemas;
+namespace Filagora\Forums\Filament\Resources\ForumGroups\Schemas;
 
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;

@@ -2,18 +2,18 @@
 
 declare(strict_types=1);
 
-namespace ForumKit\Forums\Services;
+namespace Filagora\Forums\Services;
 
-use ForumKit\Forums\Contracts\PostSignatureResolver;
-use ForumKit\Forums\Enums\ContentModerationStatus;
-use ForumKit\Forums\Events\PostCreated;
-use ForumKit\Forums\Events\ThreadCreated;
-use ForumKit\Forums\Models\Forum;
-use ForumKit\Forums\Models\Post;
-use ForumKit\Forums\Models\Thread;
-use ForumKit\Forums\Support\Models;
-use ForumKit\Forums\Support\StatsSyncScope;
-use ForumKit\Forums\ValueObjects\CreatedThread;
+use Filagora\Forums\Contracts\PostSignatureResolver;
+use Filagora\Forums\Enums\ContentModerationStatus;
+use Filagora\Forums\Events\PostCreated;
+use Filagora\Forums\Events\ThreadCreated;
+use Filagora\Forums\Models\Forum;
+use Filagora\Forums\Models\Post;
+use Filagora\Forums\Models\Thread;
+use Filagora\Forums\Support\Models;
+use Filagora\Forums\Support\StatsSyncScope;
+use Filagora\Forums\ValueObjects\CreatedThread;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;

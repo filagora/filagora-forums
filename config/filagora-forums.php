@@ -1,13 +1,13 @@
 <?php
 
 declare(strict_types=1);
-use ForumKit\Forums\Models\Forum;
-use ForumKit\Forums\Models\ForumGroup;
-use ForumKit\Forums\Models\Post;
-use ForumKit\Forums\Models\PostModerationLog;
-use ForumKit\Forums\Models\PostReport;
-use ForumKit\Forums\Models\Thread;
-use ForumKit\Forums\Models\ThreadModerationLog;
+use Filagora\Forums\Models\Forum;
+use Filagora\Forums\Models\ForumGroup;
+use Filagora\Forums\Models\Post;
+use Filagora\Forums\Models\PostModerationLog;
+use Filagora\Forums\Models\PostReport;
+use Filagora\Forums\Models\Thread;
+use Filagora\Forums\Models\ThreadModerationLog;
 
 return [
 
@@ -17,7 +17,7 @@ return [
     |--------------------------------------------------------------------------
     |
     | The classes this package uses for its tables. Point a key at your own subclass
-    | to replace one (here, or under `forumkit.models.<key>`, which wins). Subclass
+    | to replace one (here, or under `filagora.models.<key>`, which wins). Subclass
     | the package model; the package always asks for the class through its Models
     | helper, so relations and queries follow your class.
     |
@@ -40,13 +40,13 @@ return [
     | Maps each ability that marks a user as forum staff to the entitlement that grants it.
     | Holding any of them makes a user staff. Point an ability at your own entitlement key to
     | use your own keys; keys listed here are created as definitions by
-    | `forumkit:entitlements:sync`.
+    | `filagora:entitlements:sync`.
     |
     */
     'gates' => [
-        'forumkit.forums.moderate' => 'forumkit.forums.moderate',
-        'forumkit.forums.view_unapproved' => 'forumkit.forums.view_unapproved',
-        'forumkit.forums.bypass_approval' => 'forumkit.forums.bypass_approval',
+        'filagora.forums.moderate' => 'filagora.forums.moderate',
+        'filagora.forums.view_unapproved' => 'filagora.forums.view_unapproved',
+        'filagora.forums.bypass_approval' => 'filagora.forums.bypass_approval',
     ],
 
 ];

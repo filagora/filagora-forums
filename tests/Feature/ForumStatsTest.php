@@ -2,17 +2,17 @@
 
 declare(strict_types=1);
 
-use ForumKit\Core\Support\Tables;
-use ForumKit\Forums\Enums\ContentModerationStatus;
-use ForumKit\Forums\Events\ForumStatsChanged;
-use ForumKit\Forums\Models\Forum;
-use ForumKit\Forums\Models\ForumGroup;
-use ForumKit\Forums\Models\Post;
-use ForumKit\Forums\Models\Thread;
-use ForumKit\Forums\Services\ForumStats;
-use ForumKit\Forums\Services\ThreadStats;
-use ForumKit\Forums\Support\StatsSyncScope;
-use ForumKit\Forums\Tests\Support\TestUser;
+use Filagora\Core\Support\Tables;
+use Filagora\Forums\Enums\ContentModerationStatus;
+use Filagora\Forums\Events\ForumStatsChanged;
+use Filagora\Forums\Models\Forum;
+use Filagora\Forums\Models\ForumGroup;
+use Filagora\Forums\Models\Post;
+use Filagora\Forums\Models\Thread;
+use Filagora\Forums\Services\ForumStats;
+use Filagora\Forums\Services\ThreadStats;
+use Filagora\Forums\Support\StatsSyncScope;
+use Filagora\Forums\Tests\Support\TestUser;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Event;
 
@@ -385,19 +385,19 @@ it('rebuilds every forum, or only the ones asked for', function () {
     corrupt($a);
     corrupt($b);
 
-    $this->artisan('forumkit:forums:sync-stats', ['--forum-id' => [$a->id]])->expectsOutputToContain('Forum counters synced.')->assertExitCode(0);
+    $this->artisan('filagora:forums:sync-stats', ['--forum-id' => [$a->id]])->expectsOutputToContain('Forum counters synced.')->assertExitCode(0);
 
     expect(counters($a)['posts'])->toBe(1)->and(counters($b)['posts'])->toBe(99);
 
-    $this->artisan('forumkit:forums:sync-stats')->assertExitCode(0);
+    $this->artisan('filagora:forums:sync-stats')->assertExitCode(0);
 
     expect(counters($b)['posts'])->toBe(1);
 });
 
 it('says so when there is nothing to sync', function () {
-    $this->artisan('forumkit:forums:sync-stats')->expectsOutputToContain('No forums found to sync.')->assertExitCode(0);
-    $this->artisan('forumkit:forums:sync-stats', ['--forum-id' => [999]])->expectsOutputToContain('No forums found to sync.')->assertExitCode(0);
-    $this->artisan('forumkit:forums:sync-thread-stats')->expectsOutputToContain('No threads found to sync.')->assertExitCode(0);
+    $this->artisan('filagora:forums:sync-stats')->expectsOutputToContain('No forums found to sync.')->assertExitCode(0);
+    $this->artisan('filagora:forums:sync-stats', ['--forum-id' => [999]])->expectsOutputToContain('No forums found to sync.')->assertExitCode(0);
+    $this->artisan('filagora:forums:sync-thread-stats')->expectsOutputToContain('No threads found to sync.')->assertExitCode(0);
 });
 
 it('rebuilds thread stats for every thread, or only the ones asked for', function () {
@@ -411,12 +411,12 @@ it('rebuilds thread stats for every thread, or only the ones asked for', functio
     statsPost($two, $author);
     DB::table(Tables::name('threads'))->update(['reply_count' => 77]);
 
-    $this->artisan('forumkit:forums:sync-thread-stats', ['--thread-id' => [$one->id]])
+    $this->artisan('filagora:forums:sync-thread-stats', ['--thread-id' => [$one->id]])
         ->expectsOutputToContain('1/1 threads updated')->assertExitCode(0);
 
     expect($one->refresh()->reply_count)->toBe(1)->and($two->refresh()->reply_count)->toBe(77);
 
-    $this->artisan('forumkit:forums:sync-thread-stats')->expectsOutputToContain('2/2 threads updated')->assertExitCode(0);
+    $this->artisan('filagora:forums:sync-thread-stats')->expectsOutputToContain('2/2 threads updated')->assertExitCode(0);
 
     expect($two->refresh()->reply_count)->toBe(1);
 });

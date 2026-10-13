@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace ForumKit\Forums\Enums;
+namespace Filagora\Forums\Enums;
 
 enum PostReportStatus: string
 {

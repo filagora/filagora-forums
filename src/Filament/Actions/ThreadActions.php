@@ -2,17 +2,17 @@
 
 declare(strict_types=1);
 
-namespace ForumKit\Forums\Filament\Actions;
+namespace Filagora\Forums\Filament\Actions;
 
+use Filagora\Forums\Models\Forum;
+use Filagora\Forums\Models\Thread;
+use Filagora\Forums\Services\ThreadModeration;
+use Filagora\Forums\Support\Models;
 use Filament\Actions\Action;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Notifications\Notification;
-use ForumKit\Forums\Models\Forum;
-use ForumKit\Forums\Models\Thread;
-use ForumKit\Forums\Services\ThreadModeration;
-use ForumKit\Forums\Support\Models;
 use Illuminate\Database\Eloquent\Model;
 
 /**

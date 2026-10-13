@@ -2,22 +2,22 @@
 
 declare(strict_types=1);
 
-namespace ForumKit\Forums\Filament\Pages;
+namespace Filagora\Forums\Filament\Pages;
 
 use BackedEnum;
+use Filagora\Core\Navigation\NavigationGroupRegistry;
+use Filagora\Forums\Enums\ContentModerationStatus;
+use Filagora\Forums\Enums\PostReportStatus;
+use Filagora\Forums\Filament\Actions\PostActions;
+use Filagora\Forums\Filament\Actions\ResolveReportAction;
+use Filagora\Forums\Filament\Actions\ThreadActions;
+use Filagora\Forums\Models\Post;
+use Filagora\Forums\Models\PostReport;
+use Filagora\Forums\Models\Thread;
+use Filagora\Forums\Support\Abilities;
 use Filament\Actions\Action;
 use Filament\Pages\Page;
 use Filament\Support\Icons\Heroicon;
-use ForumKit\Core\Navigation\NavigationGroupRegistry;
-use ForumKit\Forums\Enums\ContentModerationStatus;
-use ForumKit\Forums\Enums\PostReportStatus;
-use ForumKit\Forums\Filament\Actions\PostActions;
-use ForumKit\Forums\Filament\Actions\ResolveReportAction;
-use ForumKit\Forums\Filament\Actions\ThreadActions;
-use ForumKit\Forums\Models\Post;
-use ForumKit\Forums\Models\PostReport;
-use ForumKit\Forums\Models\Thread;
-use ForumKit\Forums\Support\Abilities;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Gate;
 use UnitEnum;
@@ -36,7 +36,7 @@ class ModerationQueue extends Page
 
     protected static ?string $slug = 'forum-moderation-queue';
 
-    protected string $view = 'forumkit-forums::pages.moderation-queue';
+    protected string $view = 'filagora-forums::pages.moderation-queue';
 
     /** @var Collection<int, Thread> */
     public Collection $pendingThreads;
@@ -59,12 +59,12 @@ class ModerationQueue extends Page
 
     public static function getNavigationLabel(): string
     {
-        return __('forumkit-forums::messages.queue.navigation_label');
+        return __('filagora-forums::messages.queue.navigation_label');
     }
 
     public function getTitle(): string
     {
-        return __('forumkit-forums::messages.queue.title');
+        return __('filagora-forums::messages.queue.title');
     }
 
     public function mount(): void

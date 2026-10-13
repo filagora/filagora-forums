@@ -2,8 +2,9 @@
 
 declare(strict_types=1);
 
-namespace ForumKit\Forums\Filament\Resources\Forums\Tables;
+namespace Filagora\Forums\Filament\Resources\Forums\Tables;
 
+use Filagora\Forums\Enums\ForumVisibility;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
@@ -12,7 +13,6 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Enums\RecordActionsPosition;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
-use ForumKit\Forums\Enums\ForumVisibility;
 
 class ForumsTable
 {
@@ -21,11 +21,11 @@ class ForumsTable
         return $table
             ->defaultSort('sort_order')
             ->columns([
-                TextColumn::make('group.name')->label(__('forumkit-forums::messages.forums.table.group'))->searchable(),
+                TextColumn::make('group.name')->label(__('filagora-forums::messages.forums.table.group'))->searchable(),
                 TextColumn::make('name')->searchable(),
                 TextColumn::make('visibility')->badge()->formatStateUsing(fn ($state): string => $state instanceof ForumVisibility ? $state->label() : (string) $state),
-                TextColumn::make('required_entitlement_scope')->label(__('forumkit-forums::messages.forums.table.entitlement'))->toggleable(isToggledHiddenByDefault: true),
-                TextColumn::make('reply_entitlement_scope')->label(__('forumkit-forums::messages.forums.table.reply_entitlement'))->toggleable(isToggledHiddenByDefault: true),
+                TextColumn::make('required_entitlement_scope')->label(__('filagora-forums::messages.forums.table.entitlement'))->toggleable(isToggledHiddenByDefault: true),
+                TextColumn::make('reply_entitlement_scope')->label(__('filagora-forums::messages.forums.table.reply_entitlement'))->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('thread_count')->numeric()->sortable(),
                 TextColumn::make('post_count')->numeric()->sortable(),
                 IconColumn::make('is_read_only')->boolean(),

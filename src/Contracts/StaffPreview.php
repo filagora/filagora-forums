@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace ForumKit\Forums\Contracts;
+namespace Filagora\Forums\Contracts;
 
 use Illuminate\Contracts\Auth\Authenticatable;
 

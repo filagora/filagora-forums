@@ -2,23 +2,23 @@
 
 declare(strict_types=1);
 
-use ForumKit\Core\Schema\Adopter;
-use ForumKit\Core\Schema\AdoptionStatus;
-use ForumKit\Core\Schema\SchemaExtension;
-use ForumKit\Core\Schema\SchemaRegistry;
-use ForumKit\Core\Support\Tables;
+use Filagora\Core\Schema\Adopter;
+use Filagora\Core\Schema\AdoptionStatus;
+use Filagora\Core\Schema\SchemaExtension;
+use Filagora\Core\Schema\SchemaRegistry;
+use Filagora\Core\Support\Tables;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
-const FORUM_MIGRATION = '2026_10_11_000000_create_forumkit_forum_tables';
+const FORUM_MIGRATION = '2026_10_11_000000_create_filagora_forum_tables';
 
 /**
  * Build the tables the way an existing site has them: no prefix, and the migration not recorded.
  */
 function existingForumTables(): void
 {
-    config(['forumkit.table_prefix' => '']);
+    config(['filagora.table_prefix' => '']);
 
     $migration = require __DIR__.'/../../database/migrations/'.FORUM_MIGRATION.'.php';
     $migration->down();
@@ -77,7 +77,7 @@ afterEach(function () {
         Schema::dropIfExists($table);
     }
 
-    config(['forumkit.table_prefix' => 'forumkit_']);
+    config(['filagora.table_prefix' => 'filagora_']);
 });
 
 it('adopts the forum tables of an existing site and records the migration', function () {
@@ -88,7 +88,7 @@ it('adopts the forum tables of an existing site and records the migration', func
     expect($plan->status)->toBe(AdoptionStatus::Adoptable, implode('; ', $plan->differences))
         ->and($plan->pendingMigrations)->toBe([FORUM_MIGRATION]);
 
-    $this->artisan('forumkit:adopt', ['--package' => 'forums'])->expectsOutputToContain('Recorded 1 migration(s) as run.')->assertExitCode(0);
+    $this->artisan('filagora:adopt', ['--package' => 'forums'])->expectsOutputToContain('Recorded 1 migration(s) as run.')->assertExitCode(0);
 
     expect(DB::table('migrations')->where('migration', FORUM_MIGRATION)->exists())->toBeTrue();
 });
@@ -158,5 +158,5 @@ it('refuses a site that has only some of the forum tables', function () {
 
 it('is already adopted on a site that ran the package migration', function () {
     expect(app(Adopter::class)->planFor(forumsSchema())->status)->toBe(AdoptionStatus::AlreadyAdopted)
-        ->and(Tables::name('forums'))->toBe('forumkit_forums');
+        ->and(Tables::name('forums'))->toBe('filagora_forums');
 });

@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace ForumKit\Forums\Support;
+namespace Filagora\Forums\Support;
 
-use ForumKit\Forums\Contracts\PaidAccessCheck;
+use Filagora\Forums\Contracts\PaidAccessCheck;
 use Illuminate\Contracts\Auth\Authenticatable;
 
 final class NoPaidAccess implements PaidAccessCheck

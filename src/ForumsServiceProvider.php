@@ -2,44 +2,44 @@
 
 declare(strict_types=1);
 
-namespace ForumKit\Forums;
+namespace Filagora\Forums;
 
-use ForumKit\Core\Modules\Module;
-use ForumKit\Core\Modules\ModuleRegistry;
-use ForumKit\Core\Navigation\NavigationGroupDefinition;
-use ForumKit\Core\Navigation\NavigationGroupRegistry;
-use ForumKit\Core\Schema\PackageSchema;
-use ForumKit\Core\Schema\SchemaRegistry;
-use ForumKit\Core\Settings\SettingDefinition;
-use ForumKit\Core\Settings\SettingsRegistry;
-use ForumKit\Core\Settings\SettingType;
-use ForumKit\Entitlements\Registry\Definition;
-use ForumKit\Entitlements\Registry\EntitlementRegistry;
-use ForumKit\Entitlements\Services\AuthorizationService;
-use ForumKit\Forums\Commands\SyncForumStatsCommand;
-use ForumKit\Forums\Commands\SyncThreadStatsCommand;
-use ForumKit\Forums\Contracts\ContentModerationPolicy;
-use ForumKit\Forums\Contracts\PaidAccessCheck;
-use ForumKit\Forums\Contracts\PostSignatureResolver;
-use ForumKit\Forums\Contracts\StaffPreview;
-use ForumKit\Forums\Observers\ForumStatsObserver;
-use ForumKit\Forums\Services\ApprovalRules;
-use ForumKit\Forums\Services\ForumAccess;
-use ForumKit\Forums\Services\ForumStats;
-use ForumKit\Forums\Services\Posting;
-use ForumKit\Forums\Services\PostModeration;
-use ForumKit\Forums\Services\PostRelocation;
-use ForumKit\Forums\Services\PostReports;
-use ForumKit\Forums\Services\ReplyCreation;
-use ForumKit\Forums\Services\ThreadCreation;
-use ForumKit\Forums\Services\ThreadModeration;
-use ForumKit\Forums\Services\ThreadStats;
-use ForumKit\Forums\Support\AlwaysStaffPreview;
-use ForumKit\Forums\Support\ForumEntitlementKeys;
-use ForumKit\Forums\Support\Models;
-use ForumKit\Forums\Support\NoContentModeration;
-use ForumKit\Forums\Support\NoPaidAccess;
-use ForumKit\Forums\Support\NoPostSignature;
+use Filagora\Core\Modules\Module;
+use Filagora\Core\Modules\ModuleRegistry;
+use Filagora\Core\Navigation\NavigationGroupDefinition;
+use Filagora\Core\Navigation\NavigationGroupRegistry;
+use Filagora\Core\Schema\PackageSchema;
+use Filagora\Core\Schema\SchemaRegistry;
+use Filagora\Core\Settings\SettingDefinition;
+use Filagora\Core\Settings\SettingsRegistry;
+use Filagora\Core\Settings\SettingType;
+use Filagora\Entitlements\Registry\Definition;
+use Filagora\Entitlements\Registry\EntitlementRegistry;
+use Filagora\Entitlements\Services\AuthorizationService;
+use Filagora\Forums\Commands\SyncForumStatsCommand;
+use Filagora\Forums\Commands\SyncThreadStatsCommand;
+use Filagora\Forums\Contracts\ContentModerationPolicy;
+use Filagora\Forums\Contracts\PaidAccessCheck;
+use Filagora\Forums\Contracts\PostSignatureResolver;
+use Filagora\Forums\Contracts\StaffPreview;
+use Filagora\Forums\Observers\ForumStatsObserver;
+use Filagora\Forums\Services\ApprovalRules;
+use Filagora\Forums\Services\ForumAccess;
+use Filagora\Forums\Services\ForumStats;
+use Filagora\Forums\Services\Posting;
+use Filagora\Forums\Services\PostModeration;
+use Filagora\Forums\Services\PostRelocation;
+use Filagora\Forums\Services\PostReports;
+use Filagora\Forums\Services\ReplyCreation;
+use Filagora\Forums\Services\ThreadCreation;
+use Filagora\Forums\Services\ThreadModeration;
+use Filagora\Forums\Services\ThreadStats;
+use Filagora\Forums\Support\AlwaysStaffPreview;
+use Filagora\Forums\Support\ForumEntitlementKeys;
+use Filagora\Forums\Support\Models;
+use Filagora\Forums\Support\NoContentModeration;
+use Filagora\Forums\Support\NoPaidAccess;
+use Filagora\Forums\Support\NoPostSignature;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
@@ -48,7 +48,7 @@ class ForumsServiceProvider extends ServiceProvider
 {
     public function register(): void
     {
-        $this->mergeConfigFrom(__DIR__.'/../config/forumkit-forums.php', 'forumkit-forums');
+        $this->mergeConfigFrom(__DIR__.'/../config/filagora-forums.php', 'filagora-forums');
 
         $this->app->bindIf(PaidAccessCheck::class, NoPaidAccess::class);
         $this->app->bindIf(StaffPreview::class, AlwaysStaffPreview::class);
@@ -71,7 +71,7 @@ class ForumsServiceProvider extends ServiceProvider
     {
         $this->app->make(NavigationGroupRegistry::class)->register(new NavigationGroupDefinition(
             key: 'forum',
-            label: fn (): string => __('forumkit-forums::messages.navigation_groups.forum'),
+            label: fn (): string => __('filagora-forums::messages.navigation_groups.forum'),
             icon: 'heroicon-o-chat-bubble-left-right',
             sort: 10,
         ));
@@ -80,7 +80,7 @@ class ForumsServiceProvider extends ServiceProvider
     public function boot(): void
     {
         $this->app->make(ModuleRegistry::class)->register(
-            new Module('forums', 'ForumKit Forums', 'zcwilt/forumkit-forums', requires: ['core', 'entitlements']),
+            new Module('forums', 'Filagora Forums', 'filagora/filagora-forums', requires: ['core', 'entitlements']),
         );
 
         $this->app->make(SchemaRegistry::class)->register(
@@ -93,16 +93,16 @@ class ForumsServiceProvider extends ServiceProvider
         $this->observeModels();
         $this->declareSettings();
 
-        $this->loadTranslationsFrom(__DIR__.'/../resources/lang', 'forumkit-forums');
-        $this->loadViewsFrom(__DIR__.'/../resources/views', 'forumkit-forums');
+        $this->loadTranslationsFrom(__DIR__.'/../resources/lang', 'filagora-forums');
+        $this->loadViewsFrom(__DIR__.'/../resources/views', 'filagora-forums');
         $this->loadMigrationsFrom(__DIR__.'/../database/migrations');
 
         if ($this->app->runningInConsole()) {
             $this->commands([SyncForumStatsCommand::class, SyncThreadStatsCommand::class]);
 
             $this->publishes([
-                __DIR__.'/../config/forumkit-forums.php' => config_path('forumkit-forums.php'),
-            ], 'forumkit-forums-config');
+                __DIR__.'/../config/filagora-forums.php' => config_path('filagora-forums.php'),
+            ], 'filagora-forums-config');
         }
     }
 
@@ -147,7 +147,7 @@ class ForumsServiceProvider extends ServiceProvider
     {
         $registry = $this->app->make(EntitlementRegistry::class);
 
-        foreach (config('forumkit-forums.gates', []) as $entitlement) {
+        foreach (config('filagora-forums.gates', []) as $entitlement) {
             if (is_string($entitlement) && $entitlement !== '') {
                 $registry->define(new Definition($entitlement, wildcardChildren: false));
             }
@@ -161,7 +161,7 @@ class ForumsServiceProvider extends ServiceProvider
      */
     private function defineGates(): void
     {
-        foreach (config('forumkit-forums.gates', []) as $ability => $entitlement) {
+        foreach (config('filagora-forums.gates', []) as $ability => $entitlement) {
             if (! is_string($ability) || ! is_string($entitlement)) {
                 continue;
             }

@@ -2,19 +2,19 @@
 
 declare(strict_types=1);
 
-namespace ForumKit\Forums\Services;
+namespace Filagora\Forums\Services;
 
 use Carbon\CarbonImmutable;
-use ForumKit\Forums\Enums\ContentModerationStatus;
-use ForumKit\Forums\Events\ThreadDeleted;
-use ForumKit\Forums\Events\ThreadModerated;
-use ForumKit\Forums\Exceptions\InvalidModeration;
-use ForumKit\Forums\Models\Forum;
-use ForumKit\Forums\Models\Thread;
-use ForumKit\Forums\Models\ThreadModerationLog;
-use ForumKit\Forums\Services\Concerns\ChecksModerator;
-use ForumKit\Forums\Support\Models;
-use ForumKit\Forums\Support\StatsSyncScope;
+use Filagora\Forums\Enums\ContentModerationStatus;
+use Filagora\Forums\Events\ThreadDeleted;
+use Filagora\Forums\Events\ThreadModerated;
+use Filagora\Forums\Exceptions\InvalidModeration;
+use Filagora\Forums\Models\Forum;
+use Filagora\Forums\Models\Thread;
+use Filagora\Forums\Models\ThreadModerationLog;
+use Filagora\Forums\Services\Concerns\ChecksModerator;
+use Filagora\Forums\Support\Models;
+use Filagora\Forums\Support\StatsSyncScope;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Support\Facades\DB;
 

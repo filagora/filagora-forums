@@ -2,21 +2,21 @@
 
 declare(strict_types=1);
 
-namespace ForumKit\Forums\Filament\Resources\ForumGroups;
+namespace Filagora\Forums\Filament\Resources\ForumGroups;
 
 use BackedEnum;
+use Filagora\Core\Navigation\NavigationGroupRegistry;
+use Filagora\Forums\Filament\Concerns\GatedByModerate;
+use Filagora\Forums\Filament\Resources\ForumGroups\Pages\CreateForumGroup;
+use Filagora\Forums\Filament\Resources\ForumGroups\Pages\EditForumGroup;
+use Filagora\Forums\Filament\Resources\ForumGroups\Pages\ListForumGroups;
+use Filagora\Forums\Filament\Resources\ForumGroups\Schemas\ForumGroupForm;
+use Filagora\Forums\Filament\Resources\ForumGroups\Tables\ForumGroupsTable;
+use Filagora\Forums\Support\Models;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
-use ForumKit\Core\Navigation\NavigationGroupRegistry;
-use ForumKit\Forums\Filament\Concerns\GatedByModerate;
-use ForumKit\Forums\Filament\Resources\ForumGroups\Pages\CreateForumGroup;
-use ForumKit\Forums\Filament\Resources\ForumGroups\Pages\EditForumGroup;
-use ForumKit\Forums\Filament\Resources\ForumGroups\Pages\ListForumGroups;
-use ForumKit\Forums\Filament\Resources\ForumGroups\Schemas\ForumGroupForm;
-use ForumKit\Forums\Filament\Resources\ForumGroups\Tables\ForumGroupsTable;
-use ForumKit\Forums\Support\Models;
 use UnitEnum;
 
 class ForumGroupResource extends Resource
@@ -39,17 +39,17 @@ class ForumGroupResource extends Resource
 
     public static function getNavigationLabel(): string
     {
-        return __('forumkit-forums::messages.groups.navigation_label');
+        return __('filagora-forums::messages.groups.navigation_label');
     }
 
     public static function getModelLabel(): string
     {
-        return __('forumkit-forums::messages.groups.model_label');
+        return __('filagora-forums::messages.groups.model_label');
     }
 
     public static function getPluralModelLabel(): string
     {
-        return __('forumkit-forums::messages.groups.plural_model_label');
+        return __('filagora-forums::messages.groups.plural_model_label');
     }
 
     public static function form(Schema $schema): Schema

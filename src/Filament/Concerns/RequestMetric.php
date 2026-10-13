@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace ForumKit\Forums\Filament\Concerns;
+namespace Filagora\Forums\Filament\Concerns;
 
 use Illuminate\Http\Request;
 
@@ -17,7 +17,7 @@ trait RequestMetric
     protected static function rememberRequestMetric(string $name, callable $resolver): int
     {
         $request = app()->bound('request') ? app(Request::class) : null;
-        $key = "forumkit.forums.metric.{$name}";
+        $key = "filagora.forums.metric.{$name}";
 
         if ($request instanceof Request && $request->attributes->has($key)) {
             return (int) $request->attributes->get($key);

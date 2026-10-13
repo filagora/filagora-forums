@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Filagora\Forums\Filament\Resources\ForumGroups\Pages;
 
+use Filagora\Forums\Filament\Resources\ForumGroups\ForumGroupResource;
 use Filament\Actions\DeleteAction;
 use Filament\Resources\Pages\EditRecord;
-use Filagora\Forums\Filament\Resources\ForumGroups\ForumGroupResource;
 
 class EditForumGroup extends EditRecord
 {

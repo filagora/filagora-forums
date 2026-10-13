@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Filagora\Forums;
 
-use Filament\Contracts\Plugin;
-use Filament\Panel;
 use Filagora\Forums\Filament\Pages\ModerationQueue;
 use Filagora\Forums\Filament\Resources\ForumGroups\ForumGroupResource;
 use Filagora\Forums\Filament\Resources\Forums\ForumResource;
@@ -13,6 +11,8 @@ use Filagora\Forums\Filament\Resources\PostReports\PostReportResource;
 use Filagora\Forums\Filament\Resources\Posts\PostResource;
 use Filagora\Forums\Filament\Resources\Threads\ThreadResource;
 use Filagora\Forums\Filament\Widgets\ModerationQueueStats;
+use Filament\Contracts\Plugin;
+use Filament\Panel;
 
 class FilagoraForumsPlugin implements Plugin
 {

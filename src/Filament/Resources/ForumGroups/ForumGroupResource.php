@@ -5,10 +5,6 @@ declare(strict_types=1);
 namespace Filagora\Forums\Filament\Resources\ForumGroups;
 
 use BackedEnum;
-use Filament\Resources\Resource;
-use Filament\Schemas\Schema;
-use Filament\Support\Icons\Heroicon;
-use Filament\Tables\Table;
 use Filagora\Core\Navigation\NavigationGroupRegistry;
 use Filagora\Forums\Filament\Concerns\GatedByModerate;
 use Filagora\Forums\Filament\Resources\ForumGroups\Pages\CreateForumGroup;
@@ -17,6 +13,10 @@ use Filagora\Forums\Filament\Resources\ForumGroups\Pages\ListForumGroups;
 use Filagora\Forums\Filament\Resources\ForumGroups\Schemas\ForumGroupForm;
 use Filagora\Forums\Filament\Resources\ForumGroups\Tables\ForumGroupsTable;
 use Filagora\Forums\Support\Models;
+use Filament\Resources\Resource;
+use Filament\Schemas\Schema;
+use Filament\Support\Icons\Heroicon;
+use Filament\Tables\Table;
 use UnitEnum;
 
 class ForumGroupResource extends Resource

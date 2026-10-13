@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace Filagora\Forums\Filament\Actions;
 
-use Filament\Actions\Action;
-use Filament\Forms\Components\Radio;
-use Filament\Forms\Components\Textarea;
-use Filament\Notifications\Notification;
 use Filagora\Forums\Enums\PostReportStatus;
 use Filagora\Forums\Models\Post;
 use Filagora\Forums\Models\PostReport;
 use Filagora\Forums\Services\PostReports;
+use Filament\Actions\Action;
+use Filament\Forms\Components\Radio;
+use Filament\Forms\Components\Textarea;
+use Filament\Notifications\Notification;
 use Illuminate\Database\Eloquent\Model;
 
 /**

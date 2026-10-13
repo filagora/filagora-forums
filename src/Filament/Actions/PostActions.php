@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace Filagora\Forums\Filament\Actions;
 
-use Filament\Actions\Action;
-use Filament\Forms\Components\Textarea;
-use Filament\Notifications\Notification;
 use Filagora\Forums\Enums\ContentModerationStatus;
 use Filagora\Forums\Models\Post;
 use Filagora\Forums\Services\PostModeration;
+use Filament\Actions\Action;
+use Filament\Forms\Components\Textarea;
+use Filament\Notifications\Notification;
 use Illuminate\Database\Eloquent\Model;
 
 /**

@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Filagora\Forums\Filament\Widgets;
 
-use Filament\Widgets\StatsOverviewWidget;
-use Filament\Widgets\StatsOverviewWidget\Stat;
 use Filagora\Forums\Enums\ContentModerationStatus;
 use Filagora\Forums\Enums\PostReportStatus;
 use Filagora\Forums\Filament\Pages\ModerationQueue;
@@ -13,6 +11,8 @@ use Filagora\Forums\Models\Post;
 use Filagora\Forums\Models\PostReport;
 use Filagora\Forums\Models\Thread;
 use Filagora\Forums\Support\Abilities;
+use Filament\Widgets\StatsOverviewWidget;
+use Filament\Widgets\StatsOverviewWidget\Stat;
 use Illuminate\Support\Facades\Gate;
 
 /**

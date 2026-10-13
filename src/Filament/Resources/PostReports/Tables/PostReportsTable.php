@@ -4,17 +4,17 @@ declare(strict_types=1);
 
 namespace Filagora\Forums\Filament\Resources\PostReports\Tables;
 
-use Filament\Actions\Action;
-use Filament\Tables\Columns\TextColumn;
-use Filament\Tables\Enums\RecordActionsPosition;
-use Filament\Tables\Filters\SelectFilter;
-use Filament\Tables\Table;
 use Filagora\Core\Support\UserModel;
 use Filagora\Forums\Enums\PostReportStatus;
 use Filagora\Forums\Filament\Actions\Moderate;
 use Filagora\Forums\Filament\Actions\ResolveReportAction;
 use Filagora\Forums\Models\Post;
 use Filagora\Forums\Models\PostReport;
+use Filament\Actions\Action;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Enums\RecordActionsPosition;
+use Filament\Tables\Filters\SelectFilter;
+use Filament\Tables\Table;
 use Illuminate\Support\HtmlString;
 
 class PostReportsTable

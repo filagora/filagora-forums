@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace Filagora\Forums\Filament\Actions;
 
 use Closure;
-use Filament\Notifications\Notification;
 use Filagora\Forums\Exceptions\InvalidModeration;
 use Filagora\Forums\Exceptions\ModerationNotPermitted;
+use Filament\Notifications\Notification;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Database\Eloquent\Model;
 

@@ -5,15 +5,15 @@ declare(strict_types=1);
 namespace Filagora\Forums\Filament\Resources\Threads;
 
 use BackedEnum;
-use Filament\Resources\Resource;
-use Filament\Schemas\Schema;
-use Filament\Support\Icons\Heroicon;
-use Filament\Tables\Table;
 use Filagora\Core\Navigation\NavigationGroupRegistry;
 use Filagora\Forums\Filament\Concerns\GatedByModerate;
 use Filagora\Forums\Filament\Resources\Threads\Pages\ListThreads;
 use Filagora\Forums\Filament\Resources\Threads\Tables\ThreadsTable;
 use Filagora\Forums\Support\Models;
+use Filament\Resources\Resource;
+use Filament\Schemas\Schema;
+use Filament\Support\Icons\Heroicon;
+use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use UnitEnum;
 

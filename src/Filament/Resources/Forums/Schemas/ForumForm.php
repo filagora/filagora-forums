@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Filagora\Forums\Filament\Resources\Forums\Schemas;
 
+use Filagora\Entitlements\Models\EntitlementDefinition;
+use Filagora\Forums\Enums\ForumPostingPolicy;
+use Filagora\Forums\Enums\ForumVisibility;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
@@ -11,9 +14,6 @@ use Filament\Forms\Components\Toggle;
 use Filament\Schemas\Components\Utilities\Get;
 use Filament\Schemas\Components\Utilities\Set;
 use Filament\Schemas\Schema;
-use Filagora\Entitlements\Models\EntitlementDefinition;
-use Filagora\Forums\Enums\ForumPostingPolicy;
-use Filagora\Forums\Enums\ForumVisibility;
 use Illuminate\Support\Str;
 
 class ForumForm

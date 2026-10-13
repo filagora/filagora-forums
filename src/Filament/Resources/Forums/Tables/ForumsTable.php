@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Filagora\Forums\Filament\Resources\Forums\Tables;
 
+use Filagora\Forums\Enums\ForumVisibility;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
@@ -12,7 +13,6 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Enums\RecordActionsPosition;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
-use Filagora\Forums\Enums\ForumVisibility;
 
 class ForumsTable
 {

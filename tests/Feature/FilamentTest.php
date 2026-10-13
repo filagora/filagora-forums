@@ -2,7 +2,6 @@
 
 declare(strict_types=1);
 
-use Filament\Facades\Filament;
 use Filagora\Entitlements\Models\UserEntitlementGrant;
 use Filagora\Forums\Enums\ContentModerationStatus;
 use Filagora\Forums\Enums\PostReportStatus;
@@ -30,6 +29,7 @@ use Filagora\Forums\Models\ThreadModerationLog;
 use Filagora\Forums\Services\ForumAccess;
 use Filagora\Forums\Support\Abilities;
 use Filagora\Forums\Tests\Support\TestUser;
+use Filament\Facades\Filament;
 use Livewire\Livewire;
 
 use function Pest\Laravel\actingAs;

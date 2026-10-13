@@ -4,6 +4,13 @@ declare(strict_types=1);
 
 namespace Filagora\Forums\Filament\Resources\Posts\Tables;
 
+use Filagora\Core\Support\UserModel;
+use Filagora\Forums\Enums\ContentModerationStatus;
+use Filagora\Forums\Exceptions\PostingNotPermitted;
+use Filagora\Forums\Filament\Actions\Moderate;
+use Filagora\Forums\Filament\Actions\PostActions;
+use Filagora\Forums\Models\Post;
+use Filagora\Forums\Services\Posting;
 use Filament\Actions\Action;
 use Filament\Actions\ActionGroup;
 use Filament\Forms\Components\Textarea;
@@ -14,13 +21,6 @@ use Filament\Tables\Enums\RecordActionsPosition;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Filters\TernaryFilter;
 use Filament\Tables\Table;
-use Filagora\Core\Support\UserModel;
-use Filagora\Forums\Enums\ContentModerationStatus;
-use Filagora\Forums\Exceptions\PostingNotPermitted;
-use Filagora\Forums\Filament\Actions\Moderate;
-use Filagora\Forums\Filament\Actions\PostActions;
-use Filagora\Forums\Models\Post;
-use Filagora\Forums\Services\Posting;
 use Illuminate\Support\HtmlString;
 
 class PostsTable

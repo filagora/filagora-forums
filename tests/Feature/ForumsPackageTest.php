@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-use Filament\Panel;
 use Filagora\Core\Modules\ModuleRegistry;
 use Filagora\Forums\FilagoraForumsPlugin;
+use Filament\Panel;
 
 it('registers itself as a module that needs core and entitlements', function () {
     $module = app(ModuleRegistry::class)->get('forums');

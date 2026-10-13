@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Filagora\Forums\Filament\Resources\Forums\Pages;
 
+use Filagora\Forums\Filament\Resources\Forums\ForumResource;
 use Filament\Actions\CreateAction;
 use Filament\Resources\Pages\ListRecords;
-use Filagora\Forums\Filament\Resources\Forums\ForumResource;
 
 class ListForums extends ListRecords
 {

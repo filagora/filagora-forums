@@ -5,10 +5,6 @@ declare(strict_types=1);
 namespace Filagora\Forums\Filament\Resources\PostReports;
 
 use BackedEnum;
-use Filament\Resources\Resource;
-use Filament\Schemas\Schema;
-use Filament\Support\Icons\Heroicon;
-use Filament\Tables\Table;
 use Filagora\Core\Navigation\NavigationGroupRegistry;
 use Filagora\Forums\Enums\PostReportStatus;
 use Filagora\Forums\Filament\Concerns\GatedByModerate;
@@ -17,6 +13,10 @@ use Filagora\Forums\Filament\Resources\PostReports\Pages\ListPostReports;
 use Filagora\Forums\Filament\Resources\PostReports\Tables\PostReportsTable;
 use Filagora\Forums\Models\PostReport;
 use Filagora\Forums\Support\Models;
+use Filament\Resources\Resource;
+use Filament\Schemas\Schema;
+use Filament\Support\Icons\Heroicon;
+use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use UnitEnum;
 

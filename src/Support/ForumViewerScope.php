@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace ForumKit\Forums\Support;
+namespace Filagora\Forums\Support;
 
 /**
  * Which forums a viewer can see, and in which of them only their own threads.

@@ -5,6 +5,13 @@ All notable changes to this package are documented here. The format follows
 
 ## [Unreleased]
 
+## [0.2.0] - 2026-10-13
+
+### Changed
+
+- **Renamed to Filagora.** The Composer package is now `filagora/filagora-forums` (it was `zcwilt/forumkit-forums`) and the repository is `github.com/filagora/filagora-forums`. The PHP namespace is `Filagora\Forums\` (was `ForumKit\Forums\`), the config file is `config/filagora-forums.php`, the staff abilities and their default entitlement keys start with `filagora.forums.` (for example `filagora.forums.moderate`), the commands are `filagora:forums:sync-stats` and `filagora:forums:sync-thread-stats`, and the table prefix is `filagora_`. It requires `filagora/filagora-core` `^0.2` and `filagora/filagora-entitlements` `^0.2`. Nothing else changed: moving from 0.1 means renaming those names in your application, its config and its stored keys.
+
+
 ## [0.1.0] - 2026-10-12
 
 First release.

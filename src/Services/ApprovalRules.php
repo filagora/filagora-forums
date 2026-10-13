@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace ForumKit\Forums\Services;
+namespace Filagora\Forums\Services;
 
-use ForumKit\Forums\Contracts\ContentModerationPolicy;
-use ForumKit\Forums\Models\Forum;
-use ForumKit\Forums\Support\Abilities;
+use Filagora\Forums\Contracts\ContentModerationPolicy;
+use Filagora\Forums\Models\Forum;
+use Filagora\Forums\Support\Abilities;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Support\Facades\Gate;
 

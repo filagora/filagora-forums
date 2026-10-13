@@ -2,19 +2,19 @@
 
 declare(strict_types=1);
 
-namespace ForumKit\Forums\Filament\Resources\PostReports\Tables;
+namespace Filagora\Forums\Filament\Resources\PostReports\Tables;
 
 use Filament\Actions\Action;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Enums\RecordActionsPosition;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
-use ForumKit\Core\Support\UserModel;
-use ForumKit\Forums\Enums\PostReportStatus;
-use ForumKit\Forums\Filament\Actions\Moderate;
-use ForumKit\Forums\Filament\Actions\ResolveReportAction;
-use ForumKit\Forums\Models\Post;
-use ForumKit\Forums\Models\PostReport;
+use Filagora\Core\Support\UserModel;
+use Filagora\Forums\Enums\PostReportStatus;
+use Filagora\Forums\Filament\Actions\Moderate;
+use Filagora\Forums\Filament\Actions\ResolveReportAction;
+use Filagora\Forums\Models\Post;
+use Filagora\Forums\Models\PostReport;
 use Illuminate\Support\HtmlString;
 
 class PostReportsTable
@@ -25,9 +25,9 @@ class PostReportsTable
             ->defaultSort('created_at', 'desc')
             ->columns([
                 TextColumn::make('id')->sortable(),
-                TextColumn::make('post.body')->label(__('forumkit-forums::messages.reports.table.post'))->limit(60),
+                TextColumn::make('post.body')->label(__('filagora-forums::messages.reports.table.post'))->limit(60),
                 TextColumn::make('reason')->limit(60)->searchable(),
-                TextColumn::make('reporter.'.UserModel::titleAttribute())->label(__('forumkit-forums::messages.reports.table.reporter'))->searchable(),
+                TextColumn::make('reporter.'.UserModel::titleAttribute())->label(__('filagora-forums::messages.reports.table.reporter'))->searchable(),
                 TextColumn::make('status')
                     ->badge()
                     ->formatStateUsing(fn ($state): string => $state instanceof PostReportStatus ? $state->label() : (string) $state)

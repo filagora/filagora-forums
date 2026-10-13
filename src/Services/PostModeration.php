@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace ForumKit\Forums\Services;
+namespace Filagora\Forums\Services;
 
-use ForumKit\Forums\Enums\ContentModerationStatus;
-use ForumKit\Forums\Events\PostModerated;
-use ForumKit\Forums\Exceptions\InvalidModeration;
-use ForumKit\Forums\Models\Post;
-use ForumKit\Forums\Models\PostModerationLog;
-use ForumKit\Forums\Services\Concerns\ChecksModerator;
+use Filagora\Forums\Enums\ContentModerationStatus;
+use Filagora\Forums\Events\PostModerated;
+use Filagora\Forums\Exceptions\InvalidModeration;
+use Filagora\Forums\Models\Post;
+use Filagora\Forums\Models\PostModerationLog;
+use Filagora\Forums\Services\Concerns\ChecksModerator;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Support\Facades\DB;
 

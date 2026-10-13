@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace ForumKit\Forums\Models;
+namespace Filagora\Forums\Models;
 
-use ForumKit\Core\Settings\SettingsRegistry;
-use ForumKit\Core\Support\Tables;
-use ForumKit\Core\Support\UserModel;
-use ForumKit\Forums\Enums\ContentModerationStatus;
-use ForumKit\Forums\Support\Models;
+use Filagora\Core\Settings\SettingsRegistry;
+use Filagora\Core\Support\Tables;
+use Filagora\Core\Support\UserModel;
+use Filagora\Forums\Enums\ContentModerationStatus;
+use Filagora\Forums\Support\Models;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;

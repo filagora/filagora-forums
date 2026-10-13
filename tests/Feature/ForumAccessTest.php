@@ -2,20 +2,20 @@
 
 declare(strict_types=1);
 
-use ForumKit\Entitlements\Models\EntitlementDefinition;
-use ForumKit\Entitlements\Models\UserEntitlementGrant;
-use ForumKit\Forums\Contracts\PaidAccessCheck;
-use ForumKit\Forums\Contracts\StaffPreview;
-use ForumKit\Forums\Enums\ContentModerationStatus;
-use ForumKit\Forums\Enums\ForumPostingPolicy;
-use ForumKit\Forums\Enums\ForumVisibility;
-use ForumKit\Forums\Models\Forum;
-use ForumKit\Forums\Models\ForumGroup;
-use ForumKit\Forums\Models\Post;
-use ForumKit\Forums\Models\Thread;
-use ForumKit\Forums\Services\ForumAccess;
-use ForumKit\Forums\Support\Abilities;
-use ForumKit\Forums\Tests\Support\TestUser;
+use Filagora\Entitlements\Models\EntitlementDefinition;
+use Filagora\Entitlements\Models\UserEntitlementGrant;
+use Filagora\Forums\Contracts\PaidAccessCheck;
+use Filagora\Forums\Contracts\StaffPreview;
+use Filagora\Forums\Enums\ContentModerationStatus;
+use Filagora\Forums\Enums\ForumPostingPolicy;
+use Filagora\Forums\Enums\ForumVisibility;
+use Filagora\Forums\Models\Forum;
+use Filagora\Forums\Models\ForumGroup;
+use Filagora\Forums\Models\Post;
+use Filagora\Forums\Models\Thread;
+use Filagora\Forums\Services\ForumAccess;
+use Filagora\Forums\Support\Abilities;
+use Filagora\Forums\Tests\Support\TestUser;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Support\Facades\Gate;
 
@@ -26,7 +26,7 @@ use Illuminate\Support\Facades\Gate;
  *   entitled   holds the entitlement `club.access`
  *   paid       the host's PaidAccessCheck says yes (no entitlement)
  *   author     has started a thread in the forum
- *   staff      holds forumkit.forums.moderate
+ *   staff      holds filagora.forums.moderate
  *   staff_off  the same, with the staff preview switched off
  */
 const VIEWERS = ['guest', 'member', 'entitled', 'paid', 'author', 'staff', 'staff_off'];
@@ -308,7 +308,7 @@ it('counts any one of the three staff entitlements as staff, and nothing else', 
 
     expect($access->isStaff(TestUser::make()))->toBeFalse()
         ->and($access->isStaff(null))->toBeFalse()
-        ->and($access->isStaff(give(TestUser::make(), 'forumkit.entitlements.manage')))->toBeFalse();
+        ->and($access->isStaff(give(TestUser::make(), 'filagora.entitlements.manage')))->toBeFalse();
 });
 
 // ----------------------------------------------------------- what a viewer sees
@@ -423,7 +423,7 @@ it('creates definitions for the staff entitlements and for the keys set on forum
     accessForum(['required_entitlement_scope' => 'club.access']);
     accessForum(['reply_entitlement_scope' => '  ']);
 
-    $this->artisan('forumkit:entitlements:sync')->assertExitCode(0);
+    $this->artisan('filagora:entitlements:sync')->assertExitCode(0);
 
     $keys = EntitlementDefinition::pluck('key')->all();
 

@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace ForumKit\Forums\Support;
+namespace Filagora\Forums\Support;
 
-use ForumKit\Entitlements\Contracts\EntitlementKeySource;
+use Filagora\Entitlements\Contracts\EntitlementKeySource;
 
 /**
  * The entitlement keys set on forums, so the definitions catalogue can create a definition for
- * each (`forumkit:entitlements:sync`).
+ * each (`filagora:entitlements:sync`).
  */
 final class ForumEntitlementKeys implements EntitlementKeySource
 {

@@ -2,20 +2,20 @@
 
 declare(strict_types=1);
 
-use ForumKit\Core\Support\Tables;
-use ForumKit\Forums\Enums\ContentModerationStatus;
-use ForumKit\Forums\Enums\ForumPostingPolicy;
-use ForumKit\Forums\Enums\ForumVisibility;
-use ForumKit\Forums\Enums\PostReportStatus;
-use ForumKit\Forums\Models\Forum;
-use ForumKit\Forums\Models\ForumGroup;
-use ForumKit\Forums\Models\Post;
-use ForumKit\Forums\Models\PostModerationLog;
-use ForumKit\Forums\Models\PostReport;
-use ForumKit\Forums\Models\Thread;
-use ForumKit\Forums\Models\ThreadModerationLog;
-use ForumKit\Forums\Support\Models;
-use ForumKit\Forums\Tests\Support\TestUser;
+use Filagora\Core\Support\Tables;
+use Filagora\Forums\Enums\ContentModerationStatus;
+use Filagora\Forums\Enums\ForumPostingPolicy;
+use Filagora\Forums\Enums\ForumVisibility;
+use Filagora\Forums\Enums\PostReportStatus;
+use Filagora\Forums\Models\Forum;
+use Filagora\Forums\Models\ForumGroup;
+use Filagora\Forums\Models\Post;
+use Filagora\Forums\Models\PostModerationLog;
+use Filagora\Forums\Models\PostReport;
+use Filagora\Forums\Models\Thread;
+use Filagora\Forums\Models\ThreadModerationLog;
+use Filagora\Forums\Support\Models;
+use Filagora\Forums\Tests\Support\TestUser;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
@@ -232,10 +232,10 @@ it('removes an author\'s threads and posts with them, but only clears who modera
 it('resolves model classes from config, with the host key winning', function () {
     expect(Models::class('thread'))->toBe(Thread::class);
 
-    config(['forumkit-forums.models.thread' => CustomThread::class]);
+    config(['filagora-forums.models.thread' => CustomThread::class]);
     expect(Models::class('thread'))->toBe(CustomThread::class);
 
-    config(['forumkit.models.thread' => Thread::class]);
+    config(['filagora.models.thread' => Thread::class]);
     expect(Models::class('thread'))->toBe(Thread::class);
 });
 
@@ -245,7 +245,7 @@ it('follows a swapped model through every relation', function () {
     $thread = makeThread($forum, $author);
     makePost($thread, $author);
 
-    config(['forumkit.models.thread' => CustomThread::class]);
+    config(['filagora.models.thread' => CustomThread::class]);
 
     expect(Post::first()->thread)->toBeInstanceOf(CustomThread::class)
         ->and(Forum::first()->threads->first())->toBeInstanceOf(CustomThread::class);
@@ -253,4 +253,4 @@ it('follows a swapped model through every relation', function () {
 
 it('names an unknown model key', function () {
     Models::class('nope');
-})->throws(InvalidArgumentException::class, 'No ForumKit forums model is registered for [nope]');
+})->throws(InvalidArgumentException::class, 'No Filagora forums model is registered for [nope]');

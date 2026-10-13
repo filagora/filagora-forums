@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace ForumKit\Forums\Filament\Resources\Posts\Tables;
+namespace Filagora\Forums\Filament\Resources\Posts\Tables;
 
 use Filament\Actions\Action;
 use Filament\Actions\ActionGroup;
@@ -14,13 +14,13 @@ use Filament\Tables\Enums\RecordActionsPosition;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Filters\TernaryFilter;
 use Filament\Tables\Table;
-use ForumKit\Core\Support\UserModel;
-use ForumKit\Forums\Enums\ContentModerationStatus;
-use ForumKit\Forums\Exceptions\PostingNotPermitted;
-use ForumKit\Forums\Filament\Actions\Moderate;
-use ForumKit\Forums\Filament\Actions\PostActions;
-use ForumKit\Forums\Models\Post;
-use ForumKit\Forums\Services\Posting;
+use Filagora\Core\Support\UserModel;
+use Filagora\Forums\Enums\ContentModerationStatus;
+use Filagora\Forums\Exceptions\PostingNotPermitted;
+use Filagora\Forums\Filament\Actions\Moderate;
+use Filagora\Forums\Filament\Actions\PostActions;
+use Filagora\Forums\Models\Post;
+use Filagora\Forums\Services\Posting;
 use Illuminate\Support\HtmlString;
 
 class PostsTable
@@ -32,7 +32,7 @@ class PostsTable
             ->columns([
                 TextColumn::make('body')->limit(70)->searchable(),
                 TextColumn::make('thread.title')->limit(40)->searchable(),
-                TextColumn::make('author.'.UserModel::titleAttribute())->label(__('forumkit-forums::messages.threads.table.author'))->searchable(),
+                TextColumn::make('author.'.UserModel::titleAttribute())->label(__('filagora-forums::messages.threads.table.author'))->searchable(),
                 TextColumn::make('moderation_status')
                     ->badge()
                     ->color(fn ($state): string => $state instanceof ContentModerationStatus ? $state->color() : 'gray')

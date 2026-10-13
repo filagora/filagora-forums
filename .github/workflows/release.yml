@@ -9,4 +9,4 @@ permissions:
 
 jobs:
   release:
-    uses: zcwilt/forumkit-shared/.github/workflows/release.yml@master
+    uses: filagora/filagora-shared/.github/workflows/release.yml@master

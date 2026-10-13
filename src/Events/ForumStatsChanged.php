@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace ForumKit\Forums\Events;
+namespace Filagora\Forums\Events;
 
 use Illuminate\Foundation\Events\Dispatchable;
 

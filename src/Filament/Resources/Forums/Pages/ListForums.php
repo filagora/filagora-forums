@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace ForumKit\Forums\Filament\Resources\Forums\Pages;
+namespace Filagora\Forums\Filament\Resources\Forums\Pages;
 
 use Filament\Actions\CreateAction;
 use Filament\Resources\Pages\ListRecords;
-use ForumKit\Forums\Filament\Resources\Forums\ForumResource;
+use Filagora\Forums\Filament\Resources\Forums\ForumResource;
 
 class ListForums extends ListRecords
 {

@@ -2,17 +2,17 @@
 
 declare(strict_types=1);
 
-namespace ForumKit\Forums\Services;
+namespace Filagora\Forums\Services;
 
-use ForumKit\Forums\Contracts\ContentModerationPolicy;
-use ForumKit\Forums\Enums\PostingDenial;
-use ForumKit\Forums\Events\PostEdited;
-use ForumKit\Forums\Exceptions\PostingNotPermitted;
-use ForumKit\Forums\Models\Forum;
-use ForumKit\Forums\Models\Post;
-use ForumKit\Forums\Models\Thread;
-use ForumKit\Forums\ValueObjects\CreatedReply;
-use ForumKit\Forums\ValueObjects\CreatedThread;
+use Filagora\Forums\Contracts\ContentModerationPolicy;
+use Filagora\Forums\Enums\PostingDenial;
+use Filagora\Forums\Events\PostEdited;
+use Filagora\Forums\Exceptions\PostingNotPermitted;
+use Filagora\Forums\Models\Forum;
+use Filagora\Forums\Models\Post;
+use Filagora\Forums\Models\Thread;
+use Filagora\Forums\ValueObjects\CreatedReply;
+use Filagora\Forums\ValueObjects\CreatedThread;
 use Illuminate\Contracts\Auth\Authenticatable;
 
 /**

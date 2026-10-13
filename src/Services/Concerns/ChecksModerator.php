@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace ForumKit\Forums\Services\Concerns;
+namespace Filagora\Forums\Services\Concerns;
 
-use ForumKit\Forums\Exceptions\ModerationNotPermitted;
-use ForumKit\Forums\Services\ForumAccess;
+use Filagora\Forums\Exceptions\ModerationNotPermitted;
+use Filagora\Forums\Services\ForumAccess;
 use Illuminate\Contracts\Auth\Authenticatable;
 
 /**

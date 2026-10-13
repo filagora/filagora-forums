@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace ForumKit\Forums\Filament\Actions;
+namespace Filagora\Forums\Filament\Actions;
 
 use Closure;
 use Filament\Notifications\Notification;
-use ForumKit\Forums\Exceptions\InvalidModeration;
-use ForumKit\Forums\Exceptions\ModerationNotPermitted;
+use Filagora\Forums\Exceptions\InvalidModeration;
+use Filagora\Forums\Exceptions\ModerationNotPermitted;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Database\Eloquent\Model;
 
@@ -68,6 +68,6 @@ final class Moderate
 
     public static function t(string $key): string
     {
-        return __("forumkit-forums::messages.actions.{$key}");
+        return __("filagora-forums::messages.actions.{$key}");
     }
 }

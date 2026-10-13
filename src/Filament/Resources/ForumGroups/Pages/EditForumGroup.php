@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace ForumKit\Forums\Filament\Resources\ForumGroups\Pages;
+namespace Filagora\Forums\Filament\Resources\ForumGroups\Pages;
 
 use Filament\Actions\DeleteAction;
 use Filament\Resources\Pages\EditRecord;
-use ForumKit\Forums\Filament\Resources\ForumGroups\ForumGroupResource;
+use Filagora\Forums\Filament\Resources\ForumGroups\ForumGroupResource;
 
 class EditForumGroup extends EditRecord
 {

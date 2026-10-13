@@ -2,20 +2,20 @@
 
 declare(strict_types=1);
 
-namespace ForumKit\Forums\Services;
+namespace Filagora\Forums\Services;
 
-use ForumKit\Entitlements\Services\AuthorizationService;
-use ForumKit\Forums\Contracts\PaidAccessCheck;
-use ForumKit\Forums\Contracts\StaffPreview;
-use ForumKit\Forums\Enums\ContentModerationStatus;
-use ForumKit\Forums\Enums\ForumPostingPolicy;
-use ForumKit\Forums\Enums\ForumVisibility;
-use ForumKit\Forums\Models\Forum;
-use ForumKit\Forums\Models\Post;
-use ForumKit\Forums\Models\Thread;
-use ForumKit\Forums\Support\Abilities;
-use ForumKit\Forums\Support\ForumViewerScope;
-use ForumKit\Forums\Support\Models;
+use Filagora\Entitlements\Services\AuthorizationService;
+use Filagora\Forums\Contracts\PaidAccessCheck;
+use Filagora\Forums\Contracts\StaffPreview;
+use Filagora\Forums\Enums\ContentModerationStatus;
+use Filagora\Forums\Enums\ForumPostingPolicy;
+use Filagora\Forums\Enums\ForumVisibility;
+use Filagora\Forums\Models\Forum;
+use Filagora\Forums\Models\Post;
+use Filagora\Forums\Models\Thread;
+use Filagora\Forums\Support\Abilities;
+use Filagora\Forums\Support\ForumViewerScope;
+use Filagora\Forums\Support\Models;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;

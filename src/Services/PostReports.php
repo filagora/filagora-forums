@@ -2,22 +2,22 @@
 
 declare(strict_types=1);
 
-namespace ForumKit\Forums\Services;
+namespace Filagora\Forums\Services;
 
 use Carbon\CarbonImmutable;
-use ForumKit\Forums\Enums\ContentModerationStatus;
-use ForumKit\Forums\Enums\PostingDenial;
-use ForumKit\Forums\Enums\PostReportStatus;
-use ForumKit\Forums\Events\PostReported;
-use ForumKit\Forums\Events\PostReportsResolved;
-use ForumKit\Forums\Exceptions\InvalidModeration;
-use ForumKit\Forums\Exceptions\PostingNotPermitted;
-use ForumKit\Forums\Models\Forum;
-use ForumKit\Forums\Models\Post;
-use ForumKit\Forums\Models\PostReport;
-use ForumKit\Forums\Models\Thread;
-use ForumKit\Forums\Services\Concerns\ChecksModerator;
-use ForumKit\Forums\Support\Models;
+use Filagora\Forums\Enums\ContentModerationStatus;
+use Filagora\Forums\Enums\PostingDenial;
+use Filagora\Forums\Enums\PostReportStatus;
+use Filagora\Forums\Events\PostReported;
+use Filagora\Forums\Events\PostReportsResolved;
+use Filagora\Forums\Exceptions\InvalidModeration;
+use Filagora\Forums\Exceptions\PostingNotPermitted;
+use Filagora\Forums\Models\Forum;
+use Filagora\Forums\Models\Post;
+use Filagora\Forums\Models\PostReport;
+use Filagora\Forums\Models\Thread;
+use Filagora\Forums\Services\Concerns\ChecksModerator;
+use Filagora\Forums\Support\Models;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Support\Facades\DB;
 

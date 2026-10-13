@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace ForumKit\Forums\Observers;
+namespace Filagora\Forums\Observers;
 
-use ForumKit\Forums\Enums\ContentModerationStatus;
-use ForumKit\Forums\Models\Post;
-use ForumKit\Forums\Models\Thread;
-use ForumKit\Forums\Services\ForumStats;
-use ForumKit\Forums\Support\Models;
-use ForumKit\Forums\Support\StatsSyncScope;
+use Filagora\Forums\Enums\ContentModerationStatus;
+use Filagora\Forums\Models\Post;
+use Filagora\Forums\Models\Thread;
+use Filagora\Forums\Services\ForumStats;
+use Filagora\Forums\Support\Models;
+use Filagora\Forums\Support\StatsSyncScope;
 
 /**
  * Keeps forum counters right as threads and posts change.

@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace ForumKit\Forums\Support;
+namespace Filagora\Forums\Support;
 
-use ForumKit\Forums\Contracts\StaffPreview;
+use Filagora\Forums\Contracts\StaffPreview;
 use Illuminate\Contracts\Auth\Authenticatable;
 
 final class AlwaysStaffPreview implements StaffPreview

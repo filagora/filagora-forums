@@ -2,19 +2,19 @@
 
 declare(strict_types=1);
 
-namespace ForumKit\Forums;
+namespace Filagora\Forums;
 
 use Filament\Contracts\Plugin;
 use Filament\Panel;
-use ForumKit\Forums\Filament\Pages\ModerationQueue;
-use ForumKit\Forums\Filament\Resources\ForumGroups\ForumGroupResource;
-use ForumKit\Forums\Filament\Resources\Forums\ForumResource;
-use ForumKit\Forums\Filament\Resources\PostReports\PostReportResource;
-use ForumKit\Forums\Filament\Resources\Posts\PostResource;
-use ForumKit\Forums\Filament\Resources\Threads\ThreadResource;
-use ForumKit\Forums\Filament\Widgets\ModerationQueueStats;
+use Filagora\Forums\Filament\Pages\ModerationQueue;
+use Filagora\Forums\Filament\Resources\ForumGroups\ForumGroupResource;
+use Filagora\Forums\Filament\Resources\Forums\ForumResource;
+use Filagora\Forums\Filament\Resources\PostReports\PostReportResource;
+use Filagora\Forums\Filament\Resources\Posts\PostResource;
+use Filagora\Forums\Filament\Resources\Threads\ThreadResource;
+use Filagora\Forums\Filament\Widgets\ModerationQueueStats;
 
-class ForumKitForumsPlugin implements Plugin
+class FilagoraForumsPlugin implements Plugin
 {
     public static function make(): static
     {
@@ -23,7 +23,7 @@ class ForumKitForumsPlugin implements Plugin
 
     public function getId(): string
     {
-        return 'forumkit-forums';
+        return 'filagora-forums';
     }
 
     public function register(Panel $panel): void

@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace ForumKit\Forums\Filament\Resources\PostReports\Pages;
+namespace Filagora\Forums\Filament\Resources\PostReports\Pages;
 
 use Filament\Resources\Pages\ListRecords;
-use ForumKit\Forums\Filament\Resources\PostReports\PostReportResource;
+use Filagora\Forums\Filament\Resources\PostReports\PostReportResource;
 
 class ListPostReports extends ListRecords
 {

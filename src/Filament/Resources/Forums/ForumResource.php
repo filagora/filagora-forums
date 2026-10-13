@@ -2,21 +2,21 @@
 
 declare(strict_types=1);
 
-namespace ForumKit\Forums\Filament\Resources\Forums;
+namespace Filagora\Forums\Filament\Resources\Forums;
 
 use BackedEnum;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
-use ForumKit\Core\Navigation\NavigationGroupRegistry;
-use ForumKit\Forums\Filament\Concerns\GatedByModerate;
-use ForumKit\Forums\Filament\Resources\Forums\Pages\CreateForum;
-use ForumKit\Forums\Filament\Resources\Forums\Pages\EditForum;
-use ForumKit\Forums\Filament\Resources\Forums\Pages\ListForums;
-use ForumKit\Forums\Filament\Resources\Forums\Schemas\ForumForm;
-use ForumKit\Forums\Filament\Resources\Forums\Tables\ForumsTable;
-use ForumKit\Forums\Support\Models;
+use Filagora\Core\Navigation\NavigationGroupRegistry;
+use Filagora\Forums\Filament\Concerns\GatedByModerate;
+use Filagora\Forums\Filament\Resources\Forums\Pages\CreateForum;
+use Filagora\Forums\Filament\Resources\Forums\Pages\EditForum;
+use Filagora\Forums\Filament\Resources\Forums\Pages\ListForums;
+use Filagora\Forums\Filament\Resources\Forums\Schemas\ForumForm;
+use Filagora\Forums\Filament\Resources\Forums\Tables\ForumsTable;
+use Filagora\Forums\Support\Models;
 use UnitEnum;
 
 class ForumResource extends Resource
@@ -39,17 +39,17 @@ class ForumResource extends Resource
 
     public static function getNavigationLabel(): string
     {
-        return __('forumkit-forums::messages.forums.navigation_label');
+        return __('filagora-forums::messages.forums.navigation_label');
     }
 
     public static function getModelLabel(): string
     {
-        return __('forumkit-forums::messages.forums.model_label');
+        return __('filagora-forums::messages.forums.model_label');
     }
 
     public static function getPluralModelLabel(): string
     {
-        return __('forumkit-forums::messages.forums.plural_model_label');
+        return __('filagora-forums::messages.forums.plural_model_label');
     }
 
     public static function form(Schema $schema): Schema

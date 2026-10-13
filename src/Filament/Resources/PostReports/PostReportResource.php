@@ -2,21 +2,21 @@
 
 declare(strict_types=1);
 
-namespace ForumKit\Forums\Filament\Resources\PostReports;
+namespace Filagora\Forums\Filament\Resources\PostReports;
 
 use BackedEnum;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
-use ForumKit\Core\Navigation\NavigationGroupRegistry;
-use ForumKit\Forums\Enums\PostReportStatus;
-use ForumKit\Forums\Filament\Concerns\GatedByModerate;
-use ForumKit\Forums\Filament\Concerns\RequestMetric;
-use ForumKit\Forums\Filament\Resources\PostReports\Pages\ListPostReports;
-use ForumKit\Forums\Filament\Resources\PostReports\Tables\PostReportsTable;
-use ForumKit\Forums\Models\PostReport;
-use ForumKit\Forums\Support\Models;
+use Filagora\Core\Navigation\NavigationGroupRegistry;
+use Filagora\Forums\Enums\PostReportStatus;
+use Filagora\Forums\Filament\Concerns\GatedByModerate;
+use Filagora\Forums\Filament\Concerns\RequestMetric;
+use Filagora\Forums\Filament\Resources\PostReports\Pages\ListPostReports;
+use Filagora\Forums\Filament\Resources\PostReports\Tables\PostReportsTable;
+use Filagora\Forums\Models\PostReport;
+use Filagora\Forums\Support\Models;
 use Illuminate\Database\Eloquent\Builder;
 use UnitEnum;
 
@@ -41,17 +41,17 @@ class PostReportResource extends Resource
 
     public static function getNavigationLabel(): string
     {
-        return __('forumkit-forums::messages.reports.navigation_label');
+        return __('filagora-forums::messages.reports.navigation_label');
     }
 
     public static function getModelLabel(): string
     {
-        return __('forumkit-forums::messages.reports.model_label');
+        return __('filagora-forums::messages.reports.model_label');
     }
 
     public static function getPluralModelLabel(): string
     {
-        return __('forumkit-forums::messages.reports.plural_model_label');
+        return __('filagora-forums::messages.reports.plural_model_label');
     }
 
     public static function form(Schema $schema): Schema

@@ -2,18 +2,18 @@
 
 declare(strict_types=1);
 
-namespace ForumKit\Forums\Filament\Resources\Posts;
+namespace Filagora\Forums\Filament\Resources\Posts;
 
 use BackedEnum;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
-use ForumKit\Core\Navigation\NavigationGroupRegistry;
-use ForumKit\Forums\Filament\Concerns\GatedByModerate;
-use ForumKit\Forums\Filament\Resources\Posts\Pages\ListPosts;
-use ForumKit\Forums\Filament\Resources\Posts\Tables\PostsTable;
-use ForumKit\Forums\Support\Models;
+use Filagora\Core\Navigation\NavigationGroupRegistry;
+use Filagora\Forums\Filament\Concerns\GatedByModerate;
+use Filagora\Forums\Filament\Resources\Posts\Pages\ListPosts;
+use Filagora\Forums\Filament\Resources\Posts\Tables\PostsTable;
+use Filagora\Forums\Support\Models;
 use Illuminate\Database\Eloquent\Builder;
 use UnitEnum;
 
@@ -37,17 +37,17 @@ class PostResource extends Resource
 
     public static function getNavigationLabel(): string
     {
-        return __('forumkit-forums::messages.posts.navigation_label');
+        return __('filagora-forums::messages.posts.navigation_label');
     }
 
     public static function getModelLabel(): string
     {
-        return __('forumkit-forums::messages.posts.model_label');
+        return __('filagora-forums::messages.posts.model_label');
     }
 
     public static function getPluralModelLabel(): string
     {
-        return __('forumkit-forums::messages.posts.plural_model_label');
+        return __('filagora-forums::messages.posts.plural_model_label');
     }
 
     public static function form(Schema $schema): Schema

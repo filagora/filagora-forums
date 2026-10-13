@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace ForumKit\Forums\Enums;
+namespace Filagora\Forums\Enums;
 
 /**
  * Who can see a forum. Every value ever stored is kept, so existing data loads.

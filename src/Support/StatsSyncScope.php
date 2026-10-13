@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace ForumKit\Forums\Support;
+namespace Filagora\Forums\Support;
 
 /**
  * Suppresses the stats observers while a multi-step operation does its own, single stats update,

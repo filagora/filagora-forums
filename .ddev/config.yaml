@@ -1,4 +1,4 @@
-name: forumkit-forums
+name: filagora-forums
 type: php
 docroot: .
 php_version: "8.4"

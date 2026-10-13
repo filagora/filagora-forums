@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-use ForumKit\Core\Schema\SchemaRegistry;
-use ForumKit\Core\Schema\TableShape;
-use ForumKit\Core\Support\Tables;
+use Filagora\Core\Schema\SchemaRegistry;
+use Filagora\Core\Schema\TableShape;
+use Filagora\Core\Support\Tables;
 use Illuminate\Support\Facades\DB;
 
 /*
@@ -21,7 +21,7 @@ it('ships a snapshot of the seven forum tables that matches the migration, colum
 
     expect($snapshot)->not->toBeNull()
         ->and(array_keys($snapshot->tables))->toBe(FORUM_TABLES)
-        ->and($snapshot->migrationNames())->toBe(['2026_10_11_000000_create_forumkit_forum_tables']);
+        ->and($snapshot->migrationNames())->toBe(['2026_10_11_000000_create_filagora_forum_tables']);
 
     foreach ($snapshot->tables as $base => $expected) {
         expect(TableShape::inspect($base)->differencesFrom($expected, compareColumnOrder: true))->toBe([], $base);

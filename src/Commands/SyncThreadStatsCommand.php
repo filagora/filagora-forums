@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
-namespace ForumKit\Forums\Commands;
+namespace Filagora\Forums\Commands;
 
-use ForumKit\Forums\Services\ThreadStats;
-use ForumKit\Forums\Support\Models;
+use Filagora\Forums\Services\ThreadStats;
+use Filagora\Forums\Support\Models;
 use Illuminate\Console\Command;
 
 class SyncThreadStatsCommand extends Command
 {
-    protected $signature = 'forumkit:forums:sync-thread-stats
+    protected $signature = 'filagora:forums:sync-thread-stats
         {--thread-id=* : Limit the sync to one or more thread ids}';
 
     protected $description = 'Rebuild thread reply counts and last-post fields from posts';

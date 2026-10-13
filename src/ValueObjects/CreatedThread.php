@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace ForumKit\Forums\ValueObjects;
+namespace Filagora\Forums\ValueObjects;
 
-use ForumKit\Forums\Models\Post;
-use ForumKit\Forums\Models\Thread;
+use Filagora\Forums\Models\Post;
+use Filagora\Forums\Models\Thread;
 
 final readonly class CreatedThread
 {

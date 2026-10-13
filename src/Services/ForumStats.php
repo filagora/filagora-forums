@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace ForumKit\Forums\Services;
+namespace Filagora\Forums\Services;
 
-use ForumKit\Forums\Enums\ContentModerationStatus;
-use ForumKit\Forums\Events\ForumStatsChanged;
-use ForumKit\Forums\Models\Forum;
-use ForumKit\Forums\Models\Post;
-use ForumKit\Forums\Support\Models;
+use Filagora\Forums\Enums\ContentModerationStatus;
+use Filagora\Forums\Events\ForumStatsChanged;
+use Filagora\Forums\Models\Forum;
+use Filagora\Forums\Models\Post;
+use Filagora\Forums\Support\Models;
 use Illuminate\Support\Facades\DB;
 
 /**
@@ -17,7 +17,7 @@ use Illuminate\Support\Facades\DB;
  * The counters are maintained incrementally, because a forum can hold over a million posts:
  * single-post events adjust the counts by a delta and set or refresh the last post cheaply.
  * `syncForForumIds()` recomputes from scratch, as the safety net for any drift
- * (`forumkit:forums:sync-stats`).
+ * (`filagora:forums:sync-stats`).
  *
  * `post_count` counts approved posts in approved threads and, as in the forum this was
  * extracted from, does not exclude soft-deleted posts.

@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace ForumKit\Forums\Support;
+namespace Filagora\Forums\Support;
 
-use ForumKit\Forums\Contracts\ContentModerationPolicy;
+use Filagora\Forums\Contracts\ContentModerationPolicy;
 use Illuminate\Contracts\Auth\Authenticatable;
 
 final class NoContentModeration implements ContentModerationPolicy

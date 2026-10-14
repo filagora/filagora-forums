@@ -52,7 +52,6 @@ class SiteNotification extends Model
     {
         static::saved(fn () => ActiveAnnouncements::flush());
         static::deleted(fn () => ActiveAnnouncements::flush());
-
     }
 
     public function getTable(): string

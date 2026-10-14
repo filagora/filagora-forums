@@ -5,6 +5,8 @@ All notable changes to this package are documented here. The format follows
 
 ## [Unreleased]
 
+## [0.3.0] - 2026-10-14
+
 ### Added
 
 - **Site announcements.** Tables `site_notifications` and `user_site_notification_dismissals` (a second migration; `filagora:adopt` now expects nine tables and records two migrations), models `SiteNotification` and `UserSiteNotificationDismissal` (`site_notification`, `site_notification_dismissal` in `filagora-forums.models`), enums `AnnouncementStatus`, `AnnouncementAudience` and `AnnouncementSeverity`, services `ActiveAnnouncements` and `AnnouncementDismissals`, and the targeting registry `TargetingRules` with the `TargetingRule` contract and eight rules.

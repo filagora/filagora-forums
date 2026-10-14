@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Schema;
 
 const FORUM_MIGRATION = '2026_10_11_000000_create_filagora_forum_tables';
 const ANNOUNCEMENT_MIGRATION = '2026_10_14_000000_create_filagora_announcement_tables';
+const POLL_MIGRATION = '2026_10_15_000000_create_filagora_poll_tables';
 
 function packageMigration(string $name): object
 {
@@ -30,13 +31,13 @@ function existingForumTables(): void
 
     config(['filagora.table_prefix' => '']);
 
-    foreach ([FORUM_MIGRATION, ANNOUNCEMENT_MIGRATION] as $name) {
+    foreach ([FORUM_MIGRATION, ANNOUNCEMENT_MIGRATION, POLL_MIGRATION] as $name) {
         $migration = packageMigration($name);
         $migration->down();
         $migration->up();
     }
 
-    DB::table('migrations')->whereIn('migration', [FORUM_MIGRATION, ANNOUNCEMENT_MIGRATION])->delete();
+    DB::table('migrations')->whereIn('migration', [FORUM_MIGRATION, ANNOUNCEMENT_MIGRATION, POLL_MIGRATION])->delete();
 }
 
 /**
@@ -102,11 +103,11 @@ it('adopts the forum tables of an existing site and records the migration', func
     $plan = app(Adopter::class)->planFor(forumsSchema());
 
     expect($plan->status)->toBe(AdoptionStatus::Adoptable, implode('; ', $plan->differences))
-        ->and($plan->pendingMigrations)->toBe([FORUM_MIGRATION, ANNOUNCEMENT_MIGRATION]);
+        ->and($plan->pendingMigrations)->toBe([FORUM_MIGRATION, ANNOUNCEMENT_MIGRATION, POLL_MIGRATION]);
 
-    $this->artisan('filagora:adopt', ['--package' => 'forums'])->expectsOutputToContain('Recorded 2 migration(s) as run.')->assertExitCode(0);
+    $this->artisan('filagora:adopt', ['--package' => 'forums'])->expectsOutputToContain('Recorded 3 migration(s) as run.')->assertExitCode(0);
 
-    expect(DB::table('migrations')->whereIn('migration', [FORUM_MIGRATION, ANNOUNCEMENT_MIGRATION])->count())->toBe(2);
+    expect(DB::table('migrations')->whereIn('migration', [FORUM_MIGRATION, ANNOUNCEMENT_MIGRATION, POLL_MIGRATION])->count())->toBe(3);
 });
 
 it('refuses a site whose tables carry columns nobody declared, naming each one', function () {

@@ -111,6 +111,14 @@ package) and the forum follows it. With neither, every staff screen denies every
   username and timezone columns the rules read are set in `filagora-forums.announcements`. The
   tables are `site_notifications` and `user_site_notification_dismissals`.
 
+- **Polls.** `Polls` adds a poll to a thread (moderators; one per thread; 1 to 20 questions of 2
+  to 20 options, single or multiple choice), lets them replace its questions until someone has
+  voted, and close or reopen it. `vote($user, $poll, [$questionId => [$optionId, ...]])` takes a
+  vote from anyone who can see the thread: every question answered, exactly one option for a
+  single-choice question, at least one for a multiple-choice one, locked once cast.
+  `results($poll)` gives each option's votes; `canSeeResults()` follows the rule that staff,
+  voters and everyone (once the poll is closed) may see them. Refusals are `PollRefused` with a
+  reason; the forms, the voting buttons and the results chart are yours.
 - **Privacy.** Forums registers a `PrivacyContributor` (a person's threads, posts and reports for
   an export; erasure keeps what they wrote under the anonymised account) and retention rules for
   the moderation logs and dismissed reports (`retention` in the config) with core. With

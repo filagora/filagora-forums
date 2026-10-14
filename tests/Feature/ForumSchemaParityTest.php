@@ -14,14 +14,14 @@ use Illuminate\Support\Facades\DB;
  * migration in step with the snapshot and pin the details that matter most.
  */
 
-const FORUM_TABLES = ['forum_groups', 'forums', 'threads', 'posts', 'post_reports', 'post_moderation_logs', 'thread_moderation_logs'];
+const FORUM_TABLES = ['forum_groups', 'forums', 'threads', 'posts', 'post_reports', 'post_moderation_logs', 'thread_moderation_logs', 'site_notifications', 'user_site_notification_dismissals'];
 
-it('ships a snapshot of the seven forum tables that matches the migration, column order included', function () {
+it('ships a snapshot of the nine forum tables that matches the migration, column order included', function () {
     $snapshot = app(SchemaRegistry::class)->get('forums');
 
     expect($snapshot)->not->toBeNull()
         ->and(array_keys($snapshot->tables))->toBe(FORUM_TABLES)
-        ->and($snapshot->migrationNames())->toBe(['2026_10_11_000000_create_filagora_forum_tables']);
+        ->and($snapshot->migrationNames())->toBe(['2026_10_11_000000_create_filagora_forum_tables', '2026_10_14_000000_create_filagora_announcement_tables']);
 
     foreach ($snapshot->tables as $base => $expected) {
         expect(TableShape::inspect($base)->differencesFrom($expected, compareColumnOrder: true))->toBe([], $base);

@@ -12,19 +12,31 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
 const FORUM_MIGRATION = '2026_10_11_000000_create_filagora_forum_tables';
+const ANNOUNCEMENT_MIGRATION = '2026_10_14_000000_create_filagora_announcement_tables';
+
+function packageMigration(string $name): object
+{
+    return require __DIR__.'/../../database/migrations/'.$name.'.php';
+}
 
 /**
  * Build the tables the way an existing site has them: no prefix, and the migration not recorded.
  */
 function existingForumTables(): void
 {
+    // The announcement tables' constraint names do not carry the prefix, so the prefixed set has
+    // to go before an unprefixed one can exist beside it. afterEach() puts it back.
+    packageMigration(ANNOUNCEMENT_MIGRATION)->down();
+
     config(['filagora.table_prefix' => '']);
 
-    $migration = require __DIR__.'/../../database/migrations/'.FORUM_MIGRATION.'.php';
-    $migration->down();
-    $migration->up();
+    foreach ([FORUM_MIGRATION, ANNOUNCEMENT_MIGRATION] as $name) {
+        $migration = packageMigration($name);
+        $migration->down();
+        $migration->up();
+    }
 
-    DB::table('migrations')->where('migration', FORUM_MIGRATION)->delete();
+    DB::table('migrations')->whereIn('migration', [FORUM_MIGRATION, ANNOUNCEMENT_MIGRATION])->delete();
 }
 
 /**
@@ -78,6 +90,10 @@ afterEach(function () {
     }
 
     config(['filagora.table_prefix' => 'filagora_']);
+
+    if (! Schema::hasTable(Tables::name('site_notifications'))) {
+        packageMigration(ANNOUNCEMENT_MIGRATION)->up();
+    }
 });
 
 it('adopts the forum tables of an existing site and records the migration', function () {
@@ -86,11 +102,11 @@ it('adopts the forum tables of an existing site and records the migration', func
     $plan = app(Adopter::class)->planFor(forumsSchema());
 
     expect($plan->status)->toBe(AdoptionStatus::Adoptable, implode('; ', $plan->differences))
-        ->and($plan->pendingMigrations)->toBe([FORUM_MIGRATION]);
+        ->and($plan->pendingMigrations)->toBe([FORUM_MIGRATION, ANNOUNCEMENT_MIGRATION]);
 
-    $this->artisan('filagora:adopt', ['--package' => 'forums'])->expectsOutputToContain('Recorded 1 migration(s) as run.')->assertExitCode(0);
+    $this->artisan('filagora:adopt', ['--package' => 'forums'])->expectsOutputToContain('Recorded 2 migration(s) as run.')->assertExitCode(0);
 
-    expect(DB::table('migrations')->where('migration', FORUM_MIGRATION)->exists())->toBeTrue();
+    expect(DB::table('migrations')->whereIn('migration', [FORUM_MIGRATION, ANNOUNCEMENT_MIGRATION])->count())->toBe(2);
 });
 
 it('refuses a site whose tables carry columns nobody declared, naming each one', function () {

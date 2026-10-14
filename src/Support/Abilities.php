@@ -19,6 +19,9 @@ final class Abilities
     /** Post without waiting for approval. */
     public const BYPASS_APPROVAL = 'filagora.forums.bypass_approval';
 
+    /** Manage site announcements. Not a staff ability: it does not make a user forum staff. */
+    public const ANNOUNCEMENTS = 'filagora.forums.announcements';
+
     /**
      * Holding any of these makes a user staff.
      *

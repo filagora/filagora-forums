@@ -13,9 +13,9 @@ use Filagora\Core\Schema\SchemaRegistry;
 use Filagora\Core\Settings\SettingDefinition;
 use Filagora\Core\Settings\SettingsRegistry;
 use Filagora\Core\Settings\SettingType;
+use Filagora\Core\Support\GateAbilities;
 use Filagora\Entitlements\Registry\Definition;
 use Filagora\Entitlements\Registry\EntitlementRegistry;
-use Filagora\Entitlements\Services\AuthorizationService;
 use Filagora\Forums\Commands\SyncForumStatsCommand;
 use Filagora\Forums\Commands\SyncThreadStatsCommand;
 use Filagora\Forums\Contracts\ContentModerationPolicy;
@@ -51,8 +51,6 @@ use Filagora\Forums\Targeting\Rules\PostCountBetweenRule;
 use Filagora\Forums\Targeting\Rules\TimeBetweenRule;
 use Filagora\Forums\Targeting\Rules\UsernameRule;
 use Filagora\Forums\Targeting\TargetingRules;
-use Illuminate\Contracts\Auth\Authenticatable;
-use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
 
 class ForumsServiceProvider extends ServiceProvider
@@ -105,7 +103,7 @@ class ForumsServiceProvider extends ServiceProvider
     public function boot(): void
     {
         $this->app->make(ModuleRegistry::class)->register(
-            new Module('forums', 'Filagora Forums', 'filagora/filagora-forums', requires: ['core', 'entitlements']),
+            new Module('forums', 'Filagora Forums', 'filagora/filagora-forums', requires: ['core']),
         );
 
         $this->app->make(SchemaRegistry::class)->register(
@@ -166,32 +164,30 @@ class ForumsServiceProvider extends ServiceProvider
     }
 
     /**
-     * The entitlements the staff abilities map to, and the keys set on forums.
+     * With `filagora-entitlements` installed: the entitlements the abilities map to, and the keys
+     * set on forums, are declared so `filagora:entitlements:sync` creates their definitions.
+     * Without it there is nothing to declare them to.
      */
     private function declareEntitlements(): void
     {
+        if (! class_exists(EntitlementRegistry::class) || ! $this->app->bound(EntitlementRegistry::class)) {
+            return;
+        }
+
         $registry = $this->app->make(EntitlementRegistry::class);
 
-        foreach (config('filagora-forums.gates', []) as $entitlement) {
-            if (is_string($entitlement) && $entitlement !== '') {
-                $registry->define(new Definition($entitlement, wildcardChildren: false));
-            }
+        foreach (GateAbilities::keys('filagora-forums.gates') as $entitlement) {
+            $registry->define(new Definition($entitlement, wildcardChildren: false));
         }
 
         $registry->keySource(new ForumEntitlementKeys);
     }
 
     /**
-     * Each staff ability is allowed when the user holds the mapped entitlement.
+     * Each ability is allowed when the access checker allows its mapped key.
      */
     private function defineGates(): void
     {
-        foreach (config('filagora-forums.gates', []) as $ability => $entitlement) {
-            if (! is_string($ability) || ! is_string($entitlement)) {
-                continue;
-            }
-
-            Gate::define($ability, fn (?Authenticatable $user): bool => $this->app->make(AuthorizationService::class)->allows($user, $entitlement));
-        }
+        GateAbilities::define('filagora-forums.gates');
     }
 }

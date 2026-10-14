@@ -2,8 +2,11 @@
 
 Forum groups, forums, threads and posts for Filagora, with visibility and posting rules,
 moderation, reports and a staff queue, as a Laravel 13 / Filament 5 plugin. Requires
-[`filagora/filagora-core`](https://github.com/filagora/filagora-core) and
-[`filagora/filagora-entitlements`](https://github.com/filagora/filagora-entitlements).
+[`filagora/filagora-core`](https://github.com/filagora/filagora-core). Who may do what is answered
+by core's `AccessChecker`: install
+[`filagora/filagora-entitlements`](https://github.com/filagora/filagora-entitlements) and it is
+answered from entitlement grants, or bind your own checker (roles, policies, a permissions
+package) and the forum follows it. With neither, every staff screen denies everyone.
 
 > The package is at `0.1`: the API may change between `0.x` minor versions. There is no
 > frontend: it is models, services, events and staff screens, and you build the public pages.
@@ -111,12 +114,14 @@ moderation, reports and a staff queue, as a Laravel 13 / Filament 5 plugin. Requ
 ## Install
 
 ```bash
-composer require filagora/filagora-forums
+composer require filagora/filagora-forums filagora/filagora-entitlements   # entitlements is optional, see above
 php artisan migrate
-php artisan filagora:entitlements:sync   # creates the forum entitlement definitions
+php artisan filagora:entitlements:sync   # with entitlements: creates the forum entitlement definitions
 ```
 
-Register the plugin on your Filament panel, after the core and entitlements plugins:
+Register the plugin on your Filament panel, after the core (and entitlements) plugins. Without
+entitlements the keys on a forum (`required_entitlement_scope`, `reply_entitlement_scope`) and in an
+announcement's `entitlement` rule are typed in, and mean whatever your checker makes of them:
 
 ```php
 ->plugin(\Filagora\Forums\FilagoraForumsPlugin::make())

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Filagora\Forums\Filament\Concerns;
 
-use Filagora\Entitlements\Filament\Concerns\GatedByAbility;
+use Filagora\Core\Filament\Concerns\GatedByAbility;
 use Filagora\Forums\Support\Abilities;
 use Illuminate\Database\Eloquent\Model;
 use UnitEnum;

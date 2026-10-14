@@ -6,11 +6,11 @@ use Filagora\Core\Modules\ModuleRegistry;
 use Filagora\Forums\FilagoraForumsPlugin;
 use Filament\Panel;
 
-it('registers itself as a module that needs core and entitlements', function () {
+it('registers itself as a module that needs only core', function () {
     $module = app(ModuleRegistry::class)->get('forums');
 
     expect($module->package)->toBe('filagora/filagora-forums')
-        ->and($module->requires)->toBe(['core', 'entitlements'])
+        ->and($module->requires)->toBe(['core'])
         ->and(app(ModuleRegistry::class)->missingRequirements())->toBe([]);
 });
 

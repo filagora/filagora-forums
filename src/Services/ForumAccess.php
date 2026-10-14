@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Filagora\Forums\Services;
 
-use Filagora\Entitlements\Services\AuthorizationService;
+use Filagora\Core\Contracts\AccessChecker;
 use Filagora\Forums\Contracts\PaidAccessCheck;
 use Filagora\Forums\Contracts\StaffPreview;
 use Filagora\Forums\Enums\ContentModerationStatus;
@@ -35,7 +35,7 @@ class ForumAccess
     private array $authoredForumIds = [];
 
     public function __construct(
-        private readonly AuthorizationService $authorization,
+        private readonly AccessChecker $access,
         private readonly PaidAccessCheck $paid,
         private readonly StaffPreview $preview,
     ) {}
@@ -326,7 +326,7 @@ class ForumAccess
     {
         $entitlement = trim((string) $entitlement);
 
-        return $user !== null && $entitlement !== '' && $this->authorization->allows($user, $entitlement);
+        return $user !== null && $entitlement !== '' && $this->access->allows($user, $entitlement);
     }
 
     /**

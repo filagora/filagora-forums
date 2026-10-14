@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Filagora\Forums\Filament\Resources\Forums\Schemas;
 
-use Filagora\Entitlements\Models\EntitlementDefinition;
 use Filagora\Forums\Enums\ForumPostingPolicy;
 use Filagora\Forums\Enums\ForumVisibility;
+use Filagora\Forums\Support\KeyField;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
@@ -35,16 +35,12 @@ class ForumForm
             TextInput::make('slug')->required(),
             Textarea::make('description')->columnSpanFull(),
             Select::make('visibility')->options(ForumVisibility::options())->default(ForumVisibility::PUBLIC->value)->required(),
-            Select::make('required_entitlement_scope')
+            KeyField::make('required_entitlement_scope')
                 ->label($t('required_entitlement_scope'))
-                ->helperText($t('required_entitlement_scope_help'))
-                ->options(fn (): array => EntitlementDefinition::selectorOptions())
-                ->searchable()->preload()->native(false),
-            Select::make('reply_entitlement_scope')
+                ->helperText($t('required_entitlement_scope_help')),
+            KeyField::make('reply_entitlement_scope')
                 ->label($t('reply_entitlement_scope'))
-                ->helperText($t('reply_entitlement_scope_help'))
-                ->options(fn (): array => EntitlementDefinition::selectorOptions())
-                ->searchable()->preload()->native(false),
+                ->helperText($t('reply_entitlement_scope_help')),
             Select::make('posting_policy')->options(ForumPostingPolicy::options())->default(ForumPostingPolicy::REGISTERED->value)->required(),
             Toggle::make('is_read_only')->default(false),
             Toggle::make('requires_thread_approval')->label($t('requires_thread_approval'))->helperText($t('requires_thread_approval_help'))->default(false),

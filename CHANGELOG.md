@@ -5,6 +5,10 @@ All notable changes to this package are documented here. The format follows
 
 ## [Unreleased]
 
+### Changed
+
+- **`filagora-entitlements` is now optional.** Every access question (the staff abilities, a forum's entitlement keys, an announcement's `entitlement` rule) goes through core's `AccessChecker`; entitlements answers it when installed, a host can bind its own. Gates come from core's `GateAbilities`, the screens use core's `GatedByAbility`, the module now requires only `core`, and `filagora-entitlements` moves from `require` to `suggest`. Without it the access-key form fields are text inputs instead of entitlement pickers, and nothing is declared to the entitlement registry. Behaviour with entitlements installed is unchanged. Requires `filagora/filagora-core` `^0.2.1`.
+
 ## [0.3.0] - 2026-10-14
 
 ### Added

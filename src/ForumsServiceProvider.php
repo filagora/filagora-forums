@@ -23,6 +23,8 @@ use Filagora\Forums\Contracts\PaidAccessCheck;
 use Filagora\Forums\Contracts\PostSignatureResolver;
 use Filagora\Forums\Contracts\StaffPreview;
 use Filagora\Forums\Observers\ForumStatsObserver;
+use Filagora\Forums\Services\ActiveAnnouncements;
+use Filagora\Forums\Services\AnnouncementDismissals;
 use Filagora\Forums\Services\ApprovalRules;
 use Filagora\Forums\Services\ForumAccess;
 use Filagora\Forums\Services\ForumStats;
@@ -40,6 +42,15 @@ use Filagora\Forums\Support\Models;
 use Filagora\Forums\Support\NoContentModeration;
 use Filagora\Forums\Support\NoPaidAccess;
 use Filagora\Forums\Support\NoPostSignature;
+use Filagora\Forums\Targeting\Rules\BrowsingForumRule;
+use Filagora\Forums\Targeting\Rules\DateIsRule;
+use Filagora\Forums\Targeting\Rules\EntitlementRule;
+use Filagora\Forums\Targeting\Rules\NeverPostedRule;
+use Filagora\Forums\Targeting\Rules\NotPostedDaysRule;
+use Filagora\Forums\Targeting\Rules\PostCountBetweenRule;
+use Filagora\Forums\Targeting\Rules\TimeBetweenRule;
+use Filagora\Forums\Targeting\Rules\UsernameRule;
+use Filagora\Forums\Targeting\TargetingRules;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
@@ -65,6 +76,20 @@ class ForumsServiceProvider extends ServiceProvider
         $this->app->singleton(PostModeration::class);
         $this->app->singleton(PostRelocation::class);
         $this->app->singleton(PostReports::class);
+        $this->app->singleton(ActiveAnnouncements::class);
+        $this->app->singleton(AnnouncementDismissals::class);
+        $this->app->singleton(TargetingRules::class, function ($app): TargetingRules {
+            $rules = new TargetingRules;
+
+            foreach ([
+                EntitlementRule::class, UsernameRule::class, DateIsRule::class, TimeBetweenRule::class,
+                NeverPostedRule::class, PostCountBetweenRule::class, NotPostedDaysRule::class, BrowsingForumRule::class,
+            ] as $rule) {
+                $rules->register($app->make($rule));
+            }
+
+            return $rules;
+        });
     }
 
     private function registerNavigationGroups(): void

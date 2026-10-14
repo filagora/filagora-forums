@@ -5,6 +5,12 @@ All notable changes to this package are documented here. The format follows
 
 ## [Unreleased]
 
+### Added
+
+- **Site announcements.** Tables `site_notifications` and `user_site_notification_dismissals` (a second migration; `filagora:adopt` now expects nine tables and records two migrations), models `SiteNotification` and `UserSiteNotificationDismissal` (`site_notification`, `site_notification_dismissal` in `filagora-forums.models`), enums `AnnouncementStatus`, `AnnouncementAudience` and `AnnouncementSeverity`, services `ActiveAnnouncements` and `AnnouncementDismissals`, and the targeting registry `TargetingRules` with the `TargetingRule` contract and eight rules.
+- Filament resource `SiteNotificationResource` (list, create, edit, delete; filters; the rule builder is driven by the registry) behind the new ability `filagora.forums.announcements`, which is not a staff ability.
+- Config `filagora-forums.announcements` (`username_attribute`, `timezone_attribute`) and the lang file `announcements.php`.
+
 ## [0.2.0] - 2026-10-13
 
 ### Changed

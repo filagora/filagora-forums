@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Filagora\Forums\Targeting;
 
-use Filament\Schemas\Components\Component;
+use Filament\Forms\Components\Field;
 
 /**
  * One kind of targeting rule an announcement can carry, such as "has this entitlement". A rule is
@@ -24,9 +24,9 @@ interface TargetingRule
     public function label(): string;
 
     /**
-     * The form fields for the rule, shown when its type is picked. Field names are the rule's keys.
+     * The form fields for the rule, shown when its type is picked. A field's name is the key it is stored under.
      *
-     * @return list<Component>
+     * @return list<Field>
      */
     public function schema(): array;
 

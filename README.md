@@ -85,6 +85,29 @@ moderation, reports and a staff queue, as a Laravel 13 / Filament 5 plugin. Requ
   The moderation queue's navigation badge and the widget count what is waiting; add
   `ModerationQueueStats::class` to your dashboard if your panel lists widgets explicitly.
 
+- **Site announcements** (banners). An editor publishes a message for a time window, to
+  everyone, guests or signed-in users, with a severity, a priority, whether visitors can dismiss
+  it and whether it keeps showing, and optional **targeting rules** (all must pass).
+  `ActiveAnnouncements::forViewer($user, ['forum_id' => $id])` returns what to show one viewer
+  (the shared pool is cached by id for 60 seconds and cleared on every save); `AnnouncementDismissals`
+  records a dismissal (only for a dismissible announcement) or the first view of a
+  non-persistent one, and lists a user's dismissed ids. The screen (**Announcements**, in the
+  Forum group) needs its own ability, `filagora.forums.announcements`, which does not make
+  anyone forum staff. The package has no routes, views or JavaScript: render the banners and
+  add the two endpoints in your application, for example
+
+  ```php
+  Route::post('/announcements/{id}/dismiss', fn (Request $r, int $id, AnnouncementDismissals $d) =>
+      response()->json(['dismissed' => $d->dismiss($r->user(), $id)]))->middleware('auth');
+  ```
+
+  Rules are classes registered on `TargetingRules`; it ships `entitlement`, `username`,
+  `date_is`, `time_between`, `never_posted`, `post_count_between`, `not_posted_days` and
+  `browsing_forum` (which reads `forum_id` from the context you pass). Implement `TargetingRule`
+  (a type, a label, the form fields, and `matches()`) and `register()` it to add your own. The
+  username and timezone columns the rules read are set in `filagora-forums.announcements`. The
+  tables are `site_notifications` and `user_site_notification_dismissals`.
+
 ## Install
 
 ```bash

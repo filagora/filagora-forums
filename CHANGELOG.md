@@ -5,6 +5,12 @@ All notable changes to this package are documented here. The format follows
 
 ## [Unreleased]
 
+## [0.3.2] - 2026-10-14
+
+### Added
+
+- **Privacy contributions**, registered with core's registries, so the compliance package (or any host) can export, erase and prune without forums knowing it: `ForumsDataContributor` (export of a person's threads, posts and the reports they filed; erasure leaves what they wrote, attributed to the anonymised account) and retention rules for the thread and post moderation logs and for dismissed reports (config `retention`: 1095, 1095 and 90 days; zero keeps them). Nothing here needs `filagora-compliance`; without it nothing runs the rules.
+
 ## [0.3.1] - 2026-10-14
 
 ### Changed

@@ -8,12 +8,16 @@ use Filagora\Core\Modules\Module;
 use Filagora\Core\Modules\ModuleRegistry;
 use Filagora\Core\Navigation\NavigationGroupDefinition;
 use Filagora\Core\Navigation\NavigationGroupRegistry;
+use Filagora\Core\Privacy\PrivacyContributorRegistry;
+use Filagora\Core\Privacy\RetentionRuleRegistry;
+use Filagora\Core\Privacy\TableRetentionRule;
 use Filagora\Core\Schema\PackageSchema;
 use Filagora\Core\Schema\SchemaRegistry;
 use Filagora\Core\Settings\SettingDefinition;
 use Filagora\Core\Settings\SettingsRegistry;
 use Filagora\Core\Settings\SettingType;
 use Filagora\Core\Support\GateAbilities;
+use Filagora\Core\Support\Tables;
 use Filagora\Entitlements\Registry\Definition;
 use Filagora\Entitlements\Registry\EntitlementRegistry;
 use Filagora\Forums\Commands\SyncForumStatsCommand;
@@ -23,6 +27,8 @@ use Filagora\Forums\Contracts\PaidAccessCheck;
 use Filagora\Forums\Contracts\PostSignatureResolver;
 use Filagora\Forums\Contracts\StaffPreview;
 use Filagora\Forums\Observers\ForumStatsObserver;
+use Filagora\Forums\Privacy\DismissedReportsRetention;
+use Filagora\Forums\Privacy\ForumsDataContributor;
 use Filagora\Forums\Services\ActiveAnnouncements;
 use Filagora\Forums\Services\AnnouncementDismissals;
 use Filagora\Forums\Services\ApprovalRules;
@@ -114,6 +120,7 @@ class ForumsServiceProvider extends ServiceProvider
         $this->declareEntitlements();
         $this->defineGates();
         $this->observeModels();
+        $this->registerPrivacy();
         $this->declareSettings();
 
         $this->loadTranslationsFrom(__DIR__.'/../resources/lang', 'filagora-forums');
@@ -151,6 +158,28 @@ class ForumsServiceProvider extends ServiceProvider
             label: 'Forum Post Edit Grace Period Minutes',
             description: 'Edits made within this many minutes of posting are not marked as edited.',
         ));
+    }
+
+    /**
+     * What the forums contribute to export, erasure and retention, for the compliance package
+     * (or any host) to run. Nothing here needs that package installed.
+     */
+    private function registerPrivacy(): void
+    {
+        $this->app->make(PrivacyContributorRegistry::class)->register(new ForumsDataContributor);
+
+        $retention = $this->app->make(RetentionRuleRegistry::class);
+
+        foreach (['thread_moderation_logs', 'post_moderation_logs'] as $log) {
+            $retention->register(new TableRetentionRule(
+                "forums.{$log}",
+                Tables::name($log),
+                'created_at',
+                static fn (): int => (int) config("filagora-forums.retention.{$log}_days", 1095),
+            ));
+        }
+
+        $retention->register(new DismissedReportsRetention);
     }
 
     /**

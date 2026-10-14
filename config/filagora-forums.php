@@ -70,4 +70,21 @@ return [
         'timezone_attribute' => 'timezone',
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | Retention
+    |--------------------------------------------------------------------------
+    |
+    | How long the moderation logs, and reports staff dismissed, are kept (days; zero keeps them
+    | for ever). They are registered with core's RetentionRuleRegistry, which
+    | `filagora:compliance:prune` (filagora-compliance) runs; without that package nothing
+    | deletes them.
+    |
+    */
+    'retention' => [
+        'thread_moderation_logs_days' => 1095,
+        'post_moderation_logs_days' => 1095,
+        'dismissed_reports_days' => 90,
+    ],
+
 ];

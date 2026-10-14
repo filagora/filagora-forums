@@ -6,6 +6,11 @@ use Filagora\Core\Privacy\PrivacyContributorRegistry;
 use Filagora\Core\Privacy\RetentionRuleRegistry;
 use Filagora\Forums\Models\Forum;
 use Filagora\Forums\Models\ForumGroup;
+use Filagora\Forums\Models\Poll;
+use Filagora\Forums\Models\PollOption;
+use Filagora\Forums\Models\PollQuestion;
+use Filagora\Forums\Models\PollVote;
+use Filagora\Forums\Models\PollVoteAnswer;
 use Filagora\Forums\Models\Post;
 use Filagora\Forums\Models\PostModerationLog;
 use Filagora\Forums\Models\PostReport;
@@ -32,14 +37,20 @@ it('contributes the forums\' data about a person to an export, and keeps what th
     $author = TestUser::make('Author');
     [$thread, $post] = privacyContent($author);
     [$otherThread] = privacyContent(TestUser::make('Other'));
+    $poll = Poll::create(['thread_id' => $thread->id, 'status' => 'open']);
+    $question = PollQuestion::create(['poll_id' => $poll->id, 'prompt' => 'Q?']);
+    $option = PollOption::create(['poll_question_id' => $question->id, 'label' => 'Yes']);
+    $vote = PollVote::create(['poll_id' => $poll->id, 'user_id' => $author->id]);
+    PollVoteAnswer::create(['poll_vote_id' => $vote->id, 'poll_question_id' => $question->id, 'poll_option_id' => $option->id]);
     PostReport::create(['post_id' => $post->id, 'thread_id' => $thread->id, 'reporter_id' => $author->id, 'reason' => 'Spam?']);
 
     $contributor = app(PrivacyContributorRegistry::class)->all()['forums'];
     $export = $contributor->export($author);
 
-    expect(array_keys($export))->toBe(['threads', 'posts', 'post_reports'])
+    expect(array_keys($export))->toBe(['threads', 'posts', 'poll_votes', 'post_reports'])
         ->and(array_column($export['threads'], 'title'))->toBe(['My thread'])
         ->and(array_column($export['posts'], 'body'))->toBe(['My words'])
+        ->and($export['poll_votes'])->toBe([['poll_id' => $poll->id, 'voted_at' => $vote->created_at->toIso8601String(), 'option_ids' => [$option->id]]])
         ->and($export['post_reports'][0]['reason'])->toBe('Spam?')
         ->and($export['threads'][0])->not->toHaveKey('author_id');
 

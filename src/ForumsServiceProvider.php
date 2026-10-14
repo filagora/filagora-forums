@@ -34,6 +34,7 @@ use Filagora\Forums\Services\AnnouncementDismissals;
 use Filagora\Forums\Services\ApprovalRules;
 use Filagora\Forums\Services\ForumAccess;
 use Filagora\Forums\Services\ForumStats;
+use Filagora\Forums\Services\Polls;
 use Filagora\Forums\Services\Posting;
 use Filagora\Forums\Services\PostModeration;
 use Filagora\Forums\Services\PostRelocation;
@@ -80,6 +81,7 @@ class ForumsServiceProvider extends ServiceProvider
         $this->app->singleton(PostModeration::class);
         $this->app->singleton(PostRelocation::class);
         $this->app->singleton(PostReports::class);
+        $this->app->singleton(Polls::class);
         $this->app->singleton(ActiveAnnouncements::class);
         $this->app->singleton(AnnouncementDismissals::class);
         $this->app->singleton(TargetingRules::class, function ($app): TargetingRules {

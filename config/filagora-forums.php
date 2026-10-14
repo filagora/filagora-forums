@@ -3,6 +3,11 @@
 declare(strict_types=1);
 use Filagora\Forums\Models\Forum;
 use Filagora\Forums\Models\ForumGroup;
+use Filagora\Forums\Models\Poll;
+use Filagora\Forums\Models\PollOption;
+use Filagora\Forums\Models\PollQuestion;
+use Filagora\Forums\Models\PollVote;
+use Filagora\Forums\Models\PollVoteAnswer;
 use Filagora\Forums\Models\Post;
 use Filagora\Forums\Models\PostModerationLog;
 use Filagora\Forums\Models\PostReport;
@@ -34,6 +39,11 @@ return [
         'thread_moderation_log' => ThreadModerationLog::class,
         'site_notification' => SiteNotification::class,
         'site_notification_dismissal' => UserSiteNotificationDismissal::class,
+        'poll' => Poll::class,
+        'poll_question' => PollQuestion::class,
+        'poll_option' => PollOption::class,
+        'poll_vote' => PollVote::class,
+        'poll_vote_answer' => PollVoteAnswer::class,
     ],
 
     /*

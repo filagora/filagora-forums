@@ -111,6 +111,11 @@ package) and the forum follows it. With neither, every staff screen denies every
   username and timezone columns the rules read are set in `filagora-forums.announcements`. The
   tables are `site_notifications` and `user_site_notification_dismissals`.
 
+- **Privacy.** Forums registers a `PrivacyContributor` (a person's threads, posts and reports for
+  an export; erasure keeps what they wrote under the anonymised account) and retention rules for
+  the moderation logs and dismissed reports (`retention` in the config) with core. With
+  `filagora-compliance` installed, privacy requests and `filagora:compliance:prune` use them.
+
 ## Install
 
 ```bash

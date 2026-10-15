@@ -2434,5 +2434,119 @@ return [
                 ],
             ],
         ],
+        'reactions' => [
+            'columns' => [
+                'id' => [
+                    'type' => 'bigint unsigned',
+                    'nullable' => false,
+                    'default' => null,
+                    'collation' => null,
+                    'auto_increment' => true,
+                    'generation' => null,
+                ],
+                'post_id' => [
+                    'type' => 'bigint unsigned',
+                    'nullable' => false,
+                    'default' => null,
+                    'collation' => null,
+                    'auto_increment' => false,
+                    'generation' => null,
+                ],
+                'user_id' => [
+                    'type' => 'bigint unsigned',
+                    'nullable' => false,
+                    'default' => null,
+                    'collation' => null,
+                    'auto_increment' => false,
+                    'generation' => null,
+                ],
+                'type' => [
+                    'type' => 'varchar(32)',
+                    'nullable' => false,
+                    'default' => 'like',
+                    'collation' => 'utf8mb4_unicode_ci',
+                    'auto_increment' => false,
+                    'generation' => null,
+                ],
+                'created_at' => [
+                    'type' => 'timestamp',
+                    'nullable' => true,
+                    'default' => null,
+                    'collation' => null,
+                    'auto_increment' => false,
+                    'generation' => null,
+                ],
+                'updated_at' => [
+                    'type' => 'timestamp',
+                    'nullable' => true,
+                    'default' => null,
+                    'collation' => null,
+                    'auto_increment' => false,
+                    'generation' => null,
+                ],
+            ],
+            'indexes' => [
+                'primary' => [
+                    'columns' => [
+                        'id',
+                    ],
+                    'unique' => true,
+                    'primary' => true,
+                    'type' => 'btree',
+                ],
+                'reactions_post_id_type_index' => [
+                    'columns' => [
+                        'post_id',
+                        'type',
+                    ],
+                    'unique' => false,
+                    'primary' => false,
+                    'type' => 'btree',
+                ],
+                'reactions_post_id_user_id_type_unique' => [
+                    'columns' => [
+                        'post_id',
+                        'user_id',
+                        'type',
+                    ],
+                    'unique' => true,
+                    'primary' => false,
+                    'type' => 'btree',
+                ],
+                'reactions_user_id_type_index' => [
+                    'columns' => [
+                        'user_id',
+                        'type',
+                    ],
+                    'unique' => false,
+                    'primary' => false,
+                    'type' => 'btree',
+                ],
+            ],
+            'foreign_keys' => [
+                'reactions_post_id_foreign' => [
+                    'columns' => [
+                        'post_id',
+                    ],
+                    'on' => 'posts',
+                    'foreign_columns' => [
+                        'id',
+                    ],
+                    'on_delete' => 'cascade',
+                    'on_update' => 'restrict',
+                ],
+                'reactions_user_id_foreign' => [
+                    'columns' => [
+                        'user_id',
+                    ],
+                    'on' => '{users}',
+                    'foreign_columns' => [
+                        'id',
+                    ],
+                    'on_delete' => 'cascade',
+                    'on_update' => 'restrict',
+                ],
+            ],
+        ],
     ],
 ];

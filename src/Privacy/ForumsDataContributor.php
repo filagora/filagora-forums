@@ -10,8 +10,8 @@ use Illuminate\Database\Eloquent\Model;
 
 /**
  * What the forums hold about a person, for the compliance package's export: their threads, their
- * posts, their poll votes and the reports they filed. Erasure removes nothing: what a person wrote stays, attributed
- * to the account that the host's anonymiser has by then made anonymous.
+ * posts, their poll votes and the reports they filed. Erasure removes their subscriptions and digest queue; what they wrote
+ * stays, attributed to the account that the host's anonymiser has by then made anonymous.
  */
 final class ForumsDataContributor implements PrivacyContributor
 {
@@ -29,6 +29,8 @@ final class ForumsDataContributor implements PrivacyContributor
             'posts' => Models::class('post')::query()->where('author_id', $id)->orderBy('id')->get(['id', 'thread_id', 'body', 'created_at', 'updated_at'])->toArray(),
             'poll_votes' => $this->pollVotes($id),
             'reactions' => Models::class('reaction')::query()->where('user_id', $id)->orderBy('id')->get(['post_id', 'type', 'created_at'])->toArray(),
+            'thread_subscriptions' => Models::class('thread_subscription')::query()->where('user_id', $id)->orderBy('id')->get(['thread_id', 'created_at'])->toArray(),
+            'digest_items' => Models::class('thread_subscription_digest_item')::query()->where('user_id', $id)->orderBy('id')->get(['thread_id', 'post_id', 'sent_at', 'created_at'])->toArray(),
             'post_reports' => Models::class('post_report')::query()->where('reporter_id', $id)->orderBy('id')->get(['id', 'post_id', 'reason', 'status', 'created_at'])->toArray(),
         ];
     }
@@ -53,6 +55,8 @@ final class ForumsDataContributor implements PrivacyContributor
 
     public function erase(Model $user): void
     {
-        // Authored content stays, under the anonymised account.
+        // Authored content stays, under the anonymised account; what only served the person goes.
+        Models::class('thread_subscription')::query()->where('user_id', $user->getKey())->delete();
+        Models::class('thread_subscription_digest_item')::query()->where('user_id', $user->getKey())->delete();
     }
 }

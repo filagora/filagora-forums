@@ -30,7 +30,7 @@ function privacyContent(TestUser $author): array
 
 function ageLog(object $model, int $days): void
 {
-    $model->newQuery()->whereKey($model->getKey())->toBase()->update(['created_at' => now()->subDays($days)]);
+    $model->newQuery()->whereKey($model->getKey())->toBase()->update(['created_at' => now()->subDays($days)->setTime(12, 0)]);
 }
 
 it('contributes the forums\' data about a person to an export, and keeps what they wrote on erasure', function () {
@@ -47,7 +47,7 @@ it('contributes the forums\' data about a person to an export, and keeps what th
     $contributor = app(PrivacyContributorRegistry::class)->all()['forums'];
     $export = $contributor->export($author);
 
-    expect(array_keys($export))->toBe(['threads', 'posts', 'poll_votes', 'reactions', 'post_reports'])
+    expect(array_keys($export))->toBe(['threads', 'posts', 'poll_votes', 'reactions', 'thread_subscriptions', 'digest_items', 'post_reports'])
         ->and(array_column($export['threads'], 'title'))->toBe(['My thread'])
         ->and(array_column($export['posts'], 'body'))->toBe(['My words'])
         ->and($export['poll_votes'])->toBe([['poll_id' => $poll->id, 'voted_at' => $vote->created_at->toIso8601String(), 'option_ids' => [$option->id]]])
@@ -60,7 +60,7 @@ it('contributes the forums\' data about a person to an export, and keeps what th
 });
 
 it('registers the moderation log and dismissed report retention rules', function () {
-    expect(array_keys(app(RetentionRuleRegistry::class)->all()))->toContain('forums.thread_moderation_logs', 'forums.post_moderation_logs', 'forums.dismissed_reports');
+    expect(array_keys(app(RetentionRuleRegistry::class)->all()))->toContain('forums.thread_moderation_logs', 'forums.post_moderation_logs', 'forums.dismissed_reports', 'forums.digest_items');
 });
 
 it('prunes moderation logs past their window, and only those', function () {
@@ -92,7 +92,7 @@ it('prunes dismissed reports after their window, by review date, falling back to
     [$thread, $post] = privacyContent($author);
     $report = fn (string $status, ?int $reviewedDaysAgo, int $madeDaysAgo): PostReport => tap(
         PostReport::create(['post_id' => $post->id, 'thread_id' => $thread->id, 'reporter_id' => TestUser::make('R')->id, 'reason' => 'x', 'status' => $status]),
-        fn (PostReport $r) => $r->newQuery()->whereKey($r->id)->toBase()->update(['reviewed_at' => $reviewedDaysAgo === null ? null : now()->subDays($reviewedDaysAgo), 'created_at' => now()->subDays($madeDaysAgo)]),
+        fn (PostReport $r) => $r->newQuery()->whereKey($r->id)->toBase()->update(['reviewed_at' => $reviewedDaysAgo === null ? null : now()->subDays($reviewedDaysAgo)->setTime(12, 0), 'created_at' => now()->subDays($madeDaysAgo)->setTime(12, 0)]),
     );
 
     $oldDismissed = $report('dismissed', 100, 200);

@@ -2548,5 +2548,266 @@ return [
                 ],
             ],
         ],
+        'thread_subscriptions' => [
+            'columns' => [
+                'id' => [
+                    'type' => 'bigint unsigned',
+                    'nullable' => false,
+                    'default' => null,
+                    'collation' => null,
+                    'auto_increment' => true,
+                    'generation' => null,
+                ],
+                'thread_id' => [
+                    'type' => 'bigint unsigned',
+                    'nullable' => false,
+                    'default' => null,
+                    'collation' => null,
+                    'auto_increment' => false,
+                    'generation' => null,
+                ],
+                'user_id' => [
+                    'type' => 'bigint unsigned',
+                    'nullable' => false,
+                    'default' => null,
+                    'collation' => null,
+                    'auto_increment' => false,
+                    'generation' => null,
+                ],
+                'created_at' => [
+                    'type' => 'timestamp',
+                    'nullable' => true,
+                    'default' => null,
+                    'collation' => null,
+                    'auto_increment' => false,
+                    'generation' => null,
+                ],
+                'updated_at' => [
+                    'type' => 'timestamp',
+                    'nullable' => true,
+                    'default' => null,
+                    'collation' => null,
+                    'auto_increment' => false,
+                    'generation' => null,
+                ],
+            ],
+            'indexes' => [
+                'primary' => [
+                    'columns' => [
+                        'id',
+                    ],
+                    'unique' => true,
+                    'primary' => true,
+                    'type' => 'btree',
+                ],
+                'thread_subscriptions_thread_id_user_id_unique' => [
+                    'columns' => [
+                        'thread_id',
+                        'user_id',
+                    ],
+                    'unique' => true,
+                    'primary' => false,
+                    'type' => 'btree',
+                ],
+                'thread_subscriptions_user_id_created_at_index' => [
+                    'columns' => [
+                        'user_id',
+                        'created_at',
+                    ],
+                    'unique' => false,
+                    'primary' => false,
+                    'type' => 'btree',
+                ],
+                'thread_subscriptions_user_thread_idx' => [
+                    'columns' => [
+                        'user_id',
+                        'thread_id',
+                    ],
+                    'unique' => false,
+                    'primary' => false,
+                    'type' => 'btree',
+                ],
+            ],
+            'foreign_keys' => [
+                'thread_subscriptions_thread_id_foreign' => [
+                    'columns' => [
+                        'thread_id',
+                    ],
+                    'on' => 'threads',
+                    'foreign_columns' => [
+                        'id',
+                    ],
+                    'on_delete' => 'cascade',
+                    'on_update' => 'restrict',
+                ],
+                'thread_subscriptions_user_id_foreign' => [
+                    'columns' => [
+                        'user_id',
+                    ],
+                    'on' => '{users}',
+                    'foreign_columns' => [
+                        'id',
+                    ],
+                    'on_delete' => 'cascade',
+                    'on_update' => 'restrict',
+                ],
+            ],
+        ],
+        'thread_subscription_digest_items' => [
+            'columns' => [
+                'id' => [
+                    'type' => 'bigint unsigned',
+                    'nullable' => false,
+                    'default' => null,
+                    'collation' => null,
+                    'auto_increment' => true,
+                    'generation' => null,
+                ],
+                'user_id' => [
+                    'type' => 'bigint unsigned',
+                    'nullable' => false,
+                    'default' => null,
+                    'collation' => null,
+                    'auto_increment' => false,
+                    'generation' => null,
+                ],
+                'thread_id' => [
+                    'type' => 'bigint unsigned',
+                    'nullable' => false,
+                    'default' => null,
+                    'collation' => null,
+                    'auto_increment' => false,
+                    'generation' => null,
+                ],
+                'post_id' => [
+                    'type' => 'bigint unsigned',
+                    'nullable' => false,
+                    'default' => null,
+                    'collation' => null,
+                    'auto_increment' => false,
+                    'generation' => null,
+                ],
+                'sent_at' => [
+                    'type' => 'timestamp',
+                    'nullable' => true,
+                    'default' => null,
+                    'collation' => null,
+                    'auto_increment' => false,
+                    'generation' => null,
+                ],
+                'created_at' => [
+                    'type' => 'timestamp',
+                    'nullable' => true,
+                    'default' => null,
+                    'collation' => null,
+                    'auto_increment' => false,
+                    'generation' => null,
+                ],
+                'updated_at' => [
+                    'type' => 'timestamp',
+                    'nullable' => true,
+                    'default' => null,
+                    'collation' => null,
+                    'auto_increment' => false,
+                    'generation' => null,
+                ],
+            ],
+            'indexes' => [
+                'digest_items_thread_idx' => [
+                    'columns' => [
+                        'thread_id',
+                    ],
+                    'unique' => false,
+                    'primary' => false,
+                    'type' => 'btree',
+                ],
+                'digest_items_user_sent_idx' => [
+                    'columns' => [
+                        'user_id',
+                        'sent_at',
+                    ],
+                    'unique' => false,
+                    'primary' => false,
+                    'type' => 'btree',
+                ],
+                'primary' => [
+                    'columns' => [
+                        'id',
+                    ],
+                    'unique' => true,
+                    'primary' => true,
+                    'type' => 'btree',
+                ],
+                'thread_subscription_digest_items_post_id_foreign' => [
+                    'columns' => [
+                        'post_id',
+                    ],
+                    'unique' => false,
+                    'primary' => false,
+                    'type' => 'btree',
+                ],
+                'thread_subscription_digest_items_sent_at_index' => [
+                    'columns' => [
+                        'sent_at',
+                    ],
+                    'unique' => false,
+                    'primary' => false,
+                    'type' => 'btree',
+                ],
+                'thread_subscription_digest_items_user_id_created_at_index' => [
+                    'columns' => [
+                        'user_id',
+                        'created_at',
+                    ],
+                    'unique' => false,
+                    'primary' => false,
+                    'type' => 'btree',
+                ],
+                'thread_subscription_digest_items_user_id_post_id_unique' => [
+                    'columns' => [
+                        'user_id',
+                        'post_id',
+                    ],
+                    'unique' => true,
+                    'primary' => false,
+                    'type' => 'btree',
+                ],
+            ],
+            'foreign_keys' => [
+                'thread_subscription_digest_items_post_id_foreign' => [
+                    'columns' => [
+                        'post_id',
+                    ],
+                    'on' => 'posts',
+                    'foreign_columns' => [
+                        'id',
+                    ],
+                    'on_delete' => 'cascade',
+                    'on_update' => 'restrict',
+                ],
+                'thread_subscription_digest_items_thread_id_foreign' => [
+                    'columns' => [
+                        'thread_id',
+                    ],
+                    'on' => 'threads',
+                    'foreign_columns' => [
+                        'id',
+                    ],
+                    'on_delete' => 'cascade',
+                    'on_update' => 'restrict',
+                ],
+                'thread_subscription_digest_items_user_id_foreign' => [
+                    'columns' => [
+                        'user_id',
+                    ],
+                    'on' => '{users}',
+                    'foreign_columns' => [
+                        'id',
+                    ],
+                    'on_delete' => 'cascade',
+                    'on_update' => 'restrict',
+                ],
+            ],
+        ],
     ],
 ];

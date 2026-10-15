@@ -8,7 +8,8 @@ All notable changes to this package are documented here. The format follows
 ### Added
 
 - **Polls.** Tables `polls`, `poll_questions`, `poll_options`, `poll_votes` and `poll_vote_answers` (a third migration; `filagora:adopt` now expects fourteen tables and records three migrations), models (`poll`, `poll_question`, `poll_option`, `poll_vote`, `poll_vote_answer` in `filagora-forums.models`), enum `PollStatus` and the `Polls` service: moderators create a poll on a thread (one per thread), replace its questions while nobody has voted, and close or reopen it, each logged on the thread (`poll_created`, `poll_updated`, `poll_closed`, `poll_reopened`) and announced as `ThreadModerated`; people who can see the thread vote once, all questions together, locked once cast; `results()` and `canSeeResults()` (staff, voters, or anyone once closed). Limits: 20 questions, 20 options, prompt 500 and label 255 characters, no repeated option. A refusal is a `PollRefused` with a `PollRefusal` reason.
-- `ForumsDataContributor` also exports a person's poll votes.
+- **Reactions.** Table `reactions` (a fourth migration; `filagora:adopt` now expects fifteen tables and records four migrations; the site this package was extracted from also has a `legacy_reaction_id` column and unique key, which a profile package declares as an extension), model `reaction`, and the `Reactions` service: `toggle()` adds a reaction to a post the person can see or takes it back (refused for deleted or unapproved posts and unknown kinds), `counts()` and `madeBy()` answer for many posts at once. The kinds are `reactions.types` in the config (`like` by default); the kind is stored as text, so adding one needs no migration.
+- `ForumsDataContributor` also exports a person's poll votes and reactions.
 
 ## [0.3.2] - 2026-10-14
 

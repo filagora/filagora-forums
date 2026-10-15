@@ -11,6 +11,7 @@ use Filagora\Forums\Models\PollVoteAnswer;
 use Filagora\Forums\Models\Post;
 use Filagora\Forums\Models\PostModerationLog;
 use Filagora\Forums\Models\PostReport;
+use Filagora\Forums\Models\Reaction;
 use Filagora\Forums\Models\SiteNotification;
 use Filagora\Forums\Models\Thread;
 use Filagora\Forums\Models\ThreadModerationLog;
@@ -44,6 +45,7 @@ return [
         'poll_option' => PollOption::class,
         'poll_vote' => PollVote::class,
         'poll_vote_answer' => PollVoteAnswer::class,
+        'reaction' => Reaction::class,
     ],
 
     /*
@@ -95,6 +97,19 @@ return [
         'thread_moderation_logs_days' => 1095,
         'post_moderation_logs_days' => 1095,
         'dismissed_reports_days' => 90,
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Reactions
+    |--------------------------------------------------------------------------
+    |
+    | The kinds of reaction a person can make to a post. The kind is stored as text (up to 32
+    | characters), so adding one needs no migration.
+    |
+    */
+    'reactions' => [
+        'types' => ['like'],
     ],
 
 ];

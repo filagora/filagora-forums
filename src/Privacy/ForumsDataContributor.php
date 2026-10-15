@@ -28,6 +28,7 @@ final class ForumsDataContributor implements PrivacyContributor
             'threads' => Models::class('thread')::query()->where('author_id', $id)->orderBy('id')->get(['id', 'forum_id', 'title', 'slug', 'created_at', 'updated_at'])->toArray(),
             'posts' => Models::class('post')::query()->where('author_id', $id)->orderBy('id')->get(['id', 'thread_id', 'body', 'created_at', 'updated_at'])->toArray(),
             'poll_votes' => $this->pollVotes($id),
+            'reactions' => Models::class('reaction')::query()->where('user_id', $id)->orderBy('id')->get(['post_id', 'type', 'created_at'])->toArray(),
             'post_reports' => Models::class('post_report')::query()->where('reporter_id', $id)->orderBy('id')->get(['id', 'post_id', 'reason', 'status', 'created_at'])->toArray(),
         ];
     }

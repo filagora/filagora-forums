@@ -119,6 +119,10 @@ package) and the forum follows it. With neither, every staff screen denies every
   `results($poll)` gives each option's votes; `canSeeResults()` follows the rule that staff,
   voters and everyone (once the poll is closed) may see them. Refusals are `PollRefused` with a
   reason; the forms, the voting buttons and the results chart are yours.
+- **Reactions.** `Reactions::toggle($user, $post, 'like')` adds a reaction to a post the person can
+  see, or takes it back if they already made it; deleted posts, posts awaiting approval and
+  kinds not listed in `reactions.types` are refused (`ReactionRefused`). `counts($postIds)` and
+  `madeBy($user, $postIds)` answer for a whole page of posts in one query each.
 - **Privacy.** Forums registers a `PrivacyContributor` (a person's threads, posts and reports for
   an export; erasure keeps what they wrote under the anonymised account) and retention rules for
   the moderation logs and dismissed reports (`retention` in the config) with core. With

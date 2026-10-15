@@ -25,7 +25,6 @@ use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\Schema;
 
 function subs(): Subscriptions
 {
@@ -57,20 +56,6 @@ function follower(Thread $thread, string $mode = 'instant'): TestUser
 
 beforeEach(function () {
     Notification::fake();
-
-    // The host's user table: two columns the default preferences read.
-    if (! Schema::hasColumn('users', 'thread_subscription_email_frequency')) {
-        Schema::table('users', function ($table) {
-            $table->string('thread_subscription_email_frequency')->nullable();
-            $table->boolean('auto_subscribe_on_post')->nullable();
-        });
-    }
-});
-
-afterAll(function () {
-    if (Schema::hasColumn('users', 'thread_subscription_email_frequency')) {
-        Schema::table('users', fn ($table) => $table->dropColumn(['thread_subscription_email_frequency', 'auto_subscribe_on_post']));
-    }
 });
 
 // ------------------------------------------------------------------ following

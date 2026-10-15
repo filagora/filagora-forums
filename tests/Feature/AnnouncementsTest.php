@@ -102,7 +102,7 @@ it('shows each viewer the announcements for their audience', function () {
 
 it('orders by priority, then the later start first', function () {
     $low = annNotice(['priority' => 1, 'starts_at' => now()->subDay()]);
-    $high = annNotice(['priority' => 9, 'starts_at' => now()->subDays(3)]);
+    $high = annNotice(['priority' => 9, 'starts_at' => now()->subDays(3)->setTime(12, 0)]);
     $newer = annNotice(['priority' => 1, 'starts_at' => now()->subHour()]);
 
     expect(annIds())->toBe([$high->id, $newer->id, $low->id]);
@@ -234,11 +234,11 @@ it('passes the not-posted rule only for a user whose last post is old enough', f
     $never = TestUser::make('Never');
     $recent = TestUser::make('Recent');
     $old = TestUser::make('Old');
-    annPost($recent, now()->subDays(2)->toDateTimeString());
-    annPost($old, now()->subDays(40)->toDateTimeString());
-    annPost($old, now()->subDays(3)->toDateTimeString());
+    annPost($recent, now()->subDays(2)->setTime(12, 0)->toDateTimeString());
+    annPost($old, now()->subDays(40)->setTime(12, 0)->toDateTimeString());
+    annPost($old, now()->subDays(3)->setTime(12, 0)->toDateTimeString());
     $dormant = TestUser::make('Dormant');
-    annPost($dormant, now()->subDays(40)->toDateTimeString());
+    annPost($dormant, now()->subDays(40)->setTime(12, 0)->toDateTimeString());
 
     $rule = ['type' => 'not_posted_days', 'days' => 30];
 

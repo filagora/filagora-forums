@@ -22,10 +22,18 @@ use Filagora\Entitlements\Registry\Definition;
 use Filagora\Entitlements\Registry\EntitlementRegistry;
 use Filagora\Forums\Commands\SyncForumStatsCommand;
 use Filagora\Forums\Commands\SyncThreadStatsCommand;
+use Filagora\Forums\Console\SendDigestCommand;
 use Filagora\Forums\Contracts\ContentModerationPolicy;
 use Filagora\Forums\Contracts\PaidAccessCheck;
 use Filagora\Forums\Contracts\PostSignatureResolver;
 use Filagora\Forums\Contracts\StaffPreview;
+use Filagora\Forums\Contracts\SubscriptionPreferences;
+use Filagora\Forums\Events\PostCreated;
+use Filagora\Forums\Events\SubscribersToNotify;
+use Filagora\Forums\Events\ThreadCreated;
+use Filagora\Forums\Events\ThreadDigestReady;
+use Filagora\Forums\Listeners\FollowThreadActivity;
+use Filagora\Forums\Listeners\SendSubscriptionMail;
 use Filagora\Forums\Observers\ForumStatsObserver;
 use Filagora\Forums\Privacy\DismissedReportsRetention;
 use Filagora\Forums\Privacy\ForumsDataContributor;
@@ -41,9 +49,11 @@ use Filagora\Forums\Services\PostRelocation;
 use Filagora\Forums\Services\PostReports;
 use Filagora\Forums\Services\Reactions;
 use Filagora\Forums\Services\ReplyCreation;
+use Filagora\Forums\Services\Subscriptions;
 use Filagora\Forums\Services\ThreadCreation;
 use Filagora\Forums\Services\ThreadModeration;
 use Filagora\Forums\Services\ThreadStats;
+use Filagora\Forums\Subscriptions\UserAttributePreferences;
 use Filagora\Forums\Support\AlwaysStaffPreview;
 use Filagora\Forums\Support\ForumEntitlementKeys;
 use Filagora\Forums\Support\Models;
@@ -59,6 +69,7 @@ use Filagora\Forums\Targeting\Rules\PostCountBetweenRule;
 use Filagora\Forums\Targeting\Rules\TimeBetweenRule;
 use Filagora\Forums\Targeting\Rules\UsernameRule;
 use Filagora\Forums\Targeting\TargetingRules;
+use Illuminate\Support\Facades\Event;
 use Illuminate\Support\ServiceProvider;
 
 class ForumsServiceProvider extends ServiceProvider
@@ -84,6 +95,8 @@ class ForumsServiceProvider extends ServiceProvider
         $this->app->singleton(PostReports::class);
         $this->app->singleton(Polls::class);
         $this->app->singleton(Reactions::class);
+        $this->app->singleton(Subscriptions::class);
+        $this->app->bindIf(SubscriptionPreferences::class, UserAttributePreferences::class);
         $this->app->singleton(ActiveAnnouncements::class);
         $this->app->singleton(AnnouncementDismissals::class);
         $this->app->singleton(TargetingRules::class, function ($app): TargetingRules {
@@ -125,6 +138,7 @@ class ForumsServiceProvider extends ServiceProvider
         $this->defineGates();
         $this->observeModels();
         $this->registerPrivacy();
+        $this->listenForSubscriptions();
         $this->declareSettings();
 
         $this->loadTranslationsFrom(__DIR__.'/../resources/lang', 'filagora-forums');
@@ -132,7 +146,7 @@ class ForumsServiceProvider extends ServiceProvider
         $this->loadMigrationsFrom(__DIR__.'/../database/migrations');
 
         if ($this->app->runningInConsole()) {
-            $this->commands([SyncForumStatsCommand::class, SyncThreadStatsCommand::class]);
+            $this->commands([SyncForumStatsCommand::class, SyncThreadStatsCommand::class, SendDigestCommand::class]);
 
             $this->publishes([
                 __DIR__.'/../config/filagora-forums.php' => config_path('filagora-forums.php'),
@@ -165,6 +179,18 @@ class ForumsServiceProvider extends ServiceProvider
     }
 
     /**
+     * Following threads: authors follow what they start (and, by preference, what they reply to),
+     * new approved posts become updates for the followers, and the default emails go out.
+     */
+    private function listenForSubscriptions(): void
+    {
+        Event::listen(ThreadCreated::class, [FollowThreadActivity::class, 'threadCreated']);
+        Event::listen(PostCreated::class, [FollowThreadActivity::class, 'postCreated']);
+        Event::listen(SubscribersToNotify::class, [SendSubscriptionMail::class, 'updated']);
+        Event::listen(ThreadDigestReady::class, [SendSubscriptionMail::class, 'digest']);
+    }
+
+    /**
      * What the forums contribute to export, erasure and retention, for the compliance package
      * (or any host) to run. Nothing here needs that package installed.
      */
@@ -184,6 +210,12 @@ class ForumsServiceProvider extends ServiceProvider
         }
 
         $retention->register(new DismissedReportsRetention);
+        $retention->register(new TableRetentionRule(
+            'forums.digest_items',
+            Tables::name('thread_subscription_digest_items'),
+            'created_at',
+            static fn (): int => (int) config('filagora-forums.retention.digest_items_days', 365),
+        ));
     }
 
     /**

@@ -18,5 +18,6 @@ class TestSupportServiceProvider extends ServiceProvider
     public function boot(): void
     {
         $this->loadMigrationsFrom(default_migration_path());
+        $this->loadMigrationsFrom(__DIR__.'/migrations');
     }
 }

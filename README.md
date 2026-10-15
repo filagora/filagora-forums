@@ -123,6 +123,16 @@ package) and the forum follows it. With neither, every staff screen denies every
   see, or takes it back if they already made it; deleted posts, posts awaiting approval and
   kinds not listed in `reactions.types` are refused (`ReactionRefused`). `counts($postIds)` and
   `madeBy($user, $postIds)` answer for a whole page of posts in one query each.
+- **Subscriptions and digests.** `Subscriptions::subscribe($user, $thread)` follows a thread (a
+  new thread's author follows it by default; a reply's author follows it when their preference
+  says so). A new approved reply becomes updates for the followers: those who want it at once are
+  handed to the `SubscribersToNotify` event, those who chose daily or weekly get a row in the
+  digest queue, and those who turned updates off get nothing. `php artisan
+  filagora:forums:send-digest daily|weekly` (schedule it) sends the digests that are due through
+  `ThreadDigestReady`. Emails go out by default; set `subscriptions.mail.enabled` to false and
+  listen to the two events to notify by bell or push instead. A person's choice of delivery
+  (instant, daily, weekly, off) and whether posting follows a thread are read from two columns of
+  your user model (`subscriptions.user_attributes`), or bind your own `SubscriptionPreferences`.
 - **Privacy.** Forums registers a `PrivacyContributor` (a person's threads, posts and reports for
   an export; erasure keeps what they wrote under the anonymised account) and retention rules for
   the moderation logs and dismissed reports (`retention` in the config) with core. With

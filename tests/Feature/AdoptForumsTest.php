@@ -15,6 +15,7 @@ const FORUM_MIGRATION = '2026_10_11_000000_create_filagora_forum_tables';
 const ANNOUNCEMENT_MIGRATION = '2026_10_14_000000_create_filagora_announcement_tables';
 const POLL_MIGRATION = '2026_10_15_000000_create_filagora_poll_tables';
 const REACTION_MIGRATION = '2026_10_15_100000_create_filagora_reaction_tables';
+const SUBSCRIPTION_MIGRATION = '2026_10_15_200000_create_filagora_subscription_tables';
 
 function packageMigration(string $name): object
 {
@@ -32,13 +33,13 @@ function existingForumTables(): void
 
     config(['filagora.table_prefix' => '']);
 
-    foreach ([FORUM_MIGRATION, ANNOUNCEMENT_MIGRATION, POLL_MIGRATION, REACTION_MIGRATION] as $name) {
+    foreach ([FORUM_MIGRATION, ANNOUNCEMENT_MIGRATION, POLL_MIGRATION, REACTION_MIGRATION, SUBSCRIPTION_MIGRATION] as $name) {
         $migration = packageMigration($name);
         $migration->down();
         $migration->up();
     }
 
-    DB::table('migrations')->whereIn('migration', [FORUM_MIGRATION, ANNOUNCEMENT_MIGRATION, POLL_MIGRATION, REACTION_MIGRATION])->delete();
+    DB::table('migrations')->whereIn('migration', [FORUM_MIGRATION, ANNOUNCEMENT_MIGRATION, POLL_MIGRATION, REACTION_MIGRATION, SUBSCRIPTION_MIGRATION])->delete();
 }
 
 /**
@@ -104,11 +105,11 @@ it('adopts the forum tables of an existing site and records the migration', func
     $plan = app(Adopter::class)->planFor(forumsSchema());
 
     expect($plan->status)->toBe(AdoptionStatus::Adoptable, implode('; ', $plan->differences))
-        ->and($plan->pendingMigrations)->toBe([FORUM_MIGRATION, ANNOUNCEMENT_MIGRATION, POLL_MIGRATION, REACTION_MIGRATION]);
+        ->and($plan->pendingMigrations)->toBe([FORUM_MIGRATION, ANNOUNCEMENT_MIGRATION, POLL_MIGRATION, REACTION_MIGRATION, SUBSCRIPTION_MIGRATION]);
 
-    $this->artisan('filagora:adopt', ['--package' => 'forums'])->expectsOutputToContain('Recorded 4 migration(s) as run.')->assertExitCode(0);
+    $this->artisan('filagora:adopt', ['--package' => 'forums'])->expectsOutputToContain('Recorded 5 migration(s) as run.')->assertExitCode(0);
 
-    expect(DB::table('migrations')->whereIn('migration', [FORUM_MIGRATION, ANNOUNCEMENT_MIGRATION, POLL_MIGRATION, REACTION_MIGRATION])->count())->toBe(4);
+    expect(DB::table('migrations')->whereIn('migration', [FORUM_MIGRATION, ANNOUNCEMENT_MIGRATION, POLL_MIGRATION, REACTION_MIGRATION, SUBSCRIPTION_MIGRATION])->count())->toBe(5);
 });
 
 it('refuses a site whose tables carry columns nobody declared, naming each one', function () {

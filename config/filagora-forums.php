@@ -15,6 +15,8 @@ use Filagora\Forums\Models\Reaction;
 use Filagora\Forums\Models\SiteNotification;
 use Filagora\Forums\Models\Thread;
 use Filagora\Forums\Models\ThreadModerationLog;
+use Filagora\Forums\Models\ThreadSubscription;
+use Filagora\Forums\Models\ThreadSubscriptionDigestItem;
 use Filagora\Forums\Models\UserSiteNotificationDismissal;
 
 return [
@@ -46,6 +48,8 @@ return [
         'poll_vote' => PollVote::class,
         'poll_vote_answer' => PollVoteAnswer::class,
         'reaction' => Reaction::class,
+        'thread_subscription' => ThreadSubscription::class,
+        'thread_subscription_digest_item' => ThreadSubscriptionDigestItem::class,
     ],
 
     /*
@@ -97,6 +101,7 @@ return [
         'thread_moderation_logs_days' => 1095,
         'post_moderation_logs_days' => 1095,
         'dismissed_reports_days' => 90,
+        'digest_items_days' => 365,
     ],
 
     /*
@@ -110,6 +115,29 @@ return [
     */
     'reactions' => [
         'types' => ['like'],
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Subscriptions
+    |--------------------------------------------------------------------------
+    |
+    | Following threads. `user_attributes` names the columns of your user model holding a person's
+    | delivery choice (instant, daily, weekly or off) and whether posting follows a thread; bind
+    | your own Filagora\Forums\Contracts\SubscriptionPreferences to read them elsewhere. `mail`
+    | switches the default emails off (listen to SubscribersToNotify and ThreadDigestReady instead).
+    | `routes.thread` is the named route of your thread page (it receives `thread`), used for the
+    | links in the mail.
+    |
+    */
+    'subscriptions' => [
+        'user_attributes' => [
+            'frequency' => 'thread_subscription_email_frequency',
+            'auto_subscribe' => 'auto_subscribe_on_post',
+        ],
+        'auto_subscribe_default' => false,
+        'mail' => ['enabled' => true],
+        'routes' => ['thread' => null],
     ],
 
 ];

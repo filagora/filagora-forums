@@ -16,6 +16,7 @@ const ANNOUNCEMENT_MIGRATION = '2026_10_14_000000_create_filagora_announcement_t
 const POLL_MIGRATION = '2026_10_15_000000_create_filagora_poll_tables';
 const REACTION_MIGRATION = '2026_10_15_100000_create_filagora_reaction_tables';
 const SUBSCRIPTION_MIGRATION = '2026_10_15_200000_create_filagora_subscription_tables';
+const READ_TRACKING_MIGRATION = '2026_10_16_000000_create_filagora_read_tracking_tables';
 
 function packageMigration(string $name): object
 {
@@ -33,13 +34,13 @@ function existingForumTables(): void
 
     config(['filagora.table_prefix' => '']);
 
-    foreach ([FORUM_MIGRATION, ANNOUNCEMENT_MIGRATION, POLL_MIGRATION, REACTION_MIGRATION, SUBSCRIPTION_MIGRATION] as $name) {
+    foreach ([FORUM_MIGRATION, ANNOUNCEMENT_MIGRATION, POLL_MIGRATION, REACTION_MIGRATION, SUBSCRIPTION_MIGRATION, READ_TRACKING_MIGRATION] as $name) {
         $migration = packageMigration($name);
         $migration->down();
         $migration->up();
     }
 
-    DB::table('migrations')->whereIn('migration', [FORUM_MIGRATION, ANNOUNCEMENT_MIGRATION, POLL_MIGRATION, REACTION_MIGRATION, SUBSCRIPTION_MIGRATION])->delete();
+    DB::table('migrations')->whereIn('migration', [FORUM_MIGRATION, ANNOUNCEMENT_MIGRATION, POLL_MIGRATION, REACTION_MIGRATION, SUBSCRIPTION_MIGRATION, READ_TRACKING_MIGRATION])->delete();
 }
 
 /**
@@ -105,11 +106,11 @@ it('adopts the forum tables of an existing site and records the migration', func
     $plan = app(Adopter::class)->planFor(forumsSchema());
 
     expect($plan->status)->toBe(AdoptionStatus::Adoptable, implode('; ', $plan->differences))
-        ->and($plan->pendingMigrations)->toBe([FORUM_MIGRATION, ANNOUNCEMENT_MIGRATION, POLL_MIGRATION, REACTION_MIGRATION, SUBSCRIPTION_MIGRATION]);
+        ->and($plan->pendingMigrations)->toBe([FORUM_MIGRATION, ANNOUNCEMENT_MIGRATION, POLL_MIGRATION, REACTION_MIGRATION, SUBSCRIPTION_MIGRATION, READ_TRACKING_MIGRATION]);
 
-    $this->artisan('filagora:adopt', ['--package' => 'forums'])->expectsOutputToContain('Recorded 5 migration(s) as run.')->assertExitCode(0);
+    $this->artisan('filagora:adopt', ['--package' => 'forums'])->expectsOutputToContain('Recorded 6 migration(s) as run.')->assertExitCode(0);
 
-    expect(DB::table('migrations')->whereIn('migration', [FORUM_MIGRATION, ANNOUNCEMENT_MIGRATION, POLL_MIGRATION, REACTION_MIGRATION, SUBSCRIPTION_MIGRATION])->count())->toBe(5);
+    expect(DB::table('migrations')->whereIn('migration', [FORUM_MIGRATION, ANNOUNCEMENT_MIGRATION, POLL_MIGRATION, REACTION_MIGRATION, SUBSCRIPTION_MIGRATION, READ_TRACKING_MIGRATION])->count())->toBe(6);
 });
 
 it('refuses a site whose tables carry columns nobody declared, naming each one', function () {

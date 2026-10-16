@@ -52,6 +52,7 @@ use Filagora\Forums\Services\PostModeration;
 use Filagora\Forums\Services\PostRelocation;
 use Filagora\Forums\Services\PostReports;
 use Filagora\Forums\Services\Reactions;
+use Filagora\Forums\Services\ReadTracking;
 use Filagora\Forums\Services\ReplyCreation;
 use Filagora\Forums\Services\Subscriptions;
 use Filagora\Forums\Services\ThreadCreation;
@@ -100,6 +101,7 @@ class ForumsServiceProvider extends ServiceProvider
         $this->app->singleton(PostReports::class);
         $this->app->singleton(Polls::class);
         $this->app->singleton(Reactions::class);
+        $this->app->singleton(ReadTracking::class);
         $this->app->singleton(Subscriptions::class);
         $this->app->bindIf(SubscriptionPreferences::class, UserAttributePreferences::class);
         $this->app->singleton(ActiveAnnouncements::class);

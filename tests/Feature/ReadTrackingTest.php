@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use Filagora\Core\Privacy\PrivacyContributorRegistry;
 use Filagora\Entitlements\Models\UserEntitlementGrant;
 use Filagora\Forums\Enums\ForumVisibility;
 use Filagora\Forums\Models\Forum;
@@ -303,4 +304,111 @@ it('has the same unique rows and indexes as the forum it was extracted from', fu
 
     expect(fn () => ThreadRead::create(['user_id' => $user->id, 'thread_id' => $thread->id, 'last_read_at' => now()]))->toThrow(QueryException::class)
         ->and(ThreadRead::first()->is_unread_override)->toBeFalse();
+});
+
+it('never looks back less than a day, however the lookback is set', function () {
+    $user = TestUser::make('Reader');
+    config(['filagora-forums.read_tracking.unread_max_lookback_days' => 0]);
+
+    expect(tracking()->floor($user)->toDateTimeString())->toBe('2026-06-14 12:00:00');
+});
+
+it('counts a thread read at the very moment of its last activity as read', function () {
+    $user = TestUser::make('Reader');
+    $thread = readThread(readForum(), lastPost: now());
+    tracking()->markThreadRead($user, $thread);
+
+    expect(tracking()->isUnread($user, $thread))->toBeFalse()
+        ->and(tracking()->unreadThreads($user)->count())->toBe(0);
+});
+
+it('does not list a forum read at the very moment of the last activity', function () {
+    $user = TestUser::make('Reader');
+    $forum = readForum();
+    readThread($forum, lastPost: now());
+    tracking()->markForumsRead($user, [$forum->id]);
+
+    expect(tracking()->unreadThreads($user)->count())->toBe(0);
+});
+
+it('leaves out activity exactly at the floor', function () {
+    $user = TestUser::make('Reader');
+    $forum = readForum();
+    $atFloor = readThread($forum, lastPost: now()->subYear());
+    $after = readThread($forum, lastPost: now()->subYear()->addSecond());
+
+    expect(tracking()->unreadThreads($user)->pluck('id')->map(fn ($id) => (int) $id)->all())->toBe([$after->id])
+        ->and($atFloor->id)->not->toBe($after->id);
+});
+
+it('takes the newest of the thread, forum and baseline read times', function () {
+    $user = TestUser::make('Reader');
+    $forum = readForum();
+    $thread = readThread($forum, lastPost: now()->subHours(2));
+    tracking()->markForumsRead($user, [$forum->id]);
+    $this->travel(3)->hours();
+    $laterThread = readThread($forum, lastPost: now()->subHours(2));
+    tracking()->markThreadRead($user, $thread);
+    $this->travel(1)->hour();
+    $thread->forceFill(['last_post_at' => now()->subMinutes(30)])->save();
+    tracking()->markThreadRead($user, $thread->refresh());
+
+    $other = readThread($forum, lastPost: now()->subMinutes(40));
+
+    expect(tracking()->unreadAmong($user, [$thread, $laterThread, $other]))->toBe([$laterThread->id, $other->id]);
+});
+
+it('uses the creation time when the last post is older than the thread', function () {
+    $user = TestUser::make('Reader');
+    $thread = readThread(readForum(), lastPost: now()->subDays(5), created: now()->subHour());
+    setBaseline($user, now()->subDay());
+
+    expect(tracking()->isUnread($user, $thread))->toBeTrue();
+});
+
+it('does not let one person\'s reading change what another sees', function () {
+    $alice = TestUser::make('Alice');
+    $bob = TestUser::make('Bob');
+    $forum = readForum();
+    $thread = readThread($forum, lastPost: now()->subHour());
+    tracking()->markThreadRead($bob, $thread);
+    tracking()->markForumsRead($bob, [$forum->id]);
+
+    expect(tracking()->unreadAmong($alice, [$thread]))->toBe([$thread->id])
+        ->and(tracking()->unreadThreads($alice)->count())->toBe(1)
+        ->and(tracking()->unreadThreads($bob)->count())->toBe(0);
+});
+
+it('does not list another person\'s hand-made unread flag', function () {
+    $alice = TestUser::make('Alice');
+    $bob = TestUser::make('Bob');
+    $old = readThread(readForum(), lastPost: now()->subYears(3));
+    tracking()->markThreadUnread($bob, $old);
+
+    expect(tracking()->unreadThreads($alice)->count())->toBe(0)->and(tracking()->unreadThreads($bob)->count())->toBe(1);
+});
+
+it('marks read the forums where the person sees only their own threads', function () {
+    $member = TestUser::make('Member');
+    $public = readForum('Public');
+    $private = readForum('Private', ForumVisibility::STAFF_AUTHOR_ONLY);
+    Thread::create(['forum_id' => $private->id, 'author_id' => $member->id, 'title' => 'Mine', 'slug' => 'mine']);
+
+    expect(tracking()->markAllRead($member))->toBe(2)
+        ->and(ForumRead::where('user_id', $member->id)->pluck('forum_id')->sort()->values()->all())->toBe([$public->id, $private->id]);
+});
+
+it('erases a person\'s read markers and keeps everyone else\'s', function () {
+    $alice = TestUser::make('Alice');
+    $bob = TestUser::make('Bob');
+    $forum = readForum();
+    $thread = readThread($forum);
+    foreach ([$alice, $bob] as $user) {
+        tracking()->markThreadRead($user, $thread);
+        tracking()->markForumsRead($user, [$forum->id]);
+    }
+
+    app(PrivacyContributorRegistry::class)->all()['forums']->erase($alice);
+
+    expect(ThreadRead::pluck('user_id')->all())->toBe([$bob->id])->and(ForumRead::pluck('user_id')->all())->toBe([$bob->id]);
 });

@@ -5,6 +5,8 @@ All notable changes to this package are documented here. The format follows
 
 ## [Unreleased]
 
+## [0.5.0] - 2026-10-16
+
 ### Added
 
 - **Search** with `filagora/filagora-search` (suggested, not required): `ThreadSearchIndex` (approved threads in active forums, with the forum name and the text of approved posts copied in, capped by `search.post_text_limit`; the filter fields are a `filters` group for `filagora:search:backfill`), `ForumSearch` (`threads()` with the viewer's visibility as an engine-neutral filter and a stale-hit check, `unapproved()`, `posts()`), `ForumSearchCriteria`, and `ThreadDatabaseSearch`, which answers the same query from the tables (FULLTEXT on MariaDB unless `search.fulltext` is off). Posts and forums keep thread documents current (`SearchRelations`, `SyncForumThreadDocuments`).

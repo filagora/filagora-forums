@@ -133,6 +133,16 @@ package) and the forum follows it. With neither, every staff screen denies every
   listen to the two events to notify by bell or push instead. A person's choice of delivery
   (instant, daily, weekly, off) and whether posting follows a thread are read from two columns of
   your user model (`subscriptions.user_attributes`), or bind your own `SubscriptionPreferences`.
+- **Read tracking.** `ReadTracking::markThreadRead($user, $thread)` when someone opens a thread,
+  `markThreadUnread()` to flag it unread by hand (that flag beats every read time until they open
+  it again), `markForumsRead()` and `markAllRead()` (every forum they can see), `isUnread()` and
+  `unreadAmong($user, $threads)` for a page of threads in two queries. A thread is unread when its
+  latest activity is later than the newest of the person's baseline, their read time for the thread
+  and their read time for its forum. `unreadThreads($user, $query)` gives a "what's new" list for
+  you to page: it looks back no further than `read_tracking.unread_max_lookback_days` (an old
+  baseline would otherwise match every thread) and takes any query, already narrowed to what the
+  person may see. The baseline is the column of your user model named by
+  `read_tracking.baseline_attribute` (`forum_read_baseline_at` by default; null for none).
 - **Search** (with [`filagora/filagora-search`](https://github.com/filagora/filagora-search)
   installed). Threads become a search index. `ForumSearch::threads($criteria, $viewer, $page)`
   finds threads the viewer may see: by words in the title or in approved posts, and by forum,

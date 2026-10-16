@@ -5,6 +5,10 @@ All notable changes to this package are documented here. The format follows
 
 ## [Unreleased]
 
+### Added
+
+- **Read tracking.** Tables `forum_reads` and `thread_reads` (a sixth migration; `filagora:adopt` now expects nineteen tables and records six migrations), models `forum_read` and `thread_read`, and the `ReadTracking` service: mark a thread read or unread (a hand-made unread flag beats every read time), mark forums or everything visible read, `isUnread()`, `unreadAmong()` for a page of threads, and `unreadThreads()` for a "what's new" list (bounded by `read_tracking.unread_max_lookback_days`; read times are checked with subqueries so any query can be passed in). The person's baseline is read from the user column named by `read_tracking.baseline_attribute`. The privacy export includes a person's read markers and erasure removes them.
+
 ## [0.5.0] - 2026-10-16
 
 ### Added

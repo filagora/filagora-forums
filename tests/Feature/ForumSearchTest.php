@@ -251,7 +251,7 @@ it('describes a thread as a document, with the filter fields as their own group'
     $author = TestUser::make('Author');
     $replier = TestUser::make('Replier');
     $forum = searchForum('Docs');
-    $thread = searchThread($forum, $author, 'Doc title', ['reply_count' => 2, 'last_post_at' => now()->setTime(12, 0)], 'First <b>body</b>');
+    $thread = searchThread($forum, $author, 'Doc title', ['reply_count' => 2, 'last_post_at' => now()->addHour()], 'First <b>body</b>');
     Post::create(['thread_id' => $thread->id, 'author_id' => $replier->id, 'body' => 'Second']);
     $index = app(ThreadSearchIndex::class);
     $thread->refresh();

@@ -2809,5 +2809,235 @@ return [
                 ],
             ],
         ],
+        'forum_reads' => [
+            'columns' => [
+                'id' => [
+                    'type' => 'bigint unsigned',
+                    'nullable' => false,
+                    'default' => null,
+                    'collation' => null,
+                    'auto_increment' => true,
+                    'generation' => null,
+                ],
+                'user_id' => [
+                    'type' => 'bigint unsigned',
+                    'nullable' => false,
+                    'default' => null,
+                    'collation' => null,
+                    'auto_increment' => false,
+                    'generation' => null,
+                ],
+                'forum_id' => [
+                    'type' => 'bigint unsigned',
+                    'nullable' => false,
+                    'default' => null,
+                    'collation' => null,
+                    'auto_increment' => false,
+                    'generation' => null,
+                ],
+                'last_read_at' => [
+                    'type' => 'timestamp',
+                    'nullable' => false,
+                    'default' => null,
+                    'collation' => null,
+                    'auto_increment' => false,
+                    'generation' => null,
+                ],
+                'created_at' => [
+                    'type' => 'timestamp',
+                    'nullable' => true,
+                    'default' => null,
+                    'collation' => null,
+                    'auto_increment' => false,
+                    'generation' => null,
+                ],
+                'updated_at' => [
+                    'type' => 'timestamp',
+                    'nullable' => true,
+                    'default' => null,
+                    'collation' => null,
+                    'auto_increment' => false,
+                    'generation' => null,
+                ],
+            ],
+            'indexes' => [
+                'forum_reads_forum_id_foreign' => [
+                    'columns' => [
+                        'forum_id',
+                    ],
+                    'unique' => false,
+                    'primary' => false,
+                    'type' => 'btree',
+                ],
+                'forum_reads_last_read_at_index' => [
+                    'columns' => [
+                        'last_read_at',
+                    ],
+                    'unique' => false,
+                    'primary' => false,
+                    'type' => 'btree',
+                ],
+                'forum_reads_user_id_forum_id_unique' => [
+                    'columns' => [
+                        'user_id',
+                        'forum_id',
+                    ],
+                    'unique' => true,
+                    'primary' => false,
+                    'type' => 'btree',
+                ],
+                'primary' => [
+                    'columns' => [
+                        'id',
+                    ],
+                    'unique' => true,
+                    'primary' => true,
+                    'type' => 'btree',
+                ],
+            ],
+            'foreign_keys' => [
+                'forum_reads_forum_id_foreign' => [
+                    'columns' => [
+                        'forum_id',
+                    ],
+                    'on' => 'forums',
+                    'foreign_columns' => [
+                        'id',
+                    ],
+                    'on_delete' => 'cascade',
+                    'on_update' => 'restrict',
+                ],
+                'forum_reads_user_id_foreign' => [
+                    'columns' => [
+                        'user_id',
+                    ],
+                    'on' => '{users}',
+                    'foreign_columns' => [
+                        'id',
+                    ],
+                    'on_delete' => 'cascade',
+                    'on_update' => 'restrict',
+                ],
+            ],
+        ],
+        'thread_reads' => [
+            'columns' => [
+                'id' => [
+                    'type' => 'bigint unsigned',
+                    'nullable' => false,
+                    'default' => null,
+                    'collation' => null,
+                    'auto_increment' => true,
+                    'generation' => null,
+                ],
+                'user_id' => [
+                    'type' => 'bigint unsigned',
+                    'nullable' => false,
+                    'default' => null,
+                    'collation' => null,
+                    'auto_increment' => false,
+                    'generation' => null,
+                ],
+                'thread_id' => [
+                    'type' => 'bigint unsigned',
+                    'nullable' => false,
+                    'default' => null,
+                    'collation' => null,
+                    'auto_increment' => false,
+                    'generation' => null,
+                ],
+                'last_read_at' => [
+                    'type' => 'timestamp',
+                    'nullable' => false,
+                    'default' => null,
+                    'collation' => null,
+                    'auto_increment' => false,
+                    'generation' => null,
+                ],
+                'created_at' => [
+                    'type' => 'timestamp',
+                    'nullable' => true,
+                    'default' => null,
+                    'collation' => null,
+                    'auto_increment' => false,
+                    'generation' => null,
+                ],
+                'updated_at' => [
+                    'type' => 'timestamp',
+                    'nullable' => true,
+                    'default' => null,
+                    'collation' => null,
+                    'auto_increment' => false,
+                    'generation' => null,
+                ],
+                'is_unread_override' => [
+                    'type' => 'tinyint(1)',
+                    'nullable' => false,
+                    'default' => '0',
+                    'collation' => null,
+                    'auto_increment' => false,
+                    'generation' => null,
+                ],
+            ],
+            'indexes' => [
+                'primary' => [
+                    'columns' => [
+                        'id',
+                    ],
+                    'unique' => true,
+                    'primary' => true,
+                    'type' => 'btree',
+                ],
+                'thread_reads_last_read_at_index' => [
+                    'columns' => [
+                        'last_read_at',
+                    ],
+                    'unique' => false,
+                    'primary' => false,
+                    'type' => 'btree',
+                ],
+                'thread_reads_thread_id_foreign' => [
+                    'columns' => [
+                        'thread_id',
+                    ],
+                    'unique' => false,
+                    'primary' => false,
+                    'type' => 'btree',
+                ],
+                'thread_reads_user_id_thread_id_unique' => [
+                    'columns' => [
+                        'user_id',
+                        'thread_id',
+                    ],
+                    'unique' => true,
+                    'primary' => false,
+                    'type' => 'btree',
+                ],
+            ],
+            'foreign_keys' => [
+                'thread_reads_thread_id_foreign' => [
+                    'columns' => [
+                        'thread_id',
+                    ],
+                    'on' => 'threads',
+                    'foreign_columns' => [
+                        'id',
+                    ],
+                    'on_delete' => 'cascade',
+                    'on_update' => 'restrict',
+                ],
+                'thread_reads_user_id_foreign' => [
+                    'columns' => [
+                        'user_id',
+                    ],
+                    'on' => '{users}',
+                    'foreign_columns' => [
+                        'id',
+                    ],
+                    'on_delete' => 'cascade',
+                    'on_update' => 'restrict',
+                ],
+            ],
+        ],
     ],
 ];

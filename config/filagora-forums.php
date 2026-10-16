@@ -3,6 +3,7 @@
 declare(strict_types=1);
 use Filagora\Forums\Models\Forum;
 use Filagora\Forums\Models\ForumGroup;
+use Filagora\Forums\Models\ForumRead;
 use Filagora\Forums\Models\Poll;
 use Filagora\Forums\Models\PollOption;
 use Filagora\Forums\Models\PollQuestion;
@@ -15,6 +16,7 @@ use Filagora\Forums\Models\Reaction;
 use Filagora\Forums\Models\SiteNotification;
 use Filagora\Forums\Models\Thread;
 use Filagora\Forums\Models\ThreadModerationLog;
+use Filagora\Forums\Models\ThreadRead;
 use Filagora\Forums\Models\ThreadSubscription;
 use Filagora\Forums\Models\ThreadSubscriptionDigestItem;
 use Filagora\Forums\Models\UserSiteNotificationDismissal;
@@ -50,6 +52,8 @@ return [
         'reaction' => Reaction::class,
         'thread_subscription' => ThreadSubscription::class,
         'thread_subscription_digest_item' => ThreadSubscriptionDigestItem::class,
+        'forum_read' => ForumRead::class,
+        'thread_read' => ThreadRead::class,
     ],
 
     /*
@@ -138,6 +142,22 @@ return [
         'auto_subscribe_default' => false,
         'mail' => ['enabled' => true],
         'routes' => ['thread' => null],
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Read tracking
+    |--------------------------------------------------------------------------
+    |
+    | `baseline_attribute`: the column of your user model holding the moment before which
+    | everything counts as read for that person (null or blank for none). `unread_max_lookback_days`:
+    | how far back a "what's new" list looks at most, whatever the baseline (an old baseline would
+    | otherwise match every thread).
+    |
+    */
+    'read_tracking' => [
+        'baseline_attribute' => 'forum_read_baseline_at',
+        'unread_max_lookback_days' => 365,
     ],
 
     /*

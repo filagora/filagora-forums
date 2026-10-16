@@ -133,6 +133,18 @@ package) and the forum follows it. With neither, every staff screen denies every
   listen to the two events to notify by bell or push instead. A person's choice of delivery
   (instant, daily, weekly, off) and whether posting follows a thread are read from two columns of
   your user model (`subscriptions.user_attributes`), or bind your own `SubscriptionPreferences`.
+- **Search** (with [`filagora/filagora-search`](https://github.com/filagora/filagora-search)
+  installed). Threads become a search index. `ForumSearch::threads($criteria, $viewer, $page)`
+  finds threads the viewer may see: by words in the title or in approved posts, and by forum,
+  author (started, or started-or-posted), "mine", minimum replies and recent activity, sorted by
+  last post, newest, replies or relevance. What the viewer may see is turned into a filter from
+  their forum scope, so any engine applies it; results come back as ids, are loaded, and any row
+  that is no longer visible (the index can be stale) is dropped. The engine is the search
+  package's choice: Meilisearch, the database (the default, using MariaDB FULLTEXT on thread
+  titles and post bodies), or your own. `unapproved()` (for staff who ask to include pending and
+  rejected threads) and `posts()` (matches inside one thread) are database queries. Saving or
+  deleting a thread, post or forum keeps the documents right. Parsing the request into a
+  `ForumSearchCriteria` and the search pages are yours.
 - **Privacy.** Forums registers a `PrivacyContributor` (a person's threads, posts and reports for
   an export; erasure keeps what they wrote under the anonymised account) and retention rules for
   the moderation logs and dismissed reports (`retention` in the config) with core. With

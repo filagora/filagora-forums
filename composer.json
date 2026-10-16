@@ -16,6 +16,7 @@
     },
     "require-dev": {
         "filagora/filagora-entitlements": "^0.2.1",
+        "filagora/filagora-search": "^0.1",
         "larastan/larastan": "^3.0",
         "laravel/pint": "^1.0",
         "orchestra/testbench": "^11.0",
@@ -53,6 +54,7 @@
     "minimum-stability": "stable",
     "prefer-stable": true,
     "suggest": {
-        "filagora/filagora-entitlements": "Answers the access checks from entitlement grants and lets the forum screens pick entitlement keys. Without it, bind Filagora\\Core\\Contracts\\AccessChecker."
+        "filagora/filagora-entitlements": "Answers the access checks from entitlement grants and lets the forum screens pick entitlement keys. Without it, bind Filagora\\Core\\Contracts\\AccessChecker.",
+        "filagora/filagora-search": "Adds the forum search (threads, filters, visibility) with a choice of engine: Meilisearch, or the database."
     }
 }

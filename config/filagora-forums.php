@@ -140,4 +140,19 @@ return [
         'routes' => ['thread' => null],
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | Search
+    |--------------------------------------------------------------------------
+    |
+    | Used when `filagora/filagora-search` is installed. `fulltext`: answer from MariaDB's
+    | FULLTEXT indexes on the database path (off falls back to LIKE). `post_text_limit`: the most
+    | characters of a thread's post text copied into its search document.
+    |
+    */
+    'search' => [
+        'fulltext' => true,
+        'post_text_limit' => 50000,
+    ],
+
 ];

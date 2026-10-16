@@ -34,9 +34,13 @@ use Filagora\Forums\Events\ThreadCreated;
 use Filagora\Forums\Events\ThreadDigestReady;
 use Filagora\Forums\Listeners\FollowThreadActivity;
 use Filagora\Forums\Listeners\SendSubscriptionMail;
+use Filagora\Forums\Models\Forum;
+use Filagora\Forums\Models\Post;
 use Filagora\Forums\Observers\ForumStatsObserver;
 use Filagora\Forums\Privacy\DismissedReportsRetention;
 use Filagora\Forums\Privacy\ForumsDataContributor;
+use Filagora\Forums\Search\SearchRelations;
+use Filagora\Forums\Search\ThreadSearchIndex;
 use Filagora\Forums\Services\ActiveAnnouncements;
 use Filagora\Forums\Services\AnnouncementDismissals;
 use Filagora\Forums\Services\ApprovalRules;
@@ -69,6 +73,7 @@ use Filagora\Forums\Targeting\Rules\PostCountBetweenRule;
 use Filagora\Forums\Targeting\Rules\TimeBetweenRule;
 use Filagora\Forums\Targeting\Rules\UsernameRule;
 use Filagora\Forums\Targeting\TargetingRules;
+use Filagora\Search\Support\SearchIndexRegistry;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\ServiceProvider;
 
@@ -138,6 +143,7 @@ class ForumsServiceProvider extends ServiceProvider
         $this->defineGates();
         $this->observeModels();
         $this->registerPrivacy();
+        $this->registerSearch();
         $this->listenForSubscriptions();
         $this->declareSettings();
 
@@ -216,6 +222,36 @@ class ForumsServiceProvider extends ServiceProvider
             'created_at',
             static fn (): int => (int) config('filagora-forums.retention.digest_items_days', 365),
         ));
+    }
+
+    /**
+     * With `filagora-search` installed, threads become a search index, and posts and forums keep
+     * the thread documents they feed right. Without it there is no forum search to set up.
+     */
+    private function registerSearch(): void
+    {
+        if (! class_exists(SearchIndexRegistry::class) || ! $this->app->bound(SearchIndexRegistry::class)) {
+            return;
+        }
+
+        $this->app->make(SearchIndexRegistry::class)->register($this->app->make(ThreadSearchIndex::class));
+
+        Event::listen('eloquent.saved: *', function (string $event, array $payload): void {
+            $model = $payload[0] ?? null;
+
+            match (true) {
+                $model instanceof Post => $this->app->make(SearchRelations::class)->postSaved($model),
+                $model instanceof Forum => $this->app->make(SearchRelations::class)->forumSaved($model),
+                default => null,
+            };
+        });
+        Event::listen('eloquent.deleted: *', function (string $event, array $payload): void {
+            $model = $payload[0] ?? null;
+
+            if ($model instanceof Post) {
+                $this->app->make(SearchRelations::class)->postDeleted($model);
+            }
+        });
     }
 
     /**

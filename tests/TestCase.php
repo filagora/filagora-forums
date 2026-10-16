@@ -12,6 +12,7 @@ use Filagora\Forums\ForumsServiceProvider;
 use Filagora\Forums\Tests\Support\TestPanelProvider;
 use Filagora\Forums\Tests\Support\TestSupportServiceProvider;
 use Filagora\Forums\Tests\Support\TestUser;
+use Filagora\Search\SearchServiceProvider;
 use Filament\Actions\ActionsServiceProvider;
 use Filament\FilamentServiceProvider;
 use Filament\Forms\FormsServiceProvider;
@@ -43,6 +44,7 @@ abstract class TestCase extends Orchestra
             WidgetsServiceProvider::class,
             CoreServiceProvider::class,
             EntitlementsServiceProvider::class,
+            SearchServiceProvider::class,
             ForumsServiceProvider::class,
             TestSupportServiceProvider::class,
             TestPanelProvider::class,

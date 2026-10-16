@@ -10,6 +10,7 @@ use Filagora\Forums\Models\PollQuestion;
 use Filagora\Forums\Models\PollVote;
 use Filagora\Forums\Models\PollVoteAnswer;
 use Filagora\Forums\Models\Post;
+use Filagora\Forums\Models\PostMention;
 use Filagora\Forums\Models\PostModerationLog;
 use Filagora\Forums\Models\PostReport;
 use Filagora\Forums\Models\Reaction;
@@ -54,6 +55,7 @@ return [
         'thread_subscription_digest_item' => ThreadSubscriptionDigestItem::class,
         'forum_read' => ForumRead::class,
         'thread_read' => ThreadRead::class,
+        'post_mention' => PostMention::class,
     ],
 
     /*
@@ -140,6 +142,27 @@ return [
             'auto_subscribe' => 'auto_subscribe_on_post',
         ],
         'auto_subscribe_default' => false,
+        'mail' => ['enabled' => true],
+        'routes' => ['thread' => null],
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Mentions
+    |--------------------------------------------------------------------------
+    |
+    | `@name` in a post. `enabled` switches the automatic handling of new, edited and approved
+    | posts off (call `Mentions::sync()` yourself). `user_attribute` is the user column the names
+    | are matched against, ignoring case. `max_per_post` is the most people ever told about one
+    | post. `mail` switches the default email off (listen to UsersMentioned instead);
+    | `routes.thread` is the named route of your thread page (it receives `thread`; the link gets
+    | `#post-{id}` added).
+    |
+    */
+    'mentions' => [
+        'enabled' => true,
+        'user_attribute' => 'username',
+        'max_per_post' => 10,
         'mail' => ['enabled' => true],
         'routes' => ['thread' => null],
     ],

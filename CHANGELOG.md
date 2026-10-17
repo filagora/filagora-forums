@@ -5,6 +5,8 @@ All notable changes to this package are documented here. The format follows
 
 ## [Unreleased]
 
+## [0.6.0] - 2026-10-17
+
 ### Added
 
 - **Attachments.** Table `post_attachments` (an eighth migration; `filagora:adopt` now expects twenty-one tables and records eight migrations; the site this package was extracted from also has importer columns and composite indexes, which a profile package declares, using core 0.2.2's `drop_indexes`), model `post_attachment`, the `Attachments` service (upload with a per-person hourly limit, inline upload then claim, thumbnails with `intervention/image`, access that follows the post, serving with safe headers and a download count, SVG never shown in the page, `authorizeUsing()` for other packages' files), `AttachmentRefused`, command `filagora:forums:prune-attachments` and the retention rule `forums.orphaned_attachments`. The privacy export lists a person's uploads and erasure removes the ones never used. Requires `filagora/filagora-core` `^0.2.2`.

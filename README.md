@@ -133,6 +133,21 @@ package) and the forum follows it. With neither, every staff screen denies every
   listen to the two events to notify by bell or push instead. A person's choice of delivery
   (instant, daily, weekly, off) and whether posting follows a thread are read from two columns of
   your user model (`subscriptions.user_attributes`), or bind your own `SubscriptionPreferences`.
+- **Attachments.** Files on posts. `Attachments::storeInline($user, $file)` stores a file while a
+  post is being written (nothing owns it yet) and `claimInline($body, $user, $post)` claims the ones
+  the body refers to once the post is saved (the pattern that finds a file id in your URLs is
+  `attachments.inline_pattern`); `store($post, $user, $files)` attaches files to a saved post. Images
+  get a thumbnail when `intervention/image` is installed. `canView($attachment, $viewer)` follows the
+  post: a file nobody has claimed is its uploader's alone; one on a post needs the forum, the thread
+  and the post to be visible to the viewer (a post awaiting approval or deleted is visible to its
+  author and staff). `stream($attachment, thumbnail:, inline:)` serves the file with safe headers
+  (`nosniff`, a cleaned file name) and counts the download; images and documents are shown in the
+  page only when asked, and **SVG never is**. A person may upload `attachments.max_per_hour` files an
+  hour (`AttachmentRefused` says why a file was refused). Uploads that were never claimed are removed
+  after `attachments.orphan_hours` by `filagora:forums:prune-attachments` or core's retention run;
+  files whose post was deleted stay with their thread. Other packages that attach files to
+  something else add their own access rule with `authorizeUsing()` (private messages do). The
+  upload form, the routes and the controller are yours.
 - **Mentions.** `@name` in a post tells that person. New approved posts, edits, posts approved or
   restored later and the posts of a thread when it is approved all call `Mentions::sync($post)`
   (switch the automatic part off with `mentions.enabled`). Names are matched ignoring case against

@@ -508,3 +508,52 @@ it('writes a file size people can read', function (int $bytes, string $text) {
     [5 * 1024 * 1024, '5 MB'],
     [3 * 1024 ** 3, '3 GB'],
 ]);
+
+it('does not prune a file whose post was deleted, because it still belongs to the thread', function () {
+    $post = attachmentPost();
+    $file = attachments()->store($post, TestUser::make('U'), [UploadedFile::fake()->image('a.png')])[0];
+    $post->delete();
+    PostAttachment::whereKey($file->id)->toBase()->update(['created_at' => now()->subDays(3)]);
+
+    expect($file->refresh()->post_id)->toBeNull()->and($file->thread_id)->not->toBeNull()
+        ->and(attachments()->pruneOrphaned(24))->toBe(0)
+        ->and(PostAttachment::count())->toBe(1);
+});
+
+it('never prunes a file waiting less than an hour, however the hours are given', function () {
+    $file = waitingFile(TestUser::make('U'));
+    PostAttachment::whereKey($file->id)->toBase()->update(['created_at' => now()->subMinutes(30)]);
+
+    expect(attachments()->pruneOrphaned(0))->toBe(0)->and(attachments()->pruneOrphaned(-5))->toBe(0)->and(PostAttachment::count())->toBe(1);
+});
+
+it('keeps a person\'s file whose post was deleted when they are erased', function () {
+    $uploader = TestUser::make('U');
+    $post = attachmentPost();
+    $file = attachments()->store($post, $uploader, [UploadedFile::fake()->image('a.png')])[0];
+    $post->delete();
+
+    app(PrivacyContributorRegistry::class)->all()['forums']->erase($uploader);
+
+    expect(PostAttachment::whereKey($file->id)->exists())->toBeTrue();
+    Storage::disk('local')->assertExists($file->storage_path);
+});
+
+it('checks a file linked to a post alone through the post\'s thread', function () {
+    $post = attachmentPost(visibility: ForumVisibility::STAFF_ONLY);
+    $file = attachments()->store($post, TestUser::make('U'), [UploadedFile::fake()->image('a.png')])[0];
+    $file->forceFill(['thread_id' => null])->save();
+
+    expect(attachments()->canView($file->refresh(), TestUser::make('Member')))->toBeFalse()
+        ->and(attachments()->canView($file, staffMember()))->toBeTrue();
+});
+
+it('says the file is gone when the disk cannot be read even though it reports the file', function () {
+    $file = waitingFile(TestUser::make('U'));
+    $disk = Mockery::mock(Filesystem::class);
+    $disk->shouldReceive('exists')->andReturn(true);
+    $disk->shouldReceive('readStream')->andReturn(null);
+    Storage::set('local', $disk);
+
+    expect(fn () => attachments()->stream($file))->toThrow(AttachmentRefused::class);
+});

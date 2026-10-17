@@ -3039,5 +3039,108 @@ return [
                 ],
             ],
         ],
+        'post_mentions' => [
+            'columns' => [
+                'id' => [
+                    'type' => 'bigint unsigned',
+                    'nullable' => false,
+                    'default' => null,
+                    'collation' => null,
+                    'auto_increment' => true,
+                    'generation' => null,
+                ],
+                'post_id' => [
+                    'type' => 'bigint unsigned',
+                    'nullable' => false,
+                    'default' => null,
+                    'collation' => null,
+                    'auto_increment' => false,
+                    'generation' => null,
+                ],
+                'user_id' => [
+                    'type' => 'bigint unsigned',
+                    'nullable' => false,
+                    'default' => null,
+                    'collation' => null,
+                    'auto_increment' => false,
+                    'generation' => null,
+                ],
+                'notified_at' => [
+                    'type' => 'timestamp',
+                    'nullable' => true,
+                    'default' => null,
+                    'collation' => null,
+                    'auto_increment' => false,
+                    'generation' => null,
+                ],
+                'created_at' => [
+                    'type' => 'timestamp',
+                    'nullable' => true,
+                    'default' => null,
+                    'collation' => null,
+                    'auto_increment' => false,
+                    'generation' => null,
+                ],
+                'updated_at' => [
+                    'type' => 'timestamp',
+                    'nullable' => true,
+                    'default' => null,
+                    'collation' => null,
+                    'auto_increment' => false,
+                    'generation' => null,
+                ],
+            ],
+            'indexes' => [
+                'post_mentions_post_id_user_id_unique' => [
+                    'columns' => [
+                        'post_id',
+                        'user_id',
+                    ],
+                    'unique' => true,
+                    'primary' => false,
+                    'type' => 'btree',
+                ],
+                'post_mentions_user_id_index' => [
+                    'columns' => [
+                        'user_id',
+                    ],
+                    'unique' => false,
+                    'primary' => false,
+                    'type' => 'btree',
+                ],
+                'primary' => [
+                    'columns' => [
+                        'id',
+                    ],
+                    'unique' => true,
+                    'primary' => true,
+                    'type' => 'btree',
+                ],
+            ],
+            'foreign_keys' => [
+                'post_mentions_post_id_foreign' => [
+                    'columns' => [
+                        'post_id',
+                    ],
+                    'on' => 'posts',
+                    'foreign_columns' => [
+                        'id',
+                    ],
+                    'on_delete' => 'cascade',
+                    'on_update' => 'restrict',
+                ],
+                'post_mentions_user_id_foreign' => [
+                    'columns' => [
+                        'user_id',
+                    ],
+                    'on' => '{users}',
+                    'foreign_columns' => [
+                        'id',
+                    ],
+                    'on_delete' => 'cascade',
+                    'on_update' => 'restrict',
+                ],
+            ],
+        ],
     ],
 ];

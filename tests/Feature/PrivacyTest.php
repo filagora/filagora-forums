@@ -47,7 +47,7 @@ it('contributes the forums\' data about a person to an export, and keeps what th
     $contributor = app(PrivacyContributorRegistry::class)->all()['forums'];
     $export = $contributor->export($author);
 
-    expect(array_keys($export))->toBe(['threads', 'posts', 'poll_votes', 'reactions', 'thread_subscriptions', 'digest_items', 'forum_reads', 'thread_reads', 'post_reports'])
+    expect(array_keys($export))->toBe(['threads', 'posts', 'poll_votes', 'reactions', 'thread_subscriptions', 'digest_items', 'mentions', 'forum_reads', 'thread_reads', 'post_reports'])
         ->and(array_column($export['threads'], 'title'))->toBe(['My thread'])
         ->and(array_column($export['posts'], 'body'))->toBe(['My words'])
         ->and($export['poll_votes'])->toBe([['poll_id' => $poll->id, 'voted_at' => $vote->created_at->toIso8601String(), 'option_ids' => [$option->id]]])

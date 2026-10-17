@@ -133,6 +133,17 @@ package) and the forum follows it. With neither, every staff screen denies every
   listen to the two events to notify by bell or push instead. A person's choice of delivery
   (instant, daily, weekly, off) and whether posting follows a thread are read from two columns of
   your user model (`subscriptions.user_attributes`), or bind your own `SubscriptionPreferences`.
+- **Mentions.** `@name` in a post tells that person. New approved posts, edits, posts approved or
+  restored later and the posts of a thread when it is approved all call `Mentions::sync($post)`
+  (switch the automatic part off with `mentions.enabled`). Names are matched ignoring case against
+  the user column `mentions.user_attribute` (`username`); code and the blocks the Quote button
+  inserts (a `> **Author:**` line and the `>` lines after it) are not scanned, so quoting a post does
+  not replay its mentions. The author is never told about their own post, nobody is told twice
+  about the same post, only people who can see the thread are told, and at most
+  `mentions.max_per_post` people (10) are ever told about one post. Each batch is announced as
+  `UsersMentioned`; by default each person is emailed (`mentions.mail.enabled` switches that off;
+  `mentions.routes.thread` names your thread route for the link). `Mentions::usernames($body)`
+  returns the names in a body, for rendering them as links.
 - **Read tracking.** `ReadTracking::markThreadRead($user, $thread)` when someone opens a thread,
   `markThreadUnread()` to flag it unread by hand (that flag beats every read time until they open
   it again), `markForumsRead()` and `markAllRead()` (every forum they can see), `isUnread()` and

@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Model;
 
 /**
  * What the forums hold about a person, for the compliance package's export: their threads, their
- * posts, their poll votes, the forums and threads they marked read and the reports they filed. Erasure removes their subscriptions, digest queue and read markers; what they wrote
+ * posts, their poll votes, the posts that mentioned them, the forums and threads they marked read and the reports they filed. Erasure removes their subscriptions, digest queue, mention records and read markers; what they wrote
  * stays, attributed to the account that the host's anonymiser has by then made anonymous.
  */
 final class ForumsDataContributor implements PrivacyContributor
@@ -31,6 +31,7 @@ final class ForumsDataContributor implements PrivacyContributor
             'reactions' => Models::class('reaction')::query()->where('user_id', $id)->orderBy('id')->get(['post_id', 'type', 'created_at'])->toArray(),
             'thread_subscriptions' => Models::class('thread_subscription')::query()->where('user_id', $id)->orderBy('id')->get(['thread_id', 'created_at'])->toArray(),
             'digest_items' => Models::class('thread_subscription_digest_item')::query()->where('user_id', $id)->orderBy('id')->get(['thread_id', 'post_id', 'sent_at', 'created_at'])->toArray(),
+            'mentions' => Models::class('post_mention')::query()->where('user_id', $id)->orderBy('id')->get(['post_id', 'notified_at'])->toArray(),
             'forum_reads' => Models::class('forum_read')::query()->where('user_id', $id)->orderBy('id')->get(['forum_id', 'last_read_at'])->toArray(),
             'thread_reads' => Models::class('thread_read')::query()->where('user_id', $id)->orderBy('id')->get(['thread_id', 'last_read_at', 'is_unread_override'])->toArray(),
             'post_reports' => Models::class('post_report')::query()->where('reporter_id', $id)->orderBy('id')->get(['id', 'post_id', 'reason', 'status', 'created_at'])->toArray(),
@@ -60,6 +61,7 @@ final class ForumsDataContributor implements PrivacyContributor
         // Authored content stays, under the anonymised account; what only served the person goes.
         Models::class('thread_subscription')::query()->where('user_id', $user->getKey())->delete();
         Models::class('thread_subscription_digest_item')::query()->where('user_id', $user->getKey())->delete();
+        Models::class('post_mention')::query()->where('user_id', $user->getKey())->delete();
         Models::class('forum_read')::query()->where('user_id', $user->getKey())->delete();
         Models::class('thread_read')::query()->where('user_id', $user->getKey())->delete();
     }

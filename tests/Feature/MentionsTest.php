@@ -304,3 +304,51 @@ it('allows one mention of a person per post at the database level', function () 
 
     expect(fn () => PostMention::create(['post_id' => $post->id, 'user_id' => $bob->id]))->toThrow(QueryException::class);
 });
+
+it('ignores a name that is only one letter once the trailing punctuation is gone', function () {
+    expect(app(Mentions::class)->usernames('Hello @a. and @bb.'))->toBe(['bb']);
+});
+
+it('has nothing to do for a post that mentions nobody', function () {
+    Event::fake([UsersMentioned::class]);
+    $post = mentionPost('Just words, no names', mentionUser('author'));
+
+    expect(app(Mentions::class)->sync($post))->toHaveCount(0)->and(PostMention::count())->toBe(0);
+    Event::assertNothingDispatched();
+});
+
+it('does not tell someone who can see the forum but not this thread', function () {
+    $author = mentionUser('author');
+    $bob = mentionUser('bob');
+    $group = ForumGroup::query()->firstOrCreate(['slug' => 'main'], ['name' => 'Main']);
+    $forum = Forum::create(['forum_group_id' => $group->id, 'name' => 'Private', 'slug' => 'private', 'visibility' => ForumVisibility::STAFF_AUTHOR_ONLY])->refresh();
+    Thread::create(['forum_id' => $forum->id, 'author_id' => $bob->id, 'title' => 'Bob\'s own', 'slug' => 'bobs']);
+    $theirs = Thread::create(['forum_id' => $forum->id, 'author_id' => $author->id, 'title' => 'Theirs', 'slug' => 'theirs']);
+    $post = Post::create(['thread_id' => $theirs->id, 'author_id' => $author->id, 'body' => 'Hello @bob'])->refresh();
+
+    expect(app(ForumAccess::class)->canViewForum($forum, $bob))->toBeTrue()
+        ->and(app(Mentions::class)->sync($post))->toHaveCount(0)
+        ->and(PostMention::count())->toBe(0);
+});
+
+it('leaves other moderation of a post alone', function () {
+    mentionUser('bob');
+    $post = mentionPost('Hello @bob', mentionUser('author'));
+
+    foreach (['move', 'promote', 'unapprove'] as $action) {
+        PostModerated::dispatch($post, mentionUser("mod-{$action}"), $action, null);
+    }
+
+    expect(PostMention::count())->toBe(0);
+});
+
+it('leaves other moderation of a thread alone', function () {
+    mentionUser('bob');
+    $post = mentionPost('Hello @bob', mentionUser('author'));
+
+    foreach (['lock', 'pin', 'move', 'rename'] as $action) {
+        ThreadModerated::dispatch($post->thread, mentionUser("mod-{$action}"), $action, null);
+    }
+
+    expect(PostMention::count())->toBe(0);
+});

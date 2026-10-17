@@ -22,6 +22,7 @@ use Filagora\Entitlements\Registry\Definition;
 use Filagora\Entitlements\Registry\EntitlementRegistry;
 use Filagora\Forums\Commands\SyncForumStatsCommand;
 use Filagora\Forums\Commands\SyncThreadStatsCommand;
+use Filagora\Forums\Console\PruneOrphanedAttachmentsCommand;
 use Filagora\Forums\Console\SendDigestCommand;
 use Filagora\Forums\Contracts\ContentModerationPolicy;
 use Filagora\Forums\Contracts\PaidAccessCheck;
@@ -45,11 +46,13 @@ use Filagora\Forums\Models\Post;
 use Filagora\Forums\Observers\ForumStatsObserver;
 use Filagora\Forums\Privacy\DismissedReportsRetention;
 use Filagora\Forums\Privacy\ForumsDataContributor;
+use Filagora\Forums\Privacy\OrphanedAttachmentsRetention;
 use Filagora\Forums\Search\SearchRelations;
 use Filagora\Forums\Search\ThreadSearchIndex;
 use Filagora\Forums\Services\ActiveAnnouncements;
 use Filagora\Forums\Services\AnnouncementDismissals;
 use Filagora\Forums\Services\ApprovalRules;
+use Filagora\Forums\Services\Attachments;
 use Filagora\Forums\Services\ForumAccess;
 use Filagora\Forums\Services\ForumStats;
 use Filagora\Forums\Services\Mentions;
@@ -110,6 +113,7 @@ class ForumsServiceProvider extends ServiceProvider
         $this->app->singleton(Reactions::class);
         $this->app->singleton(ReadTracking::class);
         $this->app->singleton(Mentions::class);
+        $this->app->singleton(Attachments::class);
         $this->app->singleton(Subscriptions::class);
         $this->app->bindIf(SubscriptionPreferences::class, UserAttributePreferences::class);
         $this->app->singleton(ActiveAnnouncements::class);
@@ -162,7 +166,7 @@ class ForumsServiceProvider extends ServiceProvider
         $this->loadMigrationsFrom(__DIR__.'/../database/migrations');
 
         if ($this->app->runningInConsole()) {
-            $this->commands([SyncForumStatsCommand::class, SyncThreadStatsCommand::class, SendDigestCommand::class]);
+            $this->commands([PruneOrphanedAttachmentsCommand::class, SyncForumStatsCommand::class, SyncThreadStatsCommand::class, SendDigestCommand::class]);
 
             $this->publishes([
                 __DIR__.'/../config/filagora-forums.php' => config_path('filagora-forums.php'),
@@ -231,6 +235,7 @@ class ForumsServiceProvider extends ServiceProvider
         }
 
         $retention->register(new DismissedReportsRetention);
+        $retention->register(new OrphanedAttachmentsRetention);
         $retention->register(new TableRetentionRule(
             'forums.digest_items',
             Tables::name('thread_subscription_digest_items'),

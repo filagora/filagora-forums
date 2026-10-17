@@ -25,5 +25,5 @@ it('passes the Filagora doctor', function () {
 });
 
 it('adds its models to the configuration by default', function () {
-    expect(array_keys(config('filagora-forums.models')))->toBe(['forum_group', 'forum', 'thread', 'post', 'post_report', 'post_moderation_log', 'thread_moderation_log', 'site_notification', 'site_notification_dismissal', 'poll', 'poll_question', 'poll_option', 'poll_vote', 'poll_vote_answer', 'reaction', 'thread_subscription', 'thread_subscription_digest_item', 'forum_read', 'thread_read', 'post_mention']);
+    expect(array_keys(config('filagora-forums.models')))->toBe(['forum_group', 'forum', 'thread', 'post', 'post_report', 'post_moderation_log', 'thread_moderation_log', 'site_notification', 'site_notification_dismissal', 'poll', 'poll_question', 'poll_option', 'poll_vote', 'poll_vote_answer', 'reaction', 'thread_subscription', 'thread_subscription_digest_item', 'forum_read', 'thread_read', 'post_mention', 'post_attachment']);
 });

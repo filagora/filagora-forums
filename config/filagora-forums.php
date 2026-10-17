@@ -10,6 +10,7 @@ use Filagora\Forums\Models\PollQuestion;
 use Filagora\Forums\Models\PollVote;
 use Filagora\Forums\Models\PollVoteAnswer;
 use Filagora\Forums\Models\Post;
+use Filagora\Forums\Models\PostAttachment;
 use Filagora\Forums\Models\PostMention;
 use Filagora\Forums\Models\PostModerationLog;
 use Filagora\Forums\Models\PostReport;
@@ -56,6 +57,7 @@ return [
         'forum_read' => ForumRead::class,
         'thread_read' => ThreadRead::class,
         'post_mention' => PostMention::class,
+        'post_attachment' => PostAttachment::class,
     ],
 
     /*
@@ -144,6 +146,28 @@ return [
         'auto_subscribe_default' => false,
         'mail' => ['enabled' => true],
         'routes' => ['thread' => null],
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Attachments
+    |--------------------------------------------------------------------------
+    |
+    | Files on posts. `disk` and `directory`: where they are stored. `max_per_hour`: the most a
+    | person may upload in an hour. `thumbnail_width`: images are scaled down to this width for a
+    | thumbnail when `intervention/image` is installed. `inline_pattern`: the regular expression
+    | that finds, in a post body, the id of an uploaded file embedded in it (the first group is
+    | the id); match your attachment URLs. `orphan_hours`: how long an upload may wait for its
+    | post before it is cleaned up (zero keeps them).
+    |
+    */
+    'attachments' => [
+        'disk' => 'local',
+        'directory' => 'attachments/uploads',
+        'max_per_hour' => 30,
+        'thumbnail_width' => 640,
+        'inline_pattern' => '#post-attachments/(\d+)#',
+        'orphan_hours' => 24,
     ],
 
     /*

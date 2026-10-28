@@ -16,6 +16,7 @@ use Filagora\Forums\Search\ThreadSearchIndex;
 use Filagora\Forums\Services\ForumAccess;
 use Filagora\Forums\Tests\Support\TestUser;
 use Filagora\Search\Engines\ArrayEngine;
+use Filagora\Search\Enums\MatchingStrategy;
 use Filagora\Search\Filters\All;
 use Filagora\Search\Filters\Any;
 use Filagora\Search\Filters\Equals;
@@ -25,8 +26,10 @@ use Filagora\Search\Filters\Range;
 use Filagora\Search\Indexing\Indexer;
 use Filagora\Search\Search;
 use Filagora\Search\Support\Document;
+use Filagora\Search\Support\IndexDefinition;
 use Filagora\Search\Support\SearchEngines;
 use Filagora\Search\Support\SearchQuery;
+use Filagora\Search\Support\SearchResult;
 use Illuminate\Support\Facades\DB;
 
 /*
@@ -393,4 +396,28 @@ it('does nothing for thread search documents with the database engine', function
     expect(app(Indexer::class)->isActive())->toBeFalse()
         ->and(app(Search::class)->search(ThreadSearchIndex::NAME, new SearchQuery('quiet'))->total)->toBe(1)
         ->and((new Document(1, []))->fields)->toBe([]);
+});
+
+it('passes the matching strategy it is asked for on to the engine', function () {
+    $engine = new class extends ArrayEngine
+    {
+        public ?MatchingStrategy $asked = null;
+
+        public function search(IndexDefinition $index, SearchQuery $query): SearchResult
+        {
+            $this->asked = $query->matching;
+
+            return parent::search($index, $query);
+        }
+    };
+    app(SearchEngines::class)->extend('array', fn () => $engine);
+    config(['filagora-search.engine' => 'array']);
+    app()->forgetInstance(ForumSearch::class);
+    searchForum();
+
+    app(ForumSearch::class)->threads(new ForumSearchCriteria(query: 'zen cart 1.5.8'), null);
+    expect($engine->asked)->toBe(MatchingStrategy::All);
+
+    app(ForumSearch::class)->threads(new ForumSearchCriteria(query: 'zen cart 1.5.8', matching: MatchingStrategy::Last), null);
+    expect($engine->asked)->toBe(MatchingStrategy::Last);
 });

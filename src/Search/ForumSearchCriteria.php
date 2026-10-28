@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Filagora\Forums\Search;
 
 use Carbon\CarbonImmutable;
+use Filagora\Search\Enums\MatchingStrategy;
 
 /**
  * What a forum search asked for, already normalised: unknown values have fallen back to defaults
@@ -33,6 +34,7 @@ final readonly class ForumSearchCriteria
      * @param  string  $authorMode  `started` (the author began the thread) or `posted` (began it or has a visible post in it)
      * @param  string|null  $since  One of the SINCE_OPTIONS keys: threads active within that period
      * @param  int|string|null  $mineUserId  Only threads this person started or posted in
+     * @param  MatchingStrategy  $matching  `Last` lets the engine drop trailing words nothing matches (Meilisearch only)
      */
     public function __construct(
         public string $query = '',
@@ -45,6 +47,7 @@ final readonly class ForumSearchCriteria
         public string $sort = 'last_post',
         public bool $includeUnapproved = false,
         public string $postSort = 'oldest',
+        public MatchingStrategy $matching = MatchingStrategy::All,
     ) {}
 
     public function sinceTimestamp(): ?int

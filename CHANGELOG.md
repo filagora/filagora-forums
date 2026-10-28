@@ -5,6 +5,12 @@ All notable changes to this package are documented here. The format follows
 
 ## [Unreleased]
 
+## [0.6.1] - 2026-10-28
+
+### Added
+
+- `ForumSearchCriteria::$matching`, a `MatchingStrategy` (default `All`, unchanged) that `ForumSearch::threads()` passes to the engine. Requires `filagora/filagora-search` `^0.1.1`.
+
 ## [0.6.0] - 2026-10-17
 
 ### Added

@@ -16,7 +16,7 @@
     },
     "require-dev": {
         "filagora/filagora-entitlements": "^0.2.1",
-        "filagora/filagora-search": "^0.1",
+        "filagora/filagora-search": "^0.1.1",
         "intervention/image": "^4.2",
         "larastan/larastan": "^3.0",
         "laravel/pint": "^1.0",

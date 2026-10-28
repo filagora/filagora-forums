@@ -62,6 +62,7 @@ class ForumSearch
             sort: $this->sort($criteria),
             page: max(1, $page),
             perPage: self::PER_PAGE,
+            matching: $criteria->matching,
         ));
 
         $rows = Models::class('thread')::query()

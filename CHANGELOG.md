@@ -5,6 +5,12 @@ All notable changes to this package are documented here. The format follows
 
 ## [Unreleased]
 
+## [0.6.2] - 2026-10-30
+
+### Added
+
+- The dashboard's forums list shows each forum's posting policy, whether it shows when empty, and when it was last changed (each can be hidden from the column menu).
+
 ## [0.6.1] - 2026-10-28
 
 ### Added

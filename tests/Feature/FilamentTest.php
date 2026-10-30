@@ -130,6 +130,16 @@ it('creates and edits forum groups and forums', function () {
     Livewire::test(ListForums::class)->assertCanSeeTableRecords([$forum, $this->forum]);
 });
 
+it('lists a forum with its posting policy, whether it shows when empty and when it changed', function () {
+    fModerator();
+
+    Livewire::test(ListForums::class)
+        ->assertTableColumnExists('posting_policy')
+        ->assertTableColumnExists('show_when_empty')
+        ->assertTableColumnExists('updated_at')
+        ->assertTableColumnFormattedStateSet('posting_policy', $this->forum->posting_policy->label(), $this->forum);
+});
+
 it('requires a name, slug and group for a forum', function () {
     fModerator();
 

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Filagora\Forums\Filament\Resources\Forums\Tables;
 
+use Filagora\Forums\Enums\ForumPostingPolicy;
 use Filagora\Forums\Enums\ForumVisibility;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
@@ -24,6 +25,7 @@ class ForumsTable
                 TextColumn::make('group.name')->label(__('filagora-forums::messages.forums.table.group'))->searchable(),
                 TextColumn::make('name')->searchable(),
                 TextColumn::make('visibility')->badge()->formatStateUsing(fn ($state): string => $state instanceof ForumVisibility ? $state->label() : (string) $state),
+                TextColumn::make('posting_policy')->badge()->formatStateUsing(fn ($state): string => $state instanceof ForumPostingPolicy ? $state->label() : (string) $state)->toggleable(),
                 TextColumn::make('required_entitlement_scope')->label(__('filagora-forums::messages.forums.table.entitlement'))->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('reply_entitlement_scope')->label(__('filagora-forums::messages.forums.table.reply_entitlement'))->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('thread_count')->numeric()->sortable(),
@@ -31,8 +33,10 @@ class ForumsTable
                 IconColumn::make('is_read_only')->boolean(),
                 IconColumn::make('requires_thread_approval')->boolean(),
                 IconColumn::make('requires_reply_approval')->boolean(),
+                IconColumn::make('show_when_empty')->boolean()->toggleable(),
                 TextColumn::make('sort_order')->numeric()->sortable(),
                 IconColumn::make('is_active')->boolean(),
+                TextColumn::make('updated_at')->dateTime()->sortable()->toggleable(),
             ])
             ->filters([
                 SelectFilter::make('visibility')->options(ForumVisibility::options()),

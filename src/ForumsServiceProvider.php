@@ -30,6 +30,7 @@ use Filagora\Forums\Contracts\PostSignatureResolver;
 use Filagora\Forums\Contracts\PostUrlResolver;
 use Filagora\Forums\Contracts\StaffPreview;
 use Filagora\Forums\Contracts\SubscriptionPreferences;
+use Filagora\Forums\Events\ForumSubscribersToNotify;
 use Filagora\Forums\Events\PostCreated;
 use Filagora\Forums\Events\PostEdited;
 use Filagora\Forums\Events\PostModerated;
@@ -37,7 +38,9 @@ use Filagora\Forums\Events\SubscribersToNotify;
 use Filagora\Forums\Events\ThreadCreated;
 use Filagora\Forums\Events\ThreadDigestReady;
 use Filagora\Forums\Events\ThreadModerated;
+use Filagora\Forums\Events\ThreadPromoted;
 use Filagora\Forums\Events\UsersMentioned;
+use Filagora\Forums\Listeners\AnnounceNewThreads;
 use Filagora\Forums\Listeners\FollowThreadActivity;
 use Filagora\Forums\Listeners\NotifyMentions;
 use Filagora\Forums\Listeners\SendMentionMail;
@@ -56,6 +59,7 @@ use Filagora\Forums\Services\ApprovalRules;
 use Filagora\Forums\Services\Attachments;
 use Filagora\Forums\Services\ForumAccess;
 use Filagora\Forums\Services\ForumStats;
+use Filagora\Forums\Services\ForumSubscriptions;
 use Filagora\Forums\Services\Mentions;
 use Filagora\Forums\Services\Polls;
 use Filagora\Forums\Services\Posting;
@@ -118,6 +122,7 @@ class ForumsServiceProvider extends ServiceProvider
         $this->app->singleton(Mentions::class);
         $this->app->singleton(Attachments::class);
         $this->app->singleton(Subscriptions::class);
+        $this->app->singleton(ForumSubscriptions::class);
         $this->app->bindIf(SubscriptionPreferences::class, UserAttributePreferences::class);
         $this->app->singleton(ActiveAnnouncements::class);
         $this->app->singleton(AnnouncementDismissals::class);
@@ -215,6 +220,10 @@ class ForumsServiceProvider extends ServiceProvider
         Event::listen(ThreadModerated::class, [NotifyMentions::class, 'threadModerated']);
         Event::listen(UsersMentioned::class, [SendMentionMail::class, 'handle']);
         Event::listen(SubscribersToNotify::class, [SendSubscriptionMail::class, 'updated']);
+        Event::listen(ThreadCreated::class, [AnnounceNewThreads::class, 'threadCreated']);
+        Event::listen(ThreadModerated::class, [AnnounceNewThreads::class, 'threadModerated']);
+        Event::listen(ThreadPromoted::class, [AnnounceNewThreads::class, 'threadPromoted']);
+        Event::listen(ForumSubscribersToNotify::class, [SendSubscriptionMail::class, 'newThread']);
         Event::listen(ThreadDigestReady::class, [SendSubscriptionMail::class, 'digest']);
     }
 

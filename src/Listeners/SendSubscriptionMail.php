@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace Filagora\Forums\Listeners;
 
+use Filagora\Forums\Events\ForumSubscribersToNotify;
 use Filagora\Forums\Events\SubscribersToNotify;
 use Filagora\Forums\Events\ThreadDigestReady;
+use Filagora\Forums\Notifications\ForumThreadCreatedNotification;
 use Filagora\Forums\Notifications\ThreadDigestNotification;
 use Filagora\Forums\Notifications\ThreadUpdatedNotification;
 use Illuminate\Support\Facades\Notification;
@@ -20,6 +22,13 @@ final class SendSubscriptionMail
     {
         if ($this->enabled() && $event->recipients !== []) {
             Notification::send($event->recipients, new ThreadUpdatedNotification($event->thread, $event->post));
+        }
+    }
+
+    public function newThread(ForumSubscribersToNotify $event): void
+    {
+        if ($this->enabled() && $event->recipients !== []) {
+            Notification::send($event->recipients, new ForumThreadCreatedNotification($event->thread));
         }
     }
 

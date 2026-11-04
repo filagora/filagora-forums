@@ -4,6 +4,7 @@ declare(strict_types=1);
 use Filagora\Forums\Models\Forum;
 use Filagora\Forums\Models\ForumGroup;
 use Filagora\Forums\Models\ForumRead;
+use Filagora\Forums\Models\ForumSubscription;
 use Filagora\Forums\Models\Poll;
 use Filagora\Forums\Models\PollOption;
 use Filagora\Forums\Models\PollQuestion;
@@ -52,6 +53,7 @@ return [
         'poll_vote' => PollVote::class,
         'poll_vote_answer' => PollVoteAnswer::class,
         'reaction' => Reaction::class,
+        'forum_subscription' => ForumSubscription::class,
         'thread_subscription' => ThreadSubscription::class,
         'thread_subscription_digest_item' => ThreadSubscriptionDigestItem::class,
         'forum_read' => ForumRead::class,

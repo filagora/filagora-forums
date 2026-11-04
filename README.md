@@ -123,6 +123,10 @@ package) and the forum follows it. With neither, every staff screen denies every
   see, or takes it back if they already made it; deleted posts, posts awaiting approval and
   kinds not listed in `reactions.types` are refused (`ReactionRefused`). `counts($postIds)` and
   `madeBy($user, $postIds)` answer for a whole page of posts in one query each.
+- **Forum subscriptions.** `ForumSubscriptions::subscribe($user, $forum)` follows a whole forum. When a
+  thread becomes visible in it (started without moderation, approved, moved in, or made from a reply)
+  a queued job fires `ForumSubscribersToNotify` in batches, for followers who may still read it, leaving
+  out the author and anyone already following the thread. Mail follows `subscriptions.mail.enabled`.
 - **Subscriptions and digests.** `Subscriptions::subscribe($user, $thread)` follows a thread (a
   new thread's author follows it by default; a reply's author follows it when their preference
   says so). A new approved reply becomes updates for the followers: those who want it at once are

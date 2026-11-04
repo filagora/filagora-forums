@@ -31,6 +31,7 @@ final class ForumsDataContributor implements PrivacyContributor
             'posts' => Models::class('post')::query()->where('author_id', $id)->orderBy('id')->get(['id', 'thread_id', 'body', 'created_at', 'updated_at'])->toArray(),
             'poll_votes' => $this->pollVotes($id),
             'reactions' => Models::class('reaction')::query()->where('user_id', $id)->orderBy('id')->get(['post_id', 'type', 'created_at'])->toArray(),
+            'forum_subscriptions' => Models::class('forum_subscription')::query()->where('user_id', $id)->orderBy('id')->get(['forum_id', 'created_at'])->toArray(),
             'thread_subscriptions' => Models::class('thread_subscription')::query()->where('user_id', $id)->orderBy('id')->get(['thread_id', 'created_at'])->toArray(),
             'digest_items' => Models::class('thread_subscription_digest_item')::query()->where('user_id', $id)->orderBy('id')->get(['thread_id', 'post_id', 'sent_at', 'created_at'])->toArray(),
             'attachments' => Models::class('post_attachment')::query()->where('uploader_id', $id)->orderBy('id')->get(['id', 'post_id', 'original_filename', 'mime_type', 'filesize_bytes', 'created_at'])->toArray(),
@@ -62,6 +63,7 @@ final class ForumsDataContributor implements PrivacyContributor
     public function erase(Model $user): void
     {
         // Authored content stays, under the anonymised account; what only served the person goes.
+        Models::class('forum_subscription')::query()->where('user_id', $user->getKey())->delete();
         Models::class('thread_subscription')::query()->where('user_id', $user->getKey())->delete();
         Models::class('thread_subscription_digest_item')::query()->where('user_id', $user->getKey())->delete();
         Models::class('post_mention')::query()->where('user_id', $user->getKey())->delete();

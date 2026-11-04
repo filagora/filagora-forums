@@ -6,6 +6,7 @@ namespace Filagora\Forums\Services;
 
 use Filagora\Forums\Events\PostModerated;
 use Filagora\Forums\Events\ThreadDeleted;
+use Filagora\Forums\Events\ThreadPromoted;
 use Filagora\Forums\Exceptions\InvalidModeration;
 use Filagora\Forums\Models\Forum;
 use Filagora\Forums\Models\Post;
@@ -143,6 +144,7 @@ class PostRelocation
         });
 
         $this->announce($moderator, $moved, $removed, $reason);
+        ThreadPromoted::dispatch($thread, $moderator);
 
         return $thread;
     }

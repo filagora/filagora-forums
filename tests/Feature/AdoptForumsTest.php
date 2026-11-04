@@ -20,6 +20,7 @@ const READ_TRACKING_MIGRATION = '2026_10_16_000000_create_filagora_read_tracking
 const MENTION_MIGRATION = '2026_10_16_100000_create_filagora_mention_table';
 const ATTACHMENT_MIGRATION = '2026_10_16_200000_create_filagora_attachment_table';
 const NOINDEX_MIGRATION = '2026_11_04_000000_add_noindex_to_forums_table';
+const FORUM_SUBSCRIPTION_MIGRATION = '2026_11_04_100000_create_filagora_forum_subscription_table';
 
 function packageMigration(string $name): object
 {
@@ -37,13 +38,13 @@ function existingForumTables(): void
 
     config(['filagora.table_prefix' => '']);
 
-    foreach ([FORUM_MIGRATION, ANNOUNCEMENT_MIGRATION, POLL_MIGRATION, REACTION_MIGRATION, SUBSCRIPTION_MIGRATION, READ_TRACKING_MIGRATION, MENTION_MIGRATION, ATTACHMENT_MIGRATION, NOINDEX_MIGRATION] as $name) {
+    foreach ([FORUM_MIGRATION, ANNOUNCEMENT_MIGRATION, POLL_MIGRATION, REACTION_MIGRATION, SUBSCRIPTION_MIGRATION, READ_TRACKING_MIGRATION, MENTION_MIGRATION, ATTACHMENT_MIGRATION, NOINDEX_MIGRATION, FORUM_SUBSCRIPTION_MIGRATION] as $name) {
         $migration = packageMigration($name);
         $migration->down();
         $migration->up();
     }
 
-    DB::table('migrations')->whereIn('migration', [FORUM_MIGRATION, ANNOUNCEMENT_MIGRATION, POLL_MIGRATION, REACTION_MIGRATION, SUBSCRIPTION_MIGRATION, READ_TRACKING_MIGRATION, MENTION_MIGRATION, ATTACHMENT_MIGRATION, NOINDEX_MIGRATION])->delete();
+    DB::table('migrations')->whereIn('migration', [FORUM_MIGRATION, ANNOUNCEMENT_MIGRATION, POLL_MIGRATION, REACTION_MIGRATION, SUBSCRIPTION_MIGRATION, READ_TRACKING_MIGRATION, MENTION_MIGRATION, ATTACHMENT_MIGRATION, NOINDEX_MIGRATION, FORUM_SUBSCRIPTION_MIGRATION])->delete();
 }
 
 /**
@@ -109,11 +110,11 @@ it('adopts the forum tables of an existing site and records the migration', func
     $plan = app(Adopter::class)->planFor(forumsSchema());
 
     expect($plan->status)->toBe(AdoptionStatus::Adoptable, implode('; ', $plan->differences))
-        ->and($plan->pendingMigrations)->toBe([FORUM_MIGRATION, ANNOUNCEMENT_MIGRATION, POLL_MIGRATION, REACTION_MIGRATION, SUBSCRIPTION_MIGRATION, READ_TRACKING_MIGRATION, MENTION_MIGRATION, ATTACHMENT_MIGRATION, NOINDEX_MIGRATION]);
+        ->and($plan->pendingMigrations)->toBe([FORUM_MIGRATION, ANNOUNCEMENT_MIGRATION, POLL_MIGRATION, REACTION_MIGRATION, SUBSCRIPTION_MIGRATION, READ_TRACKING_MIGRATION, MENTION_MIGRATION, ATTACHMENT_MIGRATION, NOINDEX_MIGRATION, FORUM_SUBSCRIPTION_MIGRATION]);
 
-    $this->artisan('filagora:adopt', ['--package' => 'forums'])->expectsOutputToContain('Recorded 9 migration(s) as run.')->assertExitCode(0);
+    $this->artisan('filagora:adopt', ['--package' => 'forums'])->expectsOutputToContain('Recorded 10 migration(s) as run.')->assertExitCode(0);
 
-    expect(DB::table('migrations')->whereIn('migration', [FORUM_MIGRATION, ANNOUNCEMENT_MIGRATION, POLL_MIGRATION, REACTION_MIGRATION, SUBSCRIPTION_MIGRATION, READ_TRACKING_MIGRATION, MENTION_MIGRATION, ATTACHMENT_MIGRATION, NOINDEX_MIGRATION])->count())->toBe(9);
+    expect(DB::table('migrations')->whereIn('migration', [FORUM_MIGRATION, ANNOUNCEMENT_MIGRATION, POLL_MIGRATION, REACTION_MIGRATION, SUBSCRIPTION_MIGRATION, READ_TRACKING_MIGRATION, MENTION_MIGRATION, ATTACHMENT_MIGRATION, NOINDEX_MIGRATION, FORUM_SUBSCRIPTION_MIGRATION])->count())->toBe(10);
 });
 
 it('refuses a site whose tables carry columns nobody declared, naming each one', function () {

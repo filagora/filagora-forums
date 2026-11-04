@@ -40,7 +40,7 @@ return [
         'navigation_label' => 'Threads',
         'model_label' => 'thread',
         'plural_model_label' => 'threads',
-        'table' => ['author' => 'Author'],
+        'table' => ['author' => 'Author', 'forum' => 'Forum'],
     ],
 
     'posts' => [

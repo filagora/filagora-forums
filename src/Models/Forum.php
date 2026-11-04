@@ -27,6 +27,7 @@ use Illuminate\Support\Carbon;
  * @property bool $requires_thread_approval
  * @property bool $requires_reply_approval
  * @property bool $show_when_empty
+ * @property bool $noindex
  * @property int $sort_order
  * @property bool $is_active
  * @property int $thread_count
@@ -53,6 +54,7 @@ class Forum extends Model
         'requires_thread_approval',
         'requires_reply_approval',
         'show_when_empty',
+        'noindex',
         'sort_order',
         'is_active',
         'thread_count',
@@ -79,6 +81,7 @@ class Forum extends Model
             'requires_thread_approval' => 'boolean',
             'requires_reply_approval' => 'boolean',
             'show_when_empty' => 'boolean',
+            'noindex' => 'boolean',
             'is_active' => 'boolean',
             'thread_count' => 'integer',
             'post_count' => 'integer',

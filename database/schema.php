@@ -299,6 +299,14 @@ return [
                     'auto_increment' => false,
                     'generation' => null,
                 ],
+                'noindex' => [
+                    'type' => 'tinyint(1)',
+                    'nullable' => false,
+                    'default' => '0',
+                    'collation' => null,
+                    'auto_increment' => false,
+                    'generation' => null,
+                ],
             ],
             'indexes' => [
                 'forums_group_active_sort_idx' => [

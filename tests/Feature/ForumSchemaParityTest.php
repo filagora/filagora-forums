@@ -21,7 +21,7 @@ it('ships a snapshot of the twenty-one forum tables that matches the migration, 
 
     expect($snapshot)->not->toBeNull()
         ->and(array_keys($snapshot->tables))->toBe(FORUM_TABLES)
-        ->and($snapshot->migrationNames())->toBe(['2026_10_11_000000_create_filagora_forum_tables', '2026_10_14_000000_create_filagora_announcement_tables', '2026_10_15_000000_create_filagora_poll_tables', '2026_10_15_100000_create_filagora_reaction_tables', '2026_10_15_200000_create_filagora_subscription_tables', '2026_10_16_000000_create_filagora_read_tracking_tables', '2026_10_16_100000_create_filagora_mention_table', '2026_10_16_200000_create_filagora_attachment_table']);
+        ->and($snapshot->migrationNames())->toBe(['2026_10_11_000000_create_filagora_forum_tables', '2026_10_14_000000_create_filagora_announcement_tables', '2026_10_15_000000_create_filagora_poll_tables', '2026_10_15_100000_create_filagora_reaction_tables', '2026_10_15_200000_create_filagora_subscription_tables', '2026_10_16_000000_create_filagora_read_tracking_tables', '2026_10_16_100000_create_filagora_mention_table', '2026_10_16_200000_create_filagora_attachment_table', '2026_11_04_000000_add_noindex_to_forums_table']);
 
     foreach ($snapshot->tables as $base => $expected) {
         expect(TableShape::inspect($base)->differencesFrom($expected, compareColumnOrder: true))->toBe([], $base);

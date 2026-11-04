@@ -141,6 +141,22 @@ it('lists a forum with its posting policy, whether it shows when empty and when 
         ->assertTableColumnFormattedStateSet('posting_policy', $this->forum->posting_policy->label(), $this->forum);
 });
 
+it('lets staff hide a forum from search engines and shows it in the list', function () {
+    fModerator();
+    $group = ForumGroup::first();
+
+    Livewire::test(CreateForum::class)
+        ->fillForm(['forum_group_id' => $group->id, 'name' => 'Private notes', 'slug' => 'private-notes', 'visibility' => 'registered', 'posting_policy' => 'registered', 'sort_order' => 1, 'noindex' => true])
+        ->call('create')
+        ->assertHasNoFormErrors();
+
+    $forum = Forum::query()->where('slug', 'private-notes')->firstOrFail();
+    expect($forum->noindex)->toBeTrue()
+        ->and($this->forum->refresh()->noindex)->toBeFalse();
+
+    Livewire::test(ListForums::class)->assertTableColumnExists('noindex');
+});
+
 it('requires a name, slug and group for a forum', function () {
     fModerator();
 

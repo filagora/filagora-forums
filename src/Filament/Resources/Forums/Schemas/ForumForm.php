@@ -46,6 +46,7 @@ class ForumForm
             Toggle::make('requires_thread_approval')->label($t('requires_thread_approval'))->helperText($t('requires_thread_approval_help'))->default(false),
             Toggle::make('requires_reply_approval')->label($t('requires_reply_approval'))->helperText($t('requires_reply_approval_help'))->default(false),
             Toggle::make('show_when_empty')->label($t('show_when_empty'))->helperText($t('show_when_empty_help'))->default(false),
+            Toggle::make('noindex')->label($t('noindex'))->helperText($t('noindex_help'))->default(false),
             TextInput::make('sort_order')->required()->numeric()->default(0),
             Toggle::make('is_active')->default(true),
         ]);

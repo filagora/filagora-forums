@@ -34,6 +34,7 @@ class ForumsTable
                 IconColumn::make('requires_thread_approval')->boolean(),
                 IconColumn::make('requires_reply_approval')->boolean(),
                 IconColumn::make('show_when_empty')->boolean()->toggleable(),
+                IconColumn::make('noindex')->label(__('filagora-forums::messages.forums.form.noindex'))->boolean()->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('sort_order')->numeric()->sortable(),
                 IconColumn::make('is_active')->boolean(),
                 TextColumn::make('updated_at')->dateTime()->sortable()->toggleable(),

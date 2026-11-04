@@ -5,6 +5,10 @@ All notable changes to this package are documented here. The format follows
 
 ## [Unreleased]
 
+### Added
+
+- A `noindex` flag on forums (column, migration, dashboard toggle and list column): the host sends noindex for the forum and its threads and leaves it out of its sitemap. The schema snapshot now includes the column, so adopting a database that has it works and one without it does not.
+
 ## [0.6.3] - 2026-11-04
 
 ### Added

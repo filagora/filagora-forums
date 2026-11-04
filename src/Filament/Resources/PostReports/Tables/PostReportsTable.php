@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Filagora\Forums\Filament\Resources\PostReports\Tables;
 
 use Filagora\Core\Support\UserModel;
+use Filagora\Forums\Contracts\PostUrlResolver;
 use Filagora\Forums\Enums\PostReportStatus;
 use Filagora\Forums\Filament\Actions\Moderate;
 use Filagora\Forums\Filament\Actions\ResolveReportAction;
@@ -48,6 +49,7 @@ class PostReportsTable
                     ->label(Moderate::t('read'))
                     ->icon('heroicon-o-eye')
                     ->color('gray')
+                    ->url(fn (?PostReport $record): ?string => $record?->post instanceof Post ? app(PostUrlResolver::class)->url($record->post) : null, shouldOpenInNewTab: true)
                     ->modalSubmitAction(false)
                     ->modalContent(fn (PostReport $record): HtmlString => new HtmlString('<div class="p-4 whitespace-pre-wrap">'.e($record->post instanceof Post ? $record->post->body : '').'</div>')),
                 ResolveReportAction::make(),

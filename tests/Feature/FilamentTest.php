@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use Filagora\Entitlements\Models\UserEntitlementGrant;
+use Filagora\Forums\Contracts\PostUrlResolver;
 use Filagora\Forums\Enums\ContentModerationStatus;
 use Filagora\Forums\Enums\PostReportStatus;
 use Filagora\Forums\Filament\Pages\ModerationQueue;
@@ -151,6 +152,18 @@ it('requires a name, slug and group for a forum', function () {
 
 // ------------------------------------------------------------------ threads
 
+it('filters the thread list by forum', function () {
+    fModerator();
+    $other = Forum::create(['forum_group_id' => $this->forum->forum_group_id, 'name' => 'Other', 'slug' => 'other-filter'])->refresh();
+    $here = fThread($this->forum, $this->author);
+    $there = fThread($other, $this->author);
+
+    Livewire::test(ListThreads::class)
+        ->filterTable('forum_id', $other->id)
+        ->assertCanSeeTableRecords([$there])
+        ->assertCanNotSeeTableRecords([$here]);
+});
+
 it('locks, pins, renames, moves and approves a thread from the table, with a log row each', function () {
     $mod = fModerator();
     $thread = fThread($this->forum, $this->author);
@@ -241,6 +254,28 @@ it('deletes, restores, rejects and edits posts from the table', function () {
 });
 
 // ------------------------------------------------------------------ reports
+
+it('opens the reported post in a new tab when the host can say where it is, and shows its text otherwise', function () {
+    fModerator();
+    $thread = fThread($this->forum, $this->author);
+    $post = fPost($thread, $this->author);
+    $report = PostReport::create(['post_id' => $post->id, 'thread_id' => $thread->id, 'reporter_id' => $this->author->id, 'reason' => 'spam']);
+
+    Livewire::test(ListPostReports::class)
+        ->assertTableActionDoesNotHaveUrl('previewPost', $report);
+
+    $this->app->instance(PostUrlResolver::class, new class implements PostUrlResolver
+    {
+        public function url(Post $post): ?string
+        {
+            return 'https://example.test/threads/'.$post->thread_id.'#post-'.$post->getKey();
+        }
+    });
+
+    Livewire::test(ListPostReports::class)
+        ->assertTableActionHasUrl('previewPost', 'https://example.test/threads/'.$thread->id.'#post-'.$post->id, $report)
+        ->assertTableActionShouldOpenUrlInNewTab('previewPost', $report);
+});
 
 it('lists open reports by default and resolves them with an outcome', function () {
     $mod = fModerator();

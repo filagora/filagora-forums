@@ -35,6 +35,7 @@ class ThreadsTable
                 TextColumn::make('last_post_at')->dateTime()->sortable(),
             ])
             ->filters([
+                SelectFilter::make('forum_id')->label(__('filagora-forums::messages.threads.table.forum'))->relationship('forum', 'name')->searchable()->preload(),
                 SelectFilter::make('moderation_status')->options(ContentModerationStatus::options()),
                 TernaryFilter::make('is_locked'),
                 TernaryFilter::make('is_pinned'),

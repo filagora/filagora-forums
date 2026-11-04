@@ -5,6 +5,13 @@ All notable changes to this package are documented here. The format follows
 
 ## [Unreleased]
 
+## [0.6.3] - 2026-11-04
+
+### Added
+
+- `PostUrlResolver`, a contract for the address of one post on the host's thread page. The dashboard's "Read" action on a post report opens it in a new tab when the host binds one; the default answers nothing and the action still shows the post's text in a modal.
+- A forum filter on the dashboard's thread list.
+
 ## [0.6.2] - 2026-10-30
 
 ### Added

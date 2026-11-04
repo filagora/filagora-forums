@@ -5,6 +5,8 @@ All notable changes to this package are documented here. The format follows
 
 ## [Unreleased]
 
+## [0.6.4] - 2026-11-04
+
 ### Added
 
 - **Forum subscriptions.** Table `forum_subscriptions` (a tenth migration; `filagora:adopt` now expects twenty-two tables), model `forum_subscription`, the `ForumSubscriptions` service, the queued `AnnounceThreadToForumSubscribers` job, the `ForumSubscribersToNotify` and `ThreadPromoted` events, and a default mail. The privacy export lists a person's forum subscriptions and erasure removes them.

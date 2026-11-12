@@ -33,7 +33,9 @@ package) and the forum follows it. With neither, every staff screen denies every
   own threads in, and gives query scopes for visible threads and posts.
 - **Three staff abilities** (`filagora.forums.moderate`, `.view_unapproved`, `.bypass_approval`),
   each mapped to an entitlement key in `filagora-forums.gates`; holding any one makes a user
-  staff. Remap them to your own keys in config.
+  staff. Remap them to your own keys in config. Core's shared `filagora.moderate_frontend`
+  (mapped in core's `gates`) also makes a user staff and lets them moderate on your pages, but
+  opens none of the forum screens.
 - **Two extension points:** bind `PaidAccessCheck` to say what "paid" means for forums that name
   no entitlement (the default grants nobody), and `StaffPreview` if your frontend can switch staff
   privileges off to see the forum as a member does (the default is always on).
@@ -57,7 +59,8 @@ package) and the forum follows it. With neither, every staff screen denies every
   moderated, and a first post awaiting review) and `PostSignatureResolver` (the signature copied
   onto new posts). Both do nothing by default.
 
-- **Moderation.** For moderators (`filagora.forums.moderate`; anyone else gets
+- **Moderation.** For moderators (`filagora.forums.moderate`, or core's `filagora.moderate_frontend`
+  for moderation on your pages without the dashboard screens; anyone else gets
   `ModerationNotPermitted`): `ThreadModeration` locks, unlocks, pins, unpins, moves, renames,
   approves and permanently deletes threads; `PostModeration` soft-deletes (singly or up to 200
   at once), restores, approves, unapproves and rejects posts; `PostRelocation` moves posts to
@@ -74,7 +77,8 @@ package) and the forum follows it. With neither, every staff screen denies every
   threads, posts and post reports (browse, filter, and act through the moderation services, so
   every action is logged and counted), a **Moderation queue** page (threads and replies waiting
   for approval, reported replies one row each) and a `ModerationQueueStats` dashboard widget.
-  Every screen needs the `filagora.forums.moderate` ability. Register it on the panel next to the
+  Every screen needs the `filagora.forums.moderate` ability (`filagora.moderate_frontend` is not
+  enough). Register it on the panel next to the
   core and entitlements plugins:
 
   ```php

@@ -5,6 +5,14 @@ All notable changes to this package are documented here. The format follows
 
 ## [Unreleased]
 
+### Added
+
+- Core's shared `filagora.moderate_frontend` ability lets a user moderate on the host's own pages and makes them staff, without opening any forum screen. `ForumAccess::canModerate()` accepts it next to `filagora.forums.moderate` (so the moderation services and any policy built on that method do too), `Abilities::staff()` includes it, and the new `Abilities::moderators()` lists both. The forum screens still need `filagora.forums.moderate`.
+
+### Changed
+
+- Requires `filagora-core` 0.2.3 or later, which defines the shared ability.
+
 ## [0.6.4] - 2026-11-04
 
 ### Added

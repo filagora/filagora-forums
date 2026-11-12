@@ -57,11 +57,12 @@ class ForumAccess
     }
 
     /**
-     * Holds the moderate entitlement itself (the other staff entitlements are not enough).
+     * May moderate content: holds the moderate entitlement or core's shared frontend one (the
+     * other staff entitlements are not enough). The forum screens need `Abilities::MODERATE` itself.
      */
     public function canModerate(?Authenticatable $user): bool
     {
-        return $user !== null && Gate::forUser($user)->allows(Abilities::MODERATE);
+        return $user !== null && Gate::forUser($user)->any(Abilities::moderators());
     }
 
     /**

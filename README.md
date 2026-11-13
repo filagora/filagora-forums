@@ -76,6 +76,12 @@ Forums for Filagora: forum groups, forums, threads and posts, visibility and pos
   or author, staff or author) and posting policy, the viewer's entitlements, and whether they
   have authored in the forum. It also says which forums a viewer sees in full, which only their
   own threads in, and gives query scopes for visible threads and posts.
+- **Staff-or-author forums and first threads.** In a forum whose visibility or posting policy is
+  staff or author, a member sees the forum, and can post in it, only once they have started a
+  thread there. Turn on the forum's **Show when empty** setting (`show_when_empty`) and every
+  signed-in member sees the forum and can start their first thread, however many threads other
+  members have started. They still see only their own threads. Left off, nobody who has not
+  already posted there can find the forum, so nobody can make a first thread.
 - **Three staff abilities** (`filagora.forums.moderate`, `.view_unapproved`, `.bypass_approval`),
   each mapped to an entitlement key in `filagora-forums.gates`; holding any one makes a user
   staff. Remap them to your own keys in config. Core's shared `filagora.moderate_frontend`

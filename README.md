@@ -13,6 +13,51 @@ package) and the forum follows it. With neither, every staff screen denies every
 
 ## What it provides
 
+### Overview
+
+Forums for Filagora: forum groups, forums, threads and posts, visibility and posting rules, and moderation, as a Filament plugin.
+
+### Tables
+
+`forum_groups`, `forums`, `threads`, `posts`, `post_reports`, `post_moderation_logs`, `thread_moderation_logs`, `site_notifications`, `user_site_notification_dismissals`, `polls`, `poll_questions`, `poll_options`, `poll_votes`, `poll_vote_answers`, `reactions`, `thread_subscriptions`, `thread_subscription_digest_items`, `forum_reads`, `thread_reads`, `post_mentions`, `post_attachments`, `forum_subscriptions`, prefixed `filagora_` by default. A site that already has them can run `php artisan filagora:adopt` instead of migrating.
+
+### Commands
+
+| Command | What it does |
+| --- | --- |
+| `filagora:forums:prune-attachments {--hours=} {--dry-run}` | Delete uploaded files that were never attached to a post. |
+| `filagora:forums:send-digest {frequency} {--dry-run}` | Send the daily or weekly digests of new posts in followed threads. |
+| `filagora:forums:sync-stats` | Rebuild forum counters (thread_count, post_count, last_post_*) from threads and posts. |
+| `filagora:forums:sync-thread-stats` | Rebuild thread reply counts and last-post fields from posts. |
+
+### Events
+
+- `ForumStatsChanged`: Dispatched after forum counters (thread count, post count, last post) change, so a frontend can drop any cache it built from them.
+- `ForumSubscribersToNotify`: A thread has just become visible in a forum, and these followers of the forum may read it.
+- `PostCreated`: A post was created: a reply, or the first post of a new thread (`$isFirstPost`).
+- `PostEdited`
+- `PostModerated`: A moderator acted on a post: delete, restore, approve, unapprove, reject, reject_permanently, move or promote.
+- `PostReported`
+- `PostReportsResolved`: Every open report on a post was resolved at once.
+- `SubscribersToNotify`: A new approved post in a thread, and the followers who want to hear about it at once (everyone except the author and anyone whose delivery mode is a digest or off).
+- `ThreadCreated`: A new thread and its first post were created.
+- `ThreadDeleted`: A moderator permanently deleted a thread and all its posts.
+- `ThreadDigestReady`: A person's digest is due: the posts that came in since the last one, oldest first (each with its thread and post loaded).
+- `ThreadModerated`: A moderator acted on a thread: lock, unlock, pin, unpin, move, rename or approve.
+- `ThreadPromoted`: A moderator made a new thread out of one or more replies.
+- `UsersMentioned`: People newly mentioned in a post (those who could see the thread and had not been told before, up to the cap per post).
+
+### Access
+
+| Ability | Entitlement key |
+| --- | --- |
+| `filagora.forums.moderate` | `filagora.forums.moderate` |
+| `filagora.forums.view_unapproved` | `filagora.forums.view_unapproved` |
+| `filagora.forums.bypass_approval` | `filagora.forums.bypass_approval` |
+| `filagora.forums.announcements` | `filagora.forums.announcements` |
+
+### Using it
+
 - **The seven tables** (`forum_groups`, `forums`, `threads`, `posts`, `post_reports`,
   `post_moderation_logs`, `thread_moderation_logs`), matching the shape of the forum they were
   extracted from index for index, including the generated `threads.last_activity_at` column, the

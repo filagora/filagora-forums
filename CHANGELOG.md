@@ -5,6 +5,8 @@ All notable changes to this package are documented here. The format follows
 
 ## [Unreleased]
 
+## [0.6.6] - 2026-11-13
+
 ### Fixed
 
 - A staff-or-author forum with `show_when_empty` on stays visible, and open for a first thread, to every member who has not started a thread in it, rather than only while the forum has no threads from anyone. `ForumAccess` no longer checks whether the forum is empty.

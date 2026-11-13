@@ -32,7 +32,7 @@ return [
             'requires_reply_approval' => 'Replies need approval',
             'requires_reply_approval_help' => 'Replies wait for a moderator unless the author can bypass approval.',
             'show_when_empty' => 'Show when empty',
-            'show_when_empty_help' => 'List the forum to members even before it has any threads.',
+            'show_when_empty_help' => 'List the forum to members who have not started a thread in it yet.',
             'noindex' => 'Hide from search engines',
             'noindex_help' => 'Sends noindex for this forum and its threads and leaves the forum out of the sitemap. Members can still read it.',
         ],

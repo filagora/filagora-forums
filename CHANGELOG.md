@@ -5,6 +5,12 @@ All notable changes to this package are documented here. The format follows
 
 ## [Unreleased]
 
+## [0.6.9] - 2026-11-13
+
+### Changed
+
+- The README explains the staff-or-author forums and the Show when empty setting that lets a member start their first thread. No code changes.
+
 ## [0.6.8] - 2026-11-13
 
 ### Changed

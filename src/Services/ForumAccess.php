@@ -110,7 +110,7 @@ class ForumAccess
             ForumVisibility::PAID_OR_AUTHOR => $user !== null,
             ForumVisibility::STAFF_AUTHOR_ONLY => $user !== null && (
                 in_array((int) $forum->getKey(), $authoredForumIds ?? $this->authoredForumIds($user), true)
-                || ($forum->show_when_empty && $this->isForumEmpty($forum))
+                || $forum->show_when_empty
             ),
         };
     }
@@ -168,7 +168,7 @@ class ForumAccess
             ForumPostingPolicy::PUBLIC, ForumPostingPolicy::REGISTERED => true,
             ForumPostingPolicy::STAFF_ONLY => false,
             ForumPostingPolicy::STAFF_AUTHOR_ONLY => in_array((int) $forum->getKey(), $authoredForumIds ?? $this->authoredForumIds($user), true)
-                || ($forum->show_when_empty && $this->isForumEmpty($forum)),
+                || $forum->show_when_empty,
             ForumPostingPolicy::ENTITLEMENT_ONLY => $this->holdsEntitlement($user, $forum->reply_entitlement_scope),
         };
     }
@@ -352,26 +352,6 @@ class ForumAccess
     private function isAuthor(Thread $thread, ?Authenticatable $user): bool
     {
         return $user !== null && (string) $thread->author_id === (string) $user->getAuthIdentifier();
-    }
-
-    /**
-     * Uses the counts already on the model when it has them (a `threads_count` from withCount,
-     * or the stored `thread_count`; a forum loaded with only some columns may have neither),
-     * and asks the database otherwise.
-     */
-    private function isForumEmpty(Forum $forum): bool
-    {
-        $attributes = $forum->getAttributes();
-
-        foreach (['threads_count', 'thread_count'] as $column) {
-            if (isset($attributes[$column]) && is_numeric($attributes[$column])) {
-                return (int) $attributes[$column] === 0;
-            }
-        }
-
-        $thread = Models::class('thread');
-
-        return ! $thread::query()->where('forum_id', $forum->getKey())->exists();
     }
 
     private function forumOf(Thread $thread): Forum

@@ -180,36 +180,26 @@ it('never shows an inactive forum, not even to staff', function () {
         ->toBe(expectation('FFFFFFF'));
 });
 
-it('shows a staff-or-author forum that is empty to any member when it asks to be shown empty', function () {
+it('shows a staff-or-author forum to any member when it asks to be shown, even after others have posted', function () {
     $forum = accessForum(['visibility' => ForumVisibility::STAFF_AUTHOR_ONLY, 'show_when_empty' => true]);
     $viewers = viewers($forum, authorStartsThread: false);
 
     expect(resultsFor($viewers, fn ($user) => app(ForumAccess::class)->canViewForum($forum, $user)))
         ->toBe(expectation('FTTTTTT'));
 
-    // Starting a thread bumps the forum's stored counter (thread creation does this); "empty"
-    // is judged from that counter.
     accessThread($forum, $viewers['author']);
     $forum->update(['thread_count' => 1]);
     app()->forgetInstance(ForumAccess::class);
 
     expect(resultsFor($viewers, fn ($user) => app(ForumAccess::class)->canViewForum($forum->refresh(), $user)))
-        ->toBe(expectation('FFFFTTF'));
+        ->toBe(expectation('FTTTTTT'));
 });
 
-it('works out whether a forum is empty from the counts on the model or from the database', function () {
-    $forum = accessForum(['visibility' => ForumVisibility::STAFF_AUTHOR_ONLY, 'show_when_empty' => true]);
+it('keeps a staff-or-author forum hidden from members when it does not ask to be shown', function () {
+    $forum = accessForum(['visibility' => ForumVisibility::STAFF_AUTHOR_ONLY, 'show_when_empty' => false]);
     $member = TestUser::make();
 
-    expect(app(ForumAccess::class)->canViewForum($forum, $member))->toBeTrue();
-
-    accessThread($forum, TestUser::make('Other'));
-
-    // A forum loaded with only some columns has no stored counter, so the database is asked.
-    $partial = Forum::query()->select(['id', 'visibility', 'is_active', 'show_when_empty'])->find($forum->id);
-
-    expect(app(ForumAccess::class)->canViewForum($partial, $member))->toBeFalse()
-        ->and(app(ForumAccess::class)->canViewForum(Forum::query()->withCount('threads')->find($forum->id), $member))->toBeFalse();
+    expect(app(ForumAccess::class)->canViewForum($forum, $member))->toBeFalse();
 });
 
 // ---------------------------------------------------------------- can open a thread

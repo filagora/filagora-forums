@@ -6,6 +6,7 @@ use Filagora\Core\Privacy\PrivacyContributorRegistry;
 use Filagora\Core\Privacy\RetentionRuleRegistry;
 use Filagora\Forums\Contracts\SubscriptionPreferences;
 use Filagora\Forums\Enums\DeliveryMode;
+use Filagora\Forums\Enums\ForumVisibility;
 use Filagora\Forums\Events\SubscribersToNotify;
 use Filagora\Forums\Events\ThreadDigestReady;
 use Filagora\Forums\Models\Forum;
@@ -14,8 +15,10 @@ use Filagora\Forums\Models\Post;
 use Filagora\Forums\Models\Thread;
 use Filagora\Forums\Models\ThreadSubscription;
 use Filagora\Forums\Models\ThreadSubscriptionDigestItem;
+use Filagora\Forums\Notifications\ForumThreadCreatedNotification;
 use Filagora\Forums\Notifications\ThreadDigestNotification;
 use Filagora\Forums\Notifications\ThreadUpdatedNotification;
+use Filagora\Forums\Notifications\UserMentionedNotification;
 use Filagora\Forums\Services\ForumAccess;
 use Filagora\Forums\Services\Posting;
 use Filagora\Forums\Services\Subscriptions;
@@ -386,4 +389,65 @@ it('exports and erases a person\'s subscriptions and digest queue', function () 
         ->and(ThreadSubscriptionDigestItem::where('user_id', $user->id)->count())->toBe(0)
         ->and(ThreadSubscription::where('user_id', $other->id)->count())->toBe(1)
         ->and(ThreadSubscriptionDigestItem::where('user_id', $other->id)->count())->toBe(1);
+});
+
+// ------------------------------------------------------------------ locked-down threads
+
+/** A thread in a forum that only staff and the thread's author can open, with the author following it. */
+function lockedThread(): Thread
+{
+    $group = ForumGroup::query()->firstOrCreate(['slug' => 'main'], ['name' => 'Main']);
+    $forum = Forum::create(['forum_group_id' => $group->id, 'name' => 'Reports', 'slug' => 'r-'.uniqid(), 'visibility' => ForumVisibility::STAFF_AUTHOR_ONLY, 'show_when_empty' => true])->refresh();
+
+    return Thread::create(['forum_id' => $forum->id, 'author_id' => TestUser::make('Reporter')->id, 'title' => 'Hello report', 'slug' => 't-'.uniqid()])->refresh();
+}
+
+it('does not announce a post to a follower who can no longer open the thread', function () {
+    Event::fake([SubscribersToNotify::class]);
+    $thread = lockedThread();
+    follower($thread, 'instant');
+    follower($thread, 'daily');
+    $post = subPost($thread, TestUser::query()->findOrFail($thread->author_id));
+
+    subs()->announce($post);
+
+    Event::assertNotDispatched(SubscribersToNotify::class);
+    expect(ThreadSubscriptionDigestItem::count())->toBe(0);
+});
+
+it('still announces to a follower who can open the thread', function () {
+    Event::fake([SubscribersToNotify::class]);
+    $thread = subThread();
+    $reader = follower($thread, 'instant');
+
+    subs()->announce(subPost($thread, TestUser::make('Poster')));
+
+    Event::assertDispatched(SubscribersToNotify::class, fn ($e) => count($e->recipients) === 1 && $e->recipients[0]->getKey() === $reader->id);
+});
+
+it('retires digest items for a thread the person can no longer open instead of sending them', function () {
+    Event::fake([ThreadDigestReady::class]);
+    $thread = lockedThread();
+    $bystander = follower($thread, 'daily');
+    $item = ThreadSubscriptionDigestItem::create(['user_id' => $bystander->id, 'thread_id' => $thread->id, 'post_id' => subPost($thread, TestUser::make('Poster'))->id]);
+
+    $sent = subs()->sendDigests(DeliveryMode::DAILY);
+
+    Event::assertNotDispatched(ThreadDigestReady::class);
+    expect($sent)->toBe(['users' => 0, 'items' => 0])->and($item->refresh()->sent_at)->not->toBeNull();
+});
+
+it('does not send a queued notification to someone who can no longer open the thread', function () {
+    $thread = lockedThread();
+    $bystander = TestUser::make('Bystander');
+    $item = ThreadSubscriptionDigestItem::create(['user_id' => $bystander->id, 'thread_id' => $thread->id, 'post_id' => subPost($thread, TestUser::make('Poster'))->id]);
+    $post = $item->post;
+
+    expect((new ThreadUpdatedNotification($thread, $post))->via($bystander))->toBe([])
+        ->and((new ForumThreadCreatedNotification($thread))->via($bystander))->toBe([])
+        ->and((new UserMentionedNotification($post))->via($bystander))->toBe([])
+        ->and((new ThreadDigestNotification(DeliveryMode::DAILY, [$item->load('thread', 'post')]))->via($bystander))->toBe([]);
+
+    $author = TestUser::query()->find($thread->author_id);
+    expect((new ThreadUpdatedNotification($thread, $post))->via($author))->toBe(['mail']);
 });

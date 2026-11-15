@@ -289,6 +289,19 @@ it('treats staff as ordinary members while their preview is off', function () {
         ->and($access->canPostInForum($forum, $staff))->toBeFalse();
 });
 
+it('reads a thread for delivery as staff even while their preview is off, and as a member otherwise', function () {
+    $forum = accessForum(['visibility' => ForumVisibility::STAFF_ONLY, 'posting_policy' => ForumPostingPolicy::STAFF_ONLY]);
+    $thread = accessThread($forum, TestUser::make('Author'));
+    $staff = give(TestUser::make('Staff'), Abilities::VIEW_UNAPPROVED);
+    $access = app(ForumAccess::class);
+
+    $this->previewOff = [$staff->id];
+
+    expect($access->canViewForum($forum, $staff))->toBeFalse()
+        ->and($access->canReadThread($thread, $staff))->toBeTrue()
+        ->and($access->canReadThread($thread, TestUser::make('Member')))->toBeFalse();
+});
+
 it('counts any one of the three staff entitlements as staff, and nothing else', function () {
     $access = app(ForumAccess::class);
 

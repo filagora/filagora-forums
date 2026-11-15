@@ -87,17 +87,29 @@ class ForumAccess
     }
 
     /**
+     * Can this person open the thread right now, and so be told about it? The question to ask when
+     * delivering an update, digest or mention: access can be taken away after the thing was
+     * queued, and a worker has no "view as member" switch to consult, so the preview is ignored.
+     */
+    public function canReadThread(Thread $thread, Authenticatable $user): bool
+    {
+        return $this->canViewForum($this->forumOf($thread), $user, null, ignoringPreview: true)
+            && $this->canAccessThread($thread, $user, ignoringPreview: true);
+    }
+
+    /**
      * Can the viewer see the forum in the forum list and open it?
      *
      * @param  list<int>|null  $authoredForumIds  The forums the viewer has started a thread in; looked up when omitted.
+     * @param  bool  $ignoringPreview  Treat anyone holding a staff entitlement as staff, whatever their preview switch says.
      */
-    public function canViewForum(Forum $forum, ?Authenticatable $user, ?array $authoredForumIds = null): bool
+    public function canViewForum(Forum $forum, ?Authenticatable $user, ?array $authoredForumIds = null, bool $ignoringPreview = false): bool
     {
         if (! $forum->is_active) {
             return false;
         }
 
-        if ($this->actsAsStaff($user)) {
+        if ($ignoringPreview ? $this->isStaff($user) : $this->actsAsStaff($user)) {
             return true;
         }
 
@@ -117,10 +129,12 @@ class ForumAccess
 
     /**
      * Can the viewer open this thread? (Whether they may see its forum is canViewForum().)
+     *
+     * @param  bool  $ignoringPreview  Treat anyone holding a staff entitlement as staff, whatever their preview switch says.
      */
-    public function canAccessThread(Thread $thread, ?Authenticatable $user): bool
+    public function canAccessThread(Thread $thread, ?Authenticatable $user, bool $ignoringPreview = false): bool
     {
-        if ($this->actsAsStaff($user)) {
+        if ($ignoringPreview ? $this->isStaff($user) : $this->actsAsStaff($user)) {
             return true;
         }
 

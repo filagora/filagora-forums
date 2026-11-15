@@ -6,6 +6,7 @@ namespace Filagora\Forums\Notifications;
 
 use Filagora\Forums\Models\Post;
 use Filagora\Forums\Models\Thread;
+use Filagora\Forums\Notifications\Concerns\GatesOnThreadAccess;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
@@ -18,7 +19,7 @@ use Illuminate\Support\Str;
  */
 final class UserMentionedNotification extends Notification implements ShouldQueue
 {
-    use Queueable;
+    use GatesOnThreadAccess, Queueable;
 
     public function __construct(private readonly Post $post) {}
 
@@ -27,7 +28,7 @@ final class UserMentionedNotification extends Notification implements ShouldQueu
      */
     public function via(object $notifiable): array
     {
-        return ['mail'];
+        return $this->recipientCanReadThread($notifiable, $this->post->thread) ? ['mail'] : [];
     }
 
     public function toMail(object $notifiable): MailMessage

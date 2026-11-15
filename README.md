@@ -186,7 +186,9 @@ Forums for Filagora: forum groups, forums, threads and posts, visibility and pos
   new thread's author follows it by default; a reply's author follows it when their preference
   says so). A new approved reply becomes updates for the followers: those who want it at once are
   handed to the `SubscribersToNotify` event, those who chose daily or weekly get a row in the
-  digest queue, and those who turned updates off get nothing. `php artisan
+  digest queue, and those who turned updates off get nothing. Followers who can no longer open
+  the thread (a forum locked down since they followed) get nothing either; a host that notifies by
+  bell or push should check `ForumAccess::canReadThread()` when it delivers. `php artisan
   filagora:forums:send-digest daily|weekly` (schedule it) sends the digests that are due through
   `ThreadDigestReady`. Emails go out by default; set `subscriptions.mail.enabled` to false and
   listen to the two events to notify by bell or push instead. A person's choice of delivery

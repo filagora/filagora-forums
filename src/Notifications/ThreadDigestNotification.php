@@ -8,6 +8,7 @@ use Filagora\Forums\Enums\DeliveryMode;
 use Filagora\Forums\Models\Post;
 use Filagora\Forums\Models\Thread;
 use Filagora\Forums\Models\ThreadSubscriptionDigestItem;
+use Filagora\Forums\Notifications\Concerns\GatesOnThreadAccess;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
@@ -20,7 +21,7 @@ use Illuminate\Support\Str;
  */
 final class ThreadDigestNotification extends Notification implements ShouldQueue
 {
-    use Queueable;
+    use GatesOnThreadAccess, Queueable;
 
     /**
      * @param  list<ThreadSubscriptionDigestItem>  $items
@@ -32,19 +33,30 @@ final class ThreadDigestNotification extends Notification implements ShouldQueue
      */
     public function via(object $notifiable): array
     {
-        return ['mail'];
+        return $this->visibleItems($notifiable) === [] ? [] : ['mail'];
+    }
+
+    /**
+     * The items whose thread the recipient can still open when the digest is sent.
+     *
+     * @return list<ThreadSubscriptionDigestItem>
+     */
+    private function visibleItems(object $notifiable): array
+    {
+        return array_values(array_filter($this->items, fn (ThreadSubscriptionDigestItem $item): bool => $this->recipientCanReadThread($notifiable, $item->thread)));
     }
 
     public function toMail(object $notifiable): MailMessage
     {
+        $items = $this->visibleItems($notifiable);
         $mail = (new MailMessage)
             ->subject(__("filagora-forums::subscriptions.digest.subject_{$this->frequency->value}"))
-            ->line(__('filagora-forums::subscriptions.digest.intro', ['count' => count($this->items)]));
+            ->line(__('filagora-forums::subscriptions.digest.intro', ['count' => count($items)]));
 
         $route = config('filagora-forums.subscriptions.routes.thread');
         $linkable = is_string($route) && $route !== '' && Route::has($route);
 
-        foreach (collect($this->items)->groupBy('thread_id') as $items) {
+        foreach (collect($items)->groupBy('thread_id') as $items) {
             /** @var ThreadSubscriptionDigestItem $first */
             $first = $items->first();
             $thread = $first->thread;

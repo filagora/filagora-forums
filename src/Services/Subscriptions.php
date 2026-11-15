@@ -82,6 +82,12 @@ class Subscriptions
         $digest = [];
 
         foreach ($this->followers($thread, (int) $post->author_id) as $follower) {
+            // Following outlives access: a forum locked down since they subscribed must not keep
+            // telling them about it.
+            if (! $this->access()->canReadThread($thread, $follower)) {
+                continue;
+            }
+
             $mode = $this->preferences->deliveryMode($follower);
 
             if ($mode === DeliveryMode::INSTANT) {
@@ -130,6 +136,28 @@ class Subscriptions
             /** @var list<ThreadSubscriptionDigestItem> $due */
             $due = $this->digestItems()->where('user_id', $userId)->whereNull('sent_at')->with(['thread', 'post'])->orderBy('created_at')->orderBy('id')->get()->all();
 
+            // Items queued while the thread was readable can outlive that. Retire the ones the
+            // person can no longer open, as sent, so they never resurface.
+            $canRead = [];
+            $readable = [];
+            $hidden = [];
+
+            foreach ($due as $item) {
+                $canRead[$item->thread_id] ??= $item->thread instanceof Thread && $this->access()->canReadThread($item->thread, $user);
+
+                if ($canRead[$item->thread_id]) {
+                    $readable[] = $item;
+                } else {
+                    $hidden[] = $item->getKey();
+                }
+            }
+
+            if ($hidden !== [] && ! $dryRun) {
+                $this->digestItems()->whereIn('id', $hidden)->update(['sent_at' => now()]);
+            }
+
+            $due = $readable;
+
             if ($due === []) {
                 continue;
             }
@@ -158,6 +186,15 @@ class Subscriptions
             ->whereIn('id', $this->subscriptions()->where('thread_id', $thread->getKey())->where('user_id', '!=', $exceptUserId)->select('user_id'))
             ->get()
             ->all();
+    }
+
+    /**
+     * Resolved when needed, not injected: this service lives as long as a queue worker, and
+     * `ForumAccess` is rebuilt for each job.
+     */
+    private function access(): ForumAccess
+    {
+        return app(ForumAccess::class);
     }
 
     /**

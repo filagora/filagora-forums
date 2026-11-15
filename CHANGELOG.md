@@ -5,6 +5,8 @@ All notable changes to this package are documented here. The format follows
 
 ## [Unreleased]
 
+## [0.6.11] - 2026-11-15
+
 ### Fixed
 
 - Following a thread no longer outlives access to it. A post is announced only to followers who can still open the thread (the instant event and the digest queue both), a digest drops, and marks as sent, items for threads the person can no longer open, and the four queued notifications (`ThreadUpdatedNotification`, `ForumThreadCreatedNotification`, `UserMentionedNotification`, `ThreadDigestNotification`) check again when a worker sends them, so a forum locked down after something was queued stops it being delivered. A host that sends its own bell or push from `SubscribersToNotify` gets the filtered recipients, but should re-check access when it delivers.

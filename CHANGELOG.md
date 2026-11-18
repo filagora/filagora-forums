@@ -5,6 +5,17 @@ All notable changes to this package are documented here. The format follows
 
 ## [Unreleased]
 
+## [0.6.12] - 2026-11-18
+
+### Fixed
+
+- A member given only `view_unapproved` or `bypass_approval` could open, and reply in, staff-only and staff-or-author forums, because either grant counted as staff. `Abilities::staff()` is now just `filagora.forums.moderate` and core's `moderate_frontend`, so `ForumAccess::isStaff()` and `actsAsStaff()` follow it. Approval bypass is unchanged: it checks its own grant.
+- In a forum whose posting policy is staff-or-author, `ForumAccess::canReplyToThread()` now lets only staff and the thread's author reply, even where the forum is visible to the member (for example with show-when-empty on).
+
+### Changed
+
+- A host that relied on `view_unapproved` or `bypass_approval` alone making a user staff must now grant a moderation ability too.
+
 ## [0.6.11] - 2026-11-15
 
 ### Fixed

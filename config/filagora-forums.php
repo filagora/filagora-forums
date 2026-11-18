@@ -67,8 +67,9 @@ return [
     | Gate abilities
     |--------------------------------------------------------------------------
     |
-    | Maps each ability to the entitlement that grants it. Holding any of the first three
-    | makes a user forum staff; `filagora.forums.announcements` only opens the announcements
+    | Maps each ability to the entitlement that grants it. Holding `moderate` (or core's
+    | shared frontend moderation ability) makes a user forum staff; `view_unapproved` and
+    | `bypass_approval` are narrower and do not; `filagora.forums.announcements` only opens the announcements
     | screen. Point an ability at your own entitlement key to
     | use your own keys; keys listed here are created as definitions by
     | `filagora:entitlements:sync`.

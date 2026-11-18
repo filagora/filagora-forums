@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use Filagora\Core\Support\Abilities as CoreAbilities;
 use Filagora\Entitlements\Models\EntitlementDefinition;
 use Filagora\Entitlements\Models\UserEntitlementGrant;
 use Filagora\Forums\Contracts\PaidAccessCheck;
@@ -274,7 +275,7 @@ it('decides who can reply to a thread', function (ForumPostingPolicy $policy, ?s
 
 it('treats staff as ordinary members while their preview is off', function () {
     $forum = accessForum(['visibility' => ForumVisibility::STAFF_ONLY, 'posting_policy' => ForumPostingPolicy::STAFF_ONLY]);
-    $staff = give(TestUser::make('Staff'), Abilities::VIEW_UNAPPROVED);
+    $staff = give(TestUser::make('Staff'), Abilities::MODERATE);
     $access = app(ForumAccess::class);
 
     expect($access->isStaff($staff))->toBeTrue()
@@ -292,7 +293,7 @@ it('treats staff as ordinary members while their preview is off', function () {
 it('reads a thread for delivery as staff even while their preview is off, and as a member otherwise', function () {
     $forum = accessForum(['visibility' => ForumVisibility::STAFF_ONLY, 'posting_policy' => ForumPostingPolicy::STAFF_ONLY]);
     $thread = accessThread($forum, TestUser::make('Author'));
-    $staff = give(TestUser::make('Staff'), Abilities::VIEW_UNAPPROVED);
+    $staff = give(TestUser::make('Staff'), Abilities::MODERATE);
     $access = app(ForumAccess::class);
 
     $this->previewOff = [$staff->id];
@@ -302,16 +303,55 @@ it('reads a thread for delivery as staff even while their preview is off, and as
         ->and($access->canReadThread($thread, TestUser::make('Member')))->toBeFalse();
 });
 
-it('counts any one of the three staff entitlements as staff, and nothing else', function () {
+it('counts a moderation entitlement as staff, and nothing else', function () {
     $access = app(ForumAccess::class);
+
+    expect(Abilities::staff())->toBe([Abilities::MODERATE, CoreAbilities::MODERATE_FRONTEND]);
 
     foreach (Abilities::staff() as $ability) {
         expect($access->isStaff(give(TestUser::make(), $ability)))->toBeTrue($ability);
     }
 
     expect($access->isStaff(TestUser::make()))->toBeFalse()
+        ->and($access->isStaff(give(TestUser::make(), Abilities::VIEW_UNAPPROVED)))->toBeFalse()
+        ->and($access->isStaff(give(TestUser::make(), Abilities::BYPASS_APPROVAL)))->toBeFalse()
         ->and($access->isStaff(null))->toBeFalse()
         ->and($access->isStaff(give(TestUser::make(), 'filagora.entitlements.manage')))->toBeFalse();
+});
+
+it('keeps the view-unapproved and bypass-approval grants out of staff-only and staff-or-author forums', function (string $ability) {
+    $forum = accessForum([
+        'visibility' => ForumVisibility::STAFF_AUTHOR_ONLY,
+        'posting_policy' => ForumPostingPolicy::STAFF_AUTHOR_ONLY,
+        'show_when_empty' => true,
+    ]);
+    $staffOnly = accessForum(['visibility' => ForumVisibility::STAFF_ONLY, 'posting_policy' => ForumPostingPolicy::STAFF_ONLY]);
+    $thread = accessThread($forum, TestUser::make('Reporter'));
+    $user = give(TestUser::make('Trusted'), $ability);
+    $access = app(ForumAccess::class);
+
+    expect($access->canAccessThread($thread->load('forum'), $user))->toBeFalse()
+        ->and($access->canReadThread($thread, $user))->toBeFalse()
+        ->and($access->canReplyToThread($thread, $user))->toBeFalse()
+        ->and($access->canViewForum($staffOnly, $user))->toBeFalse()
+        ->and($access->canPostInForum($staffOnly, $user))->toBeFalse()
+        ->and($access->forumScopeFor($user)->unrestricted)->toBeFalse();
+})->with([Abilities::VIEW_UNAPPROVED, Abilities::BYPASS_APPROVAL]);
+
+it('lets only staff and the thread author reply in a staff-or-author posting forum, even when anyone can view it', function () {
+    $forum = accessForum([
+        'visibility' => ForumVisibility::PUBLIC,
+        'posting_policy' => ForumPostingPolicy::STAFF_AUTHOR_ONLY,
+        'show_when_empty' => true,
+        'reply_entitlement_scope' => null,
+    ]);
+    $author = TestUser::make('Reporter');
+    $thread = accessThread($forum, $author)->load('forum');
+    $access = app(ForumAccess::class);
+
+    expect($access->canReplyToThread($thread, $author))->toBeTrue()
+        ->and($access->canReplyToThread($thread, give(TestUser::make('Staff'), Abilities::MODERATE)))->toBeTrue()
+        ->and($access->canReplyToThread($thread, TestUser::make('Other member')))->toBeFalse();
 });
 
 // ----------------------------------------------------------- what a viewer sees

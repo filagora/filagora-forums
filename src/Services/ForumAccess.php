@@ -41,7 +41,8 @@ class ForumAccess
     ) {}
 
     /**
-     * Holds any staff entitlement, whatever the preview switch says.
+     * Holds a moderation entitlement (`Abilities::staff()`), whatever the preview switch says.
+     * The narrower view-unapproved and bypass-approval grants do not make a user staff.
      */
     public function isStaff(?Authenticatable $user): bool
     {
@@ -190,7 +191,8 @@ class ForumAccess
     /**
      * Can the viewer reply to this thread? They must be able to post in its forum; beyond that
      * a thread's own author can always reply, and anyone else needs the forum's reply
-     * entitlement when it names one.
+     * entitlement when it names one. In a `staff_author_only` posting forum only staff and the
+     * thread's author may reply, whatever the reply entitlement says.
      *
      * @param  list<int>|null  $authoredForumIds
      */
@@ -212,6 +214,10 @@ class ForumAccess
 
         if ($this->isAuthor($thread, $user)) {
             return true;
+        }
+
+        if ($forum->posting_policy === ForumPostingPolicy::STAFF_AUTHOR_ONLY) {
+            return false;
         }
 
         $replyEntitlement = trim((string) $forum->reply_entitlement_scope);

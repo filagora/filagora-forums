@@ -7,7 +7,7 @@ namespace Filagora\Forums\Support;
 use Filagora\Core\Support\Abilities as CoreAbilities;
 
 /**
- * The Gate abilities that mark a user as forum staff. Each maps to an entitlement key in
+ * The Gate abilities that mark a user as forum staff, or grant a narrower privilege. Each maps to an entitlement key in
  * `filagora-forums.gates`, which a host can point at its own keys.
  */
 final class Abilities
@@ -25,13 +25,15 @@ final class Abilities
     public const ANNOUNCEMENTS = 'filagora.forums.announcements';
 
     /**
-     * Holding any of these makes a user staff.
+     * Holding either of these makes a user staff: the same two that let a user moderate.
+     * `VIEW_UNAPPROVED` and `BYPASS_APPROVAL` are narrower grants and do not, so a member given
+     * one of them cannot read or post in a staff-only forum.
      *
      * @return list<string>
      */
     public static function staff(): array
     {
-        return [self::MODERATE, CoreAbilities::MODERATE_FRONTEND, self::VIEW_UNAPPROVED, self::BYPASS_APPROVAL];
+        return self::moderators();
     }
 
     /**

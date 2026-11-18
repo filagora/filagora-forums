@@ -83,10 +83,11 @@ Forums for Filagora: forum groups, forums, threads and posts, visibility and pos
   members have started. They still see only their own threads. Left off, nobody who has not
   already posted there can find the forum, so nobody can make a first thread.
 - **Three staff abilities** (`filagora.forums.moderate`, `.view_unapproved`, `.bypass_approval`),
-  each mapped to an entitlement key in `filagora-forums.gates`; holding any one makes a user
-  staff. Remap them to your own keys in config. Core's shared `filagora.moderate_frontend`
-  (mapped in core's `gates`) also makes a user staff and lets them moderate on your pages, but
-  opens none of the forum screens.
+  each mapped to an entitlement key in `filagora-forums.gates`. Only `moderate` makes a user
+  staff; `view_unapproved` and `bypass_approval` are narrower grants that do not, so holding
+  one never opens a staff-only forum. Remap them to your own keys in config. Core's shared
+  `filagora.moderate_frontend` (mapped in core's `gates`) also makes a user staff and lets them
+  moderate on your pages, but opens none of the forum screens.
 - **Two extension points:** bind `PaidAccessCheck` to say what "paid" means for forums that name
   no entitlement (the default grants nobody), and `StaffPreview` if your frontend can switch staff
   privileges off to see the forum as a member does (the default is always on).
